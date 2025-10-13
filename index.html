@@ -81,29 +81,29 @@
         /* --- SECTION HERO (Visual Dramático y Profesional - CORREGIDO) --- */
         .hero {
             position: relative;
-            height: 90vh; /* Aumentamos la altura para mayor impacto */
+            height: 90vh; 
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Alineamos contenido a la izquierda */
+            justify-content: space-between; /* Ajuste para distribuir el espacio */
             padding: 0 5%;
             background: var(--bg);
-            margin-bottom: 80px; /* Más espacio abajo */
+            margin-bottom: 80px; 
             overflow: hidden; 
         }
         .hero-content {
-            z-index: 20; /* Aseguramos que el texto esté por encima de la imagen */
-            max-width: 550px;
-            padding-left: 20px; /* Pequeño margen */
+            z-index: 20; 
+            max-width: 650px; /* MÁS ANCHO: Mueve el texto hacia la derecha */
+            padding-left: 0; 
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 5rem; /* Título más grande y con más presencia */
+            font-size: 5rem; 
             margin-bottom: 15px;
             line-height: 1;
             color: var(--primary);
         }
         .hero p {
-            font-size: 1.4rem; /* Texto más legible */
+            font-size: 1.4rem; 
             margin-bottom: 50px;
             font-weight: 400; 
             color: var(--primary);
@@ -114,10 +114,9 @@
             right: 0; /* Pegado a la derecha */
             bottom: 0; 
             height: 100%; 
-            width: 60%; /* Ocupa un poco menos de ancho */
+            width: 50%; /* MENOS ANCHO: Fuerza la imagen al costado */
             z-index: 10;
             transition: transform 0.1s ease-out; 
-            /* GRADIENTE de fondo para asegurar la transición con el texto */
             background: linear-gradient(to left, transparent 20%, var(--bg) 60%); 
         }
 
@@ -127,23 +126,20 @@
             width: auto;
             object-fit: contain; 
             object-position: right; /* Asegura que la imagen esté alineada a la derecha de su contenedor */
-            
-            /* Eliminamos el blur. Solo mantenemos un filtro de color/sombra sutil */
             filter: grayscale(5%) drop-shadow(5px 5px 15px rgba(0,0,0,0.1)); 
-            transform: translateX(0); /* Eliminamos el corrimiento, se queda a la derecha */
+            transform: translateX(0); 
             opacity: 1; 
             
-            /* TÉCNICA CLAVE: MÁSCARA DE DESVANECIMIENTO RADIAL */
-            /* Fija la opacidad al 100% en el centro (60% del radio) y la desvanece a los bordes */
+            /* MÁSCARA DE DESVANECIMIENTO RADIAL */
             mask-image: radial-gradient(circle at 60% center, black 60%, transparent 100%);
             mask-size: 100% 100%; 
             mask-mode: alpha; 
-            -webkit-mask-image: radial-gradient(circle at 60% center, black 60%, transparent 100%); /* Soporte para Webkit */
+            -webkit-mask-image: radial-gradient(circle at 60% center, black 60%, transparent 100%); 
         }
 
         /* --- SECCIONES GENERALES --- */
         .section { 
-            padding: 100px 0; /* Más relleno para 'respirar' */
+            padding: 100px 0; 
             background-color: var(--bg-light); 
             margin-bottom: 60px; 
             box-shadow: var(--shadow-subtle);
@@ -168,58 +164,8 @@
             transform: translateY(-5px); 
             box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
         }
-        /* Calendario */
-        .calendar-nav { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
-        .day-column { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
-        .day-header span.day-number { color: var(--accent); }
-        .time-slot { background-color: #f7f3ed; border: 1px solid #e3d2bf; color: var(--primary); }
-        .time-slot:not(.booked):hover { background-color: var(--accent); color: white; border-color: var(--primary); }
-        .time-slot.selected { background-color: var(--primary); color: white; border-color: var(--accent); }
-        /* Sobre Mí */
-        .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
-        .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
-        .about-text h2 { 
-            text-align: left; 
-            margin-bottom: 25px; 
-            color:var(--accent); 
-            font-size: 2.2rem; /* Título secundario más impactante */
-        }
-        footer { background-color: var(--primary); padding: 30px 0; }
-        footer p { color: #f5f5f5; font-size: 0.9rem; }
-
-        /* Media Queries */
-        @media (max-width: 992px) {
-            .hero { height: auto; min-height: 60vh; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 5%;}
-            .hero h1 { font-size: 3.5rem; text-align: center;}
-            .hero-content { max-width: 100%; text-align: center; padding-top: 0;}
-            /* Ajustamos la imagen en móvil */
-            .hero-image { position: relative; height: 30vh; margin-top: 30px; transform: translateX(0) translateY(0); width: 80%; }
-            .hero-image img { 
-                /* Remove mask and blur for better visibility on smaller screens */
-                filter: grayscale(5%) drop-shadow(0 0 10px rgba(0,0,0,0.1)); 
-                mask-image: none;
-                -webkit-mask-image: none;
-            } 
-        }
         
-        /* Estilos para el formulario */
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; color: var(--primary); }
-        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="tel"], .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--muted);
-            border-radius: 4px;
-            font-size: 1rem;
-            box-sizing: border-box; 
-        }
-        .calendar-grid { 
-            display: grid; 
-            grid-template-columns: repeat(7, 1fr); 
-            gap: 10px; 
-            margin-top: 20px;
-            overflow-x: auto;
-        }
+        /* CALENDARIO - Estilos completos para la cuadrícula */
         .calendar-nav { 
             display: flex; 
             justify-content: space-between; 
@@ -229,12 +175,21 @@
             margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 10px; 
+            margin-top: 20px;
+            overflow-x: auto;
+        }
         .day-column { 
             display: flex; 
             flex-direction: column; 
             border-radius: 4px; 
             overflow: hidden; 
             min-width: 120px; 
+            border: 1px solid #E0E0E0; /* Borde explícito */
+            background-color: var(--bg-light);
         }
         .day-header { 
             text-align: center; 
@@ -258,13 +213,64 @@
             border-radius: 4px; 
             cursor: pointer; 
             font-size: 0.9rem; 
+            background-color: #f7f3ed;
+            border: 1px solid #e3d2bf;
+            color: var(--primary);
             transition: background-color 0.2s, transform 0.1s;
+        }
+        .time-slot:not(.booked):hover { 
+            background-color: var(--accent); 
+            color: white; 
+            border-color: var(--primary); 
+        }
+        .time-slot.selected { 
+            background-color: var(--primary); 
+            color: white; 
+            border-color: var(--accent); 
         }
         .time-slot.booked { 
             background-color: #eeeeee; 
             color: var(--muted); 
             cursor: not-allowed; 
             opacity: 0.7;
+        }
+
+        /* Sobre Mí */
+        .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
+        .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
+        .about-text h2 { 
+            text-align: left; 
+            margin-bottom: 25px; 
+            color:var(--accent); 
+            font-size: 2.2rem; 
+        }
+        footer { background-color: var(--primary); padding: 30px 0; }
+        footer p { color: #f5f5f5; font-size: 0.9rem; }
+
+        /* Estilos de Formulario */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; color: var(--primary); }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="tel"], .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--muted);
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box; 
+        }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .hero { height: auto; min-height: 60vh; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 5%;}
+            .hero h1 { font-size: 3.5rem; text-align: center;}
+            .hero-content { max-width: 100%; text-align: center; padding-top: 0;}
+            /* Ajustamos la imagen en móvil */
+            .hero-image { position: relative; height: 30vh; margin-top: 30px; transform: translateX(0) translateY(0); width: 80%; }
+            .hero-image img { 
+                filter: grayscale(5%) drop-shadow(0 0 10px rgba(0,0,0,0.1)); 
+                mask-image: none;
+                -webkit-mask-image: none;
+            } 
         }
     </style>
 </head>
@@ -327,7 +333,7 @@
                     <h3>Paso 2: Elige Fecha y Hora</h3>
                     <div class="calendar-nav mt-3">
                         <button onclick="changeWeek(-1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Anterior</button>
-                        <h4 id="current-week-display" style="color:var(--accent); margin:0; text-align: center; flex-grow: 1;"></h4>
+                        <h4 id="current-week-display" style="color:var(--primary); margin:0; text-align: center; flex-grow: 1;"></h4>
                         <button onclick="changeWeek(1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;">Siguiente <i class="fas fa-chevron-right"></i></button>
                     </div>
 
@@ -458,9 +464,15 @@
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         document.getElementById(`step-${step}`).style.display = 'block';
         currentStep = step;
-        if (step !== 0) {
-            window.scrollTo({ top: document.getElementById('agendamiento-container').offsetTop, behavior: 'smooth' });
-        }
+        // SOLUCIÓN: Agregamos un pequeño retraso antes del scroll para asegurar que el elemento esté visible y calcular la posición correctamente
+        setTimeout(() => {
+            if (step !== 0) {
+                const targetElement = document.getElementById('agendamiento-container');
+                if (targetElement) {
+                    window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+                }
+            }
+        }, 100);
     }
 
     async function loadUniqueProfessional() {
@@ -583,7 +595,7 @@
                         ${formatDate(currentDayIter)}<br><span class="day-number">${currentDayIter.getDate()}</span>
                     </div>
                     <div class="time-slot-container">
-                        ${daySlotsHTML.length > 0 ? daySlotsHTML : '<p style="font-size:0.85rem; color:var(--muted);">No hay horas.</p>'}
+                        ${daySlotsHTML.length > 0 ? daySlotsHTML : '<p style="font-size:0.85rem; color:var(--muted); text-align:center;">No hay horas.</p>'}
                     </div>
                 </div>
             `;
