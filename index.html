@@ -29,7 +29,7 @@
             color: var(--primary);
             background-color: var(--bg);
             overflow-x: hidden;
-            font-weight: 300; /* AJUSTE SUTILEZA: Peso de fuente general más ligero */
+            font-weight: 300; /* SUTILEZA: Peso de fuente general más ligero */
         }
 
         .container {
@@ -93,10 +93,11 @@
             margin-bottom: 80px; 
             overflow: hidden; 
             
+            /* FONDO PUESTA DE SOL */
             background-image: url('7B7421AF-ED37-47DE-BCD2-4C0A4346C38A.jpg');
             background-size: cover; 
             background-repeat: no-repeat; 
-            background-position: center 30%;
+            background-position: center 30%; /* Enfoca el horizonte */
             
             box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.55); 
         }
@@ -107,14 +108,14 @@
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4.5rem; /* REDUCCIÓN SUTILEZA */
+            font-size: 4.5rem; 
             margin-bottom: 15px;
             line-height: 1;
             color: white; 
             text-shadow: 1px 1px 5px rgba(0,0,0,0.7); 
         }
         .hero p {
-            font-size: 1.3rem; /* REDUCCIÓN SUTILEZA */
+            font-size: 1.3rem; 
             margin-bottom: 50px;
             font-weight: 400; 
             color: rgba(255, 255, 255, 0.9); 
@@ -162,7 +163,7 @@
         
         h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.8rem; /* AJUSTE SUTILEZA */
+            font-size: 2.8rem; 
             color: var(--accent); /* AJUSTE SUTILEZA: Color de acento para títulos */
             text-align: center;
             margin-bottom: 60px;
@@ -179,7 +180,7 @@
             box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
         }
 
-        /* Sobre Mí */
+        /* Sobre Mí (Ahora sección de Reembolso) */
         .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
         .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
         .about-text h2 { 
@@ -188,6 +189,41 @@
             color:var(--accent); 
             font-size: 2.2rem; 
         }
+        
+        /* --- ESTILOS PARA EL CARRUSEL DE LOGOS DE REEMBOLSO --- */
+        .slider-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap; 
+            padding: 20px 0;
+            border-top: 1px solid #ddd;
+            border-bottom: 1px solid #ddd;
+            background-color: var(--bg-light);
+        }
+        .slider-track {
+            display: inline-block;
+            animation: scroll-logos 30s linear infinite; /* 30 segundos para una velocidad suave */
+        }
+        .slider-logo {
+            height: 60px; 
+            width: auto;
+            margin: 0 40px;
+            vertical-align: middle;
+            filter: grayscale(100%) opacity(70%); /* Logos grises y sutiles */
+            transition: filter 0.3s;
+        }
+        .slider-logo:hover {
+            filter: grayscale(0%) opacity(100%);
+        }
+        @keyframes scroll-logos {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%); 
+            }
+        }
+
         footer { background-color: var(--primary); padding: 30px 0; }
         footer p { color: #f5f5f5; font-size: 0.9rem; }
         
@@ -239,10 +275,7 @@
             box-sizing: border-box; 
         }
 
-        /* ======================================================= */
-        /* === MEDIA QUERIES PARA ADAPTACIÓN A CELULAR (MÓVIL) === */
-        /* ======================================================= */
-
+        /* --- MEDIA QUERIES PARA ADAPTACIÓN A CELULAR (MÓVIL) --- */
         @media (max-width: 992px) {
             
             /* HEADER: Los botones se apilan */
@@ -250,9 +283,8 @@
             .nav-buttons { display: flex; justify-content: center; width: 100%; gap: 10px;}
             .btn-agenda, .btn-panel { flex-grow: 1; text-align: center; margin-left: 0; }
             .logo-area { margin-bottom: 10px; }
-            .logo-area img { height: 60px; } /* Reducido para celular */
-
-
+            .logo-area img { height: 60px; } /* Logo más pequeño en móvil */
+            
             /* HERO SECTION: Contenido centrado y apilado */
             .hero { 
                 height: auto; 
@@ -265,42 +297,15 @@
                 background-position: center center; 
                 box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); 
             }
-            .hero-content { 
-                max-width: 100%; 
-                padding-right: 0; 
-                order: 2; 
-            }
-            .hero h1 { 
-                font-size: 3rem; 
-                line-height: 1.1;
-                text-align: center;
-            }
-            .hero p {
-                font-size: 1.2rem; 
-            }
+            .hero-content { max-width: 100%; padding-right: 0; order: 2; }
+            .hero h1 { font-size: 3rem; line-height: 1.1; text-align: center; }
+            .hero p { font-size: 1.2rem; }
             
             /* IMAGEN FRANCISCA: Adaptada y encima del texto */
-            .hero-image { 
-                position: relative; 
-                height: 40vh; 
-                margin-top: 0; 
-                margin-bottom: 20px;
-                width: 70%; 
-                max-width: 350px; 
-                right: auto; 
-                transform: translateX(0) translateY(0); 
-                order: 1; 
-            }
-            .hero-image img { 
-                filter: none; 
-                mask-image: none;
-                -webkit-mask-image: none;
-                box-shadow: 0 10px 20px rgba(0,0,0,0.15);
-                border-radius: 8px; 
-                object-position: center;
-            } 
+            .hero-image { position: relative; height: 40vh; margin-top: 0; margin-bottom: 20px; width: 70%; max-width: 350px; right: auto; transform: translateX(0) translateY(0); order: 1; }
+            .hero-image img { filter: none; mask-image: none; -webkit-mask-image: none; box-shadow: 0 10px 20px rgba(0,0,0,0.15); border-radius: 8px; object-position: center; } 
             
-            /* ABOUT SECTION: Apilamos el contenido */
+            /* ABOUT/REIMBURSEMENT SECTION: Apilamos el contenido */
             .about-content { flex-direction: column; }
             .about-image { order: 1; margin-bottom: 20px; }
             .about-text { order: 2; text-align: center; }
@@ -310,16 +315,12 @@
             #services-container { flex-direction: column; }
             .service-card { min-width: 100%; }
             
-            /* CALENDARIO: Aseguramos el apilamiento del calendario */
-            .calendar-grid { 
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
-            }
-            
-            /* FOOTER */
-            footer .container { text-align: center; }
+            /* AJUSTE LOGOS EN MÓVIL */
+            .slider-logo { height: 40px; margin: 0 20px; }
+            .slider-container { padding: 15px 0; }
         }
         
-        /* Ajuste fino para pantallas de celular muy pequeñas (iPhone SE, etc.) */
+        /* Ajuste fino para pantallas de celular muy pequeñas */
         @media (max-width: 576px) {
              .hero h1 { font-size: 2.5rem; }
              .hero-image { height: 30vh; }
@@ -334,7 +335,7 @@
             <a href="index.html" class="logo-text-only-icon">
                 <img src="logo-psicofit.png" alt="Logo Psicofit"/> 
             </a>
-            </div>
+        </div>
         <div class="nav-buttons fade-in-on-load">
             <a href="#agendar" class="btn btn-agenda">Agenda tu Hora</a>
             <a href="portal.html" class="btn btn-panel">Acceso Profesional</a>
@@ -356,13 +357,41 @@
         </div>
     </section>
 
+    <section class="section reimbursement-section animate-section" id="reembolso">
+        <div class="container">
+            <h2 style="margin-bottom: 20px;">Reembolsable: Isapres y Fonasa</h2>
+            
+            <p style="text-align: center; max-width: 800px; margin: 0 auto 40px; font-weight: 400; color: var(--primary);">
+                Como psicóloga certificada, mis servicios son **reembolsables** mediante la mayoría de las Isapres (a través de boleta) y Fonasa (según el tramo de tu plan). Consulta la cobertura con tu aseguradora.
+            </p>
+
+            <div class="slider-container">
+                <div class="slider-track">
+                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo">
+                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo">
+                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo">
+                    <img src="logo-isapre-concordia.png" alt="Logo Isapre Concordia" class="slider-logo">
+                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo">
+                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo">
+                    
+                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo">
+                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo">
+                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo">
+                    <img src="logo-isapre-concordia.png" alt="Logo Isapre Concordia" class="slider-logo">
+                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo">
+                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo">
+                </div>
+            </div>
+        </div>
+    </section>
+
     <section class="section about-section animate-section" id="sobre-mi">
         <div class="container about-content">
             <div class="about-image">
                 <img src="IMG_0821.jpg" alt="Persona reflexionando sobre el agua">
             </div>
             <div class="about-text">
-                <h2>Enfoque Centrado en tu Bienestar</h2>
+                <h2 style="text-align: left; margin-bottom: 25px; color:var(--accent); font-size: 2.2rem;">Enfoque Centrado en tu Bienestar</h2>
                 <p>Mi enfoque es **integrador y basado en evidencia**. Creo firmemente que la terapia es una herramienta poderosa para el autoconocimiento y el crecimiento continuo. Mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día.</p>
                 <p>Con **[Tu Experiencia]**, te ayudaré a manejar la ansiedad, superar el duelo y fortalecer tu resiliencia emocional.</p>
                 <p style="font-style: italic; color: var(--accent); margin-top: 25px; font-weight: 500;">Áreas de especialidad: Ansiedad, Duelo, Estrés y Terapia Individual para Adultos.</p>
