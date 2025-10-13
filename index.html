@@ -10,14 +10,15 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        /* PALETA DE COLORES - Profesional y Minimalista */
+        /* PALETA DE COLORES - Profesional, Potente y Minimalista (Ajustada) */
         :root {
             --primary: #2C3A47; /* Gris Azulado Oscuro */
-            --accent: #7A9D96; /* Verde Salvia/Menta (Sofisticado) */
-            --bg: #F9F7F1; /* Blanco Roto Cálido */
-            --bg-light: #FFFFFF; /* Blanco Puro para Headers */
+            --accent: #5F9EA0; /* Azul Acero/Celeste Grisáceo (Más fuerte para un look profesional) */
+            --bg: #F9F7F1; /* Blanco Roto Cálido (Base) */
+            --bg-light: #FFFFFF; /* Blanco Puro */
             --muted: #A3A3A3; /* Gris Suave */
-            --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.05);
+            --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08); /* Sombra más definida */
+            --shadow-main: 0 10px 40px rgba(0, 0, 0, 0.15); /* Sombra para resaltar secciones */
         }
 
         body {
@@ -77,55 +78,68 @@
         .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
         .btn-panel:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
 
-        /* --- SECTION HERO (Visual Dramático) --- */
+        /* --- SECTION HERO (Visual Dramático y Profesional - Ajustada) --- */
         .hero {
             position: relative;
-            height: 85vh; 
+            height: 90vh; /* Aumentamos la altura para mayor impacto */
             display: flex;
             align-items: center;
-            justify-content: space-between; 
+            justify-content: flex-start; /* Alineamos contenido a la izquierda */
             padding: 0 5%;
             background: var(--bg);
-            margin-bottom: 60px;
+            margin-bottom: 80px; /* Más espacio abajo */
             overflow: hidden; 
         }
         .hero-content {
-            z-index: 10;
+            z-index: 20; /* Aseguramos que el texto esté por encima de la imagen */
             max-width: 550px;
+            padding-left: 20px; /* Pequeño margen */
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 4.5rem; 
-            margin-bottom: 10px;
-            line-height: 1.1;
+            font-size: 5rem; /* Título más grande y con más presencia */
+            margin-bottom: 15px;
+            line-height: 1;
             color: var(--primary);
         }
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 45px;
-            font-weight: 300;
+            font-size: 1.4rem; /* Texto más legible */
+            margin-bottom: 50px;
+            font-weight: 400; /* Un poco más de peso */
             color: var(--primary);
         }
+        /* Contenedor de la Imagen: Fondo y Gradiente */
         .hero-image {
             position: absolute; 
             right: 0;
             bottom: 0; 
             height: 100%; 
-            z-index: 5;
-            /* Transición para el Parallax */
+            width: 65%; /* Ocupa más ancho */
+            z-index: 10;
             transition: transform 0.1s ease-out; 
-            background: linear-gradient(90deg, rgba(249, 247, 241, 0) 5%, var(--bg) 20%);
+            /* GRADIENTE para fusionar la imagen con el fondo de la izquierda */
+            background: linear-gradient(to left, transparent 20%, var(--bg) 60%); 
         }
+
+        /* La imagen de la profesional con el efecto DIFUMINADO/DESENFOQUE */
         .hero-image img {
-            /* CORRECCIÓN DE ALTURA */
-            height: 95%; /* Ajustada para que quepa mejor sin el 100% */
+            height: 100%; 
             width: auto;
             object-fit: contain; 
-            transform: translateX(10%) translateY(10px); 
+            /* EFECTO DIFUMINADO/DESENFOQUE (Blur) y Sombra sutil */
+            filter: blur(1.5px) grayscale(5%) drop-shadow(5px 5px 15px rgba(0,0,0,0.1)); 
+            transform: translateX(10%) translateY(0); /* Ajuste de posición */
+            opacity: 0.95; /* Suavizar ligeramente */
+            transition: filter 0.5s ease; /* Transición para el blur */
         }
 
         /* --- SECCIONES GENERALES --- */
-        .section { padding: 80px 0; background-color: var(--bg-light); margin-bottom: 40px; box-shadow: var(--shadow-subtle);}
+        .section { 
+            padding: 100px 0; /* Más relleno para 'respirar' */
+            background-color: var(--bg-light); 
+            margin-bottom: 60px; 
+            box-shadow: var(--shadow-subtle);
+        }
         .section:nth-child(even) { background-color: var(--bg); box-shadow: none; }
         
         h2 {
@@ -156,7 +170,12 @@
         /* Sobre Mí */
         .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
         .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
-        .about-text h2 { text-align: left; margin-bottom: 25px; color:var(--accent); }
+        .about-text h2 { 
+            text-align: left; 
+            margin-bottom: 25px; 
+            color:var(--accent); 
+            font-size: 2.2rem; /* Título secundario más impactante */
+        }
         footer { background-color: var(--primary); padding: 30px 0; }
         footer p { color: #f5f5f5; font-size: 0.9rem; }
 
@@ -165,7 +184,9 @@
             .hero { height: auto; min-height: 60vh; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 5%;}
             .hero h1 { font-size: 3.5rem; text-align: center;}
             .hero-content { max-width: 100%; text-align: center; padding-top: 0;}
-            .hero-image { position: relative; height: 30vh; margin-top: 30px; transform: translateX(0) translateY(0); }
+            /* Ajustamos la imagen en móvil */
+            .hero-image { position: relative; height: 30vh; margin-top: 30px; transform: translateX(0) translateY(0); width: 80%; }
+            .hero-image img { filter: blur(0px) grayscale(5%) drop-shadow(0 0 10px rgba(0,0,0,0.1)); } /* Quitamos el blur en móvil */
         }
     </style>
 </head>
