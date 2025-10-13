@@ -16,7 +16,7 @@
             --accent: #7A9D96; /* Verde Salvia/Menta (Sofisticado) */
             --bg: #F9F7F1; /* Blanco Roto Cálido */
             --bg-light: #FFFFFF; /* Blanco Puro para Headers */
-            --muted: #A3A3A3; 
+            --muted: #A3A3A3; /* Gris Suave */
             --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
@@ -46,7 +46,6 @@
             opacity: 1;
             transform: translateY(0);
         }
-        /* Aplica a servicios y secciones */
         .animate-section {
             opacity: 0;
             transition: opacity 0.8s ease-out, transform 0.8s ease-out;
@@ -57,7 +56,6 @@
             transform: translateY(0);
         }
 
-
         /* --- HEADER --- */
         header {
             background-color: var(--bg-light);
@@ -67,76 +65,108 @@
             top: 0;
             z-index: 1000;
         }
-        /* Botones de Navegación */
-        .btn {
-            padding: 10px 22px;
-            border-radius: 4px;
-            text-decoration: none;
-            font-weight: 500;
-            transition: all 0.2s;
-            display: inline-block;
-        }
-        .btn-agenda {
-            background-color: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-            transition: transform 0.3s ease, background-color 0.3s ease; /* Transición para efecto */
-        }
-        .btn-agenda:hover {
-            transform: translateY(-3px); /* Efecto 3D sutil */
-            background-color: var(--primary);
-            border-color: var(--primary);
-        }
-
-        /* --- SECTION HERO --- */
-        .hero {
-            position: relative;
-            height: 85vh; 
-            background: var(--bg);
-            margin-bottom: 60px;
-            overflow: hidden; 
-        }
-        .hero-image {
-            /* Sutil transición para el Parallax */
-            transition: transform 0.1s ease-out; 
-            right: 0;
-            bottom: 0; 
-            height: 100%; 
-            z-index: 5;
-            background: linear-gradient(90deg, rgba(249, 247, 241, 0) 5%, var(--bg) 20%);
-        }
-
-        /* --- Servicios y Agendamiento (Hover 3D) --- */
-        .service-card {
-            background-color: var(--bg-light); 
-            border: 1px solid #E0E0E0;
-            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease; /* Transición para efecto */
-        }
-        .service-card:hover, .service-card.selected { 
-            transform: translateY(-5px); /* Efecto 3D sutil */
-            box-shadow: 0 10px 20px rgba(0,0,0,0.15); /* Sombra más fuerte */
-        }
-        /* --- [El resto de estilos de diseño y agendamiento se mantienen] --- */
         .navbar { display: flex; justify-content: space-between; align-items: center; }
         .logo-area { display: flex; align-items: center; gap: 15px; }
         .logo-area img { height: 45px; }
         .logo-text { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        
+        /* Botones y Hover */
+        .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; }
+        .btn-agenda { background-color: var(--accent); color: white; border: 2px solid var(--accent); transition: transform 0.3s ease, background-color 0.3s ease; }
+        .btn-agenda:hover { transform: translateY(-3px); background-color: var(--primary); border-color: var(--primary); }
         .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
         .btn-panel:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
-        .hero-content { z-index: 10; max-width: 550px; }
-        .hero h1 { font-family: 'Playfair Display', serif; font-size: 4.5rem; margin-bottom: 10px; line-height: 1.1; color: var(--primary); }
-        .hero p { font-size: 1.3rem; margin-bottom: 45px; font-weight: 300; color: var(--primary); }
-        .hero-image img { height: 90%; width: auto; object-fit: contain; transform: translateX(10%) translateY(10px); }
+
+        /* --- SECTION HERO (Visual Dramático) --- */
+        .hero {
+            position: relative;
+            height: 85vh; 
+            display: flex;
+            align-items: center;
+            justify-content: space-between; 
+            padding: 0 5%;
+            background: var(--bg);
+            margin-bottom: 60px;
+            overflow: hidden; 
+        }
+        .hero-content {
+            z-index: 10;
+            max-width: 550px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 4.5rem; 
+            margin-bottom: 10px;
+            line-height: 1.1;
+            color: var(--primary);
+        }
+        .hero p {
+            font-size: 1.3rem;
+            margin-bottom: 45px;
+            font-weight: 300;
+            color: var(--primary);
+        }
+        .hero-image {
+            position: absolute; 
+            right: 0;
+            bottom: 0; 
+            height: 100%; 
+            z-index: 5;
+            /* Transición para el Parallax */
+            transition: transform 0.1s ease-out; 
+            background: linear-gradient(90deg, rgba(249, 247, 241, 0) 5%, var(--bg) 20%);
+        }
+        .hero-image img {
+            /* CORRECCIÓN DE ALTURA */
+            height: 95%; /* Ajustada para que quepa mejor sin el 100% */
+            width: auto;
+            object-fit: contain; 
+            transform: translateX(10%) translateY(10px); 
+        }
+
+        /* --- SECCIONES GENERALES --- */
         .section { padding: 80px 0; background-color: var(--bg-light); margin-bottom: 40px; box-shadow: var(--shadow-subtle);}
         .section:nth-child(even) { background-color: var(--bg); box-shadow: none; }
-        h2 { font-family: 'Playfair Display', serif; font-size: 2.6rem; color: var(--primary); text-align: center; margin-bottom: 60px; }
-        .calendar-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 15px; margin-top: 30px; }
+        
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.6rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 60px;
+        }
+        /* Servicios y Hover 3D */
+        .service-card {
+            background-color: var(--bg-light); 
+            border: 1px solid #E0E0E0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        .service-card:hover, .service-card.selected { 
+            transform: translateY(-5px); 
+            box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+        }
+        /* Calendario */
+        .calendar-nav { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
+        .day-column { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
+        .day-header span.day-number { color: var(--accent); }
+        .time-slot { background-color: #f7f3ed; border: 1px solid #e3d2bf; color: var(--primary); }
         .time-slot:not(.booked):hover { background-color: var(--accent); color: white; border-color: var(--primary); }
         .time-slot.selected { background-color: var(--primary); color: white; border-color: var(--accent); }
+        /* Sobre Mí */
         .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
         .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
         .about-text h2 { text-align: left; margin-bottom: 25px; color:var(--accent); }
+        footer { background-color: var(--primary); padding: 30px 0; }
+        footer p { color: #f5f5f5; font-size: 0.9rem; }
+
+        /* Media Queries */
+        @media (max-width: 992px) {
+            .hero { height: auto; min-height: 60vh; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 5%;}
+            .hero h1 { font-size: 3.5rem; text-align: center;}
+            .hero-content { max-width: 100%; text-align: center; padding-top: 0;}
+            .hero-image { position: relative; height: 30vh; margin-top: 30px; transform: translateX(0) translateY(0); }
+        }
     </style>
 </head>
 <body>
@@ -313,7 +343,7 @@
         });
     }
     
-    // --- [Resto de las funciones de agendamiento (getStartOfWeek, showStep, loadUniqueProfessional, etc.)] ---
+    // --- [Resto de las funciones de agendamiento] ---
     function getStartOfWeek(date) {
         const day = date.getDay();
         const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
@@ -543,9 +573,9 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         loadServices();
-        applyLoadEffects(); // Aplicar el efecto de carga inicial
-        setupIntersectionObserver(); // Aplicar el efecto a las secciones
-        setupParallax(); // Aplicar el efecto Parallax
+        applyLoadEffects(); 
+        setupIntersectionObserver(); 
+        setupParallax(); 
     });
 </script>
 </body>
