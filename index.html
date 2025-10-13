@@ -1,0 +1,649 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Psicofitt | Psicología Profesional y Bienestar</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        /* Paleta de colores: #2b3a67 (azul marino), #f8f9fa (gris claro), #6A9B7A (verde salvia) */
+        :root {
+            --primary: #2b3a67;
+            --accent: #6A9B7A; /* NUEVO VERDE SALVIA */
+            --bg: #f8f9fa;
+            --muted: #6c757d;
+        }
+
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            line-height: 1.8;
+            color: #495057;
+            background-color: var(--bg);
+            overflow-x: hidden;
+        }
+
+        header {
+            background-color: var(--primary);
+            color: white;
+            padding: 15px 0;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .navbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: 'Playfair Display', serif;
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: white;
+            text-decoration: none;
+        }
+        
+        /* --- Hero Section: Diseño Potente --- */
+        .hero {
+            position: relative;
+            height: 70vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            /* Placeholder para tu imagen de paisaje */
+            background: linear-gradient(rgba(43, 58, 103, 0.7), rgba(43, 58, 103, 0.7)), url('hero-psicologia.jpg') no-repeat center center/cover;
+            color: white;
+            margin-bottom: 40px;
+        }
+        .hero-content {
+            z-index: 10;
+            max-width: 800px;
+            padding: 20px;
+        }
+        .hero h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin-bottom: 20px;
+        }
+        .hero p {
+            font-size: 1.2rem;
+            margin-bottom: 30px;
+        }
+
+        .btn-primary {
+            background-color: var(--accent);
+            color: white;
+            padding: 10px 25px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-primary:hover {
+            background-color: #5d8c6b; /* Un tono más oscuro del salvia */
+        }
+        
+        .section {
+            padding: 60px 0;
+        }
+        
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem;
+            color: var(--primary);
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        /* --- Estilos Agendamiento --- */
+        #agendamiento-container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.05);
+            max-width: 900px;
+            margin: 0 auto;
+        }
+        .step-content {
+            padding: 20px 0;
+        }
+        .step-content h3 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--accent);
+            padding-bottom: 10px;
+            margin-bottom: 25px;
+            font-family: 'Playfair Display', serif;
+        }
+
+        .service-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .service-card:hover, .service-card.selected {
+            border-color: var(--accent);
+            background-color: #f0f7f2; /* Fondo muy claro del salvia */
+        }
+        .service-card h4 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+        
+        /* --- Fechas y Horarios --- */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .time-slot-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            gap: 10px;
+        }
+        .time-slot {
+            background-color: #eee;
+            padding: 10px 5px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            font-size: 0.9rem;
+        }
+        .time-slot:not(.booked):hover {
+            background-color: #ddd;
+        }
+        .time-slot.selected {
+            background-color: var(--accent);
+            color: white;
+        }
+        .time-slot.booked {
+            background-color: #f4f4f4;
+            color: var(--muted);
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* --- Formulario de Datos --- */
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        
+        /* --- Detalle de la Reserva --- */
+        .booking-summary {
+            background-color: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-top: 20px;
+        }
+        .booking-summary p strong {
+            color: var(--primary);
+        }
+
+        /* --- Footer y Sección Sobre Mí --- */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .about-section {
+            background-color: white;
+            padding: 60px 0;
+            border-top: 1px solid #eee;
+        }
+        .about-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+        }
+        .about-text h2 {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .about-text {
+            flex: 2;
+        }
+        .about-image {
+            flex: 1;
+            text-align: center;
+        }
+        .about-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Media Queries */
+        @media (max-width: 768px) {
+            .hero { height: 50vh; }
+            .hero h1 { font-size: 2rem; }
+            .hero p { font-size: 1rem; }
+            .about-content { flex-direction: column; }
+            .logo { font-size: 1.5rem; }
+            h2 { font-size: 1.8rem; }
+        }
+    </style>
+</head>
+<body>
+
+<header>
+    <div class="container navbar">
+        <a href="index.html" class="logo">Psicofitt</a>
+        <nav>
+            <a href="#agendar" class="btn-primary">Agenda tu Hora</a>
+            <a href="portal.html" style="color:white; margin-left:15px;">Panel</a>
+        </nav>
+    </div>
+</header>
+
+<main>
+
+    <section class="hero" id="home">
+        <div class="hero-content">
+            <h1>Tu Mente, Tu Bienestar. La Terapia Personalizada que Transforma.</h1>
+            <p>La psicología es la llave para comprender y reescribir tu propia historia. En Psicofitt, te acompañamos a navegar tus emociones, desarrollar resiliencia y construir una vida con propósito. Da el primer paso hacia tu transformación hoy.</p>
+            <a href="#agendar" class="btn-primary">Quiero Agendar Ahora</a>
+        </div>
+    </section>
+
+    <section class="about-section" id="sobre-mi">
+        <div class="container about-content">
+            <div class="about-image">
+                <img src="foto-profesional.jpg" alt="[Nombre de la Psicóloga] Psicóloga">
+            </div>
+            <div class="about-text">
+                <h2 style="color:var(--accent);">Conoce a tu Psicóloga</h2>
+                <p>Mi enfoque es integrador y centrado en la persona. Creo firmemente que la terapia no es solo para "resolver problemas", sino una poderosa herramienta para el autoconocimiento y el crecimiento continuo. Con más de [X] años de experiencia, mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día.</p>
+                <p>Especialista en Ansiedad, Duelo y Terapia Cognitivo-Conductual (TCC).</p>
+                <a href="mailto:contacto@psicofitt.cl" class="btn-primary" style="margin-top: 15px;">Contactar por Email</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section" id="agendar">
+        <div class="container">
+            <h2>Agenda tu Sesión en 4 Simples Pasos</h2>
+
+            <div id="agendamiento-container">
+
+                <div id="step-1" class="step-content">
+                    <h3>Paso 1: Selecciona el Tipo de Sesión</h3>
+                    <div id="services-container">
+                        </div>
+                </div>
+
+                <div id="step-3" class="step-content" style="display:none;">
+                    <h3>Paso 2: Elige Fecha y Hora</h3>
+                    <div class="booking-summary">
+                        <p>Servicio Seleccionado: <strong id="selected-service-display"></strong></p>
+                        <p>Valor: <strong id="selected-price-display"></strong></p>
+                    </div>
+                    
+                    <div class="calendar-nav mt-3">
+                        <button onclick="changeWeek(-1)" class="btn-primary" style="background-color: var(--primary);"><i class="fas fa-chevron-left"></i> Semana Anterior</button>
+                        <h4 id="current-week-display" style="color:var(--accent); margin:0;"></h4>
+                        <button onclick="changeWeek(1)" class="btn-primary" style="background-color: var(--primary);">Semana Siguiente <i class="fas fa-chevron-right"></i></button>
+                    </div>
+
+                    <div id="schedule-container" class="mt-3">
+                        </div>
+
+                    <button onclick="showStep(1)" class="btn-primary" style="background-color: var(--muted); margin-top:20px;">Volver a Servicios</button>
+                    <button onclick="validateTimeSelection()" class="btn-primary mt-3 float-end" disabled id="next-step-4-btn">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
+                </div>
+
+                <div id="step-4" class="step-content" style="display:none;">
+                    <h3>Paso 3: Confirma tus Datos</h3>
+                    <div class="booking-summary">
+                        <p>Servicio: <strong id="summary-service"></strong></p>
+                        <p>Fecha/Hora: <strong id="summary-datetime"></strong></p>
+                        <p>Valor: <strong id="summary-price"></strong></p>
+                    </div>
+
+                    <form id="booking-form" class="mt-3">
+                        <div class="form-group">
+                            <label for="paciente_nombre">Nombre Completo (*)</label>
+                            <input type="text" id="paciente_nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paciente_rut">RUT/DNI (*)</label>
+                            <input type="text" id="paciente_rut" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paciente_email">Correo Electrónico (*)</label>
+                            <input type="email" id="paciente_email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paciente_celular">Celular (*)</label>
+                            <input type="tel" id="paciente_celular" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paciente_prevision">Previsión (Opcional)</label>
+                            <input type="text" id="paciente_prevision">
+                        </div>
+                        <div class="form-group">
+                            <label for="comentarios">Comentarios / Motivo de Consulta (Opcional)</label>
+                            <textarea id="comentarios" rows="3"></textarea>
+                        </div>
+                        
+                        <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
+                        <button type="button" onclick="showStep(3)" class="btn-primary" style="background-color: var(--muted); margin-top:20px;">Volver a Horarios</button>
+                        <button type="submit" class="btn-primary mt-3 float-end" id="confirm-booking-btn">Confirmar Reserva <i class="fas fa-check"></i></button>
+                    </form>
+                </div>
+
+                <div id="step-5" class="step-content" style="display:none;">
+                    <h3>Paso 4: ¡Reserva Exitosa!</h3>
+                    <div class="booking-summary" style="background-color: #e6f7e6; border-color: var(--accent);">
+                        <p style="color: var(--accent); font-size:1.1rem;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito. Recibirás un correo de confirmación.</p>
+                        <p>Detalles: <strong id="final-summary"></strong></p>
+                        <p>Por favor, revisa tu email con las instrucciones de conexión.</p>
+                    </div>
+                    <a href="index.html" class="btn-primary mt-3">Volver al Inicio</a>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<footer>
+    <div class="container">
+        <p>&copy; 2025 Psicofitt. Todos los derechos reservados. | Diseñado por [Tu Nombre]</p>
+    </div>
+</footer>
+
+<script>
+    // Configura tu cliente Supabase
+    const supabaseUrl = '[TU_NUEVA_URL_SUPABASE]'; // <--- PEGA TU URL
+    const supabaseAnonKey = '[TU_NUEVA_KEY_SUPABASE]'; // <--- PEGA TU ANON KEY
+    const { createClient } = supabase;
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+
+    let currentStep = 1;
+    let selectedProfessionalId = null; // Se cargará automáticamente
+    let selectedServiceId = null;
+    let selectedTimeSlot = null;
+    let currentWeekStart = new Date(); // La semana actual
+
+    // Ajusta la semana al Lunes de la semana actual
+    function getStartOfWeek(date) {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1); // Ajusta a Lunes
+        return new Date(date.setDate(diff));
+    }
+
+    currentWeekStart = getStartOfWeek(currentWeekStart);
+
+
+    // FUNCIONES PRINCIPALES DE FLUJO
+    function showStep(step) {
+        document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
+        document.getElementById(`step-${step}`).style.display = 'block';
+        currentStep = step;
+        window.scrollTo({ top: document.getElementById('agendamiento-container').offsetTop, behavior: 'smooth' });
+    }
+
+    // CARGA AUTOMÁTICA DEL ÚNICO PROFESIONAL
+    async function loadUniqueProfessional() {
+        const { data: profData, error: profError } = await supabaseClient
+            .from('profesionales')
+            .select('id')
+            .limit(1);
+
+        if (profError || profData.length === 0) {
+            console.error("Error al cargar profesional único:", profError || "No se encontró profesional.");
+            alert("No se encontró al profesional disponible para agendar. Por favor, contacta a soporte.");
+            return false;
+        }
+        
+        selectedProfessionalId = profData[0].id;
+        return true;
+    }
+
+
+    // PASO 1: SELECCIONAR SERVICIO (FLUJO: 1 -> 3)
+    async function loadServices() {
+        const services = [
+            { id: 1, name: "Sesión de Terapia Individual (50 min)", price: "50.000 CLP" },
+            { id: 2, name: "Terapia de Pareja (75 min)", price: "70.000 CLP" },
+            { id: 3, name: "Orientación Vocacional (Sesión inicial)", price: "45.000 CLP" },
+            // Puedes agregar más servicios aquí
+        ];
+        
+        const servicesContainer = document.getElementById('services-container');
+        servicesContainer.innerHTML = services.map(service => `
+            <div class="service-card" data-service-id="${service.id}" data-service-name="${service.name}" data-price="${service.price}" onclick="selectService(${service.id}, '${service.name}', '${service.price}')">
+                <h4>${service.name}</h4>
+                <p>${service.price}</p>
+            </div>
+        `).join('');
+
+        // Cargar el profesional al inicio
+        await loadUniqueProfessional();
+    }
+    
+    // Al seleccionar un servicio, avanza al paso de fechas (3)
+    function selectService(id, name, price) {
+        selectedServiceId = id;
+        document.getElementById('selected-service-display').textContent = name;
+        document.getElementById('selected-price-display').textContent = price;
+
+        // Quita la clase 'selected' de todas las cards
+        document.querySelectorAll('.service-card').forEach(card => card.classList.remove('selected'));
+        // Añade la clase 'selected' a la card clickeada
+        document.querySelector(`.service-card[data-service-id="${id}"]`).classList.add('selected');
+
+        loadWeekSchedule(); // Cargar la agenda
+        showStep(3); // Saltar directamente al paso 3
+    }
+
+
+    // PASO 2: CARGA DE HORARIO (Paso 3 en el flujo visual)
+    function formatDate(date) {
+        return date.toLocaleDateString('es-ES', { weekday: 'short', day: '2-digit', month: 'short' });
+    }
+
+    function formatTime(timeString) {
+        const [hours, minutes] = timeString.split(':');
+        return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+
+    async function loadWeekSchedule() {
+        const startDate = new Date(currentWeekStart);
+        const endDate = new Date(startDate);
+        endDate.setDate(startDate.getDate() + 6); // Siete días después
+
+        document.getElementById('current-week-display').textContent = 
+            `${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
+        
+        // Cargar horarios disponibles y reservados para este profesional
+        const { data: agenda, error } = await supabaseClient
+            .from('agendas')
+            .select('*')
+            .eq('profesional_id', selectedProfessionalId)
+            .gte('fecha', startDate.toISOString().split('T')[0])
+            .lte('fecha', endDate.toISOString().split('T')[0])
+            .order('fecha', { ascending: true })
+            .order('hora_inicio', { ascending: true });
+
+        if (error) {
+            console.error('Error al cargar agenda:', error);
+            document.getElementById('schedule-container').innerHTML = '<p style="color:red;">Error al cargar la agenda. Intenta más tarde.</p>';
+            return;
+        }
+
+        const scheduleContainer = document.getElementById('schedule-container');
+        scheduleContainer.innerHTML = ''; // Limpiar el contenedor
+
+        let currentDay = new Date(startDate);
+        const today = new Date(); today.setHours(0, 0, 0, 0);
+
+        for (let i = 0; i < 7; i++) {
+            const dayKey = currentDay.toISOString().split('T')[0];
+            const isPastDay = currentDay < today && currentDay.toDateString() !== today.toDateString();
+
+            const dayAgenda = agenda.filter(item => item.fecha === dayKey);
+            const daySlots = dayAgenda.map(slot => {
+                const isBooked = !slot.disponible;
+                // Si la hora ya pasó hoy, o es un día anterior
+                const isUnavailable = isPastDay || (currentDay.toDateString() === today.toDateString() && new Date(`${dayKey}T${slot.hora_inicio}`) < new Date());
+
+                return `<div class="time-slot ${isBooked || isUnavailable ? 'booked' : ''}" 
+                             data-id="${slot.id}" 
+                             data-date="${dayKey}" 
+                             data-time="${formatTime(slot.hora_inicio)}"
+                             onclick="${isBooked || isUnavailable ? '' : 'selectTimeSlot(this)'}">
+                           ${formatTime(slot.hora_inicio)}
+                        </div>`;
+            }).join('');
+
+            scheduleContainer.innerHTML += `
+                <div style="margin-bottom: 25px; border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
+                    <h4 style="color:var(--primary); margin-top:0;">${formatDate(currentDay)}</h4>
+                    ${daySlots.length > 0 ? `<div class="time-slot-container">${daySlots}</div>` : 
+                        '<p>No hay horarios disponibles.</p>'}
+                </div>
+            `;
+            currentDay.setDate(currentDay.getDate() + 1); // Siguiente día
+        }
+
+        // Resetear la selección de hora
+        selectedTimeSlot = null;
+        document.getElementById('next-step-4-btn').disabled = true;
+    }
+
+    function changeWeek(direction) {
+        currentWeekStart.setDate(currentWeekStart.getDate() + direction * 7);
+        loadWeekSchedule();
+    }
+
+    function selectTimeSlot(element) {
+        // Deseleccionar todos los slots
+        document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+        // Seleccionar el slot clickeado
+        element.classList.add('selected');
+        
+        selectedTimeSlot = {
+            id: element.dataset.id,
+            date: element.dataset.date,
+            time: element.dataset.time
+        };
+        document.getElementById('next-step-4-btn').disabled = false;
+    }
+
+    function validateTimeSelection() {
+        if (!selectedTimeSlot) {
+            alert('Por favor, selecciona una hora disponible.');
+            return;
+        }
+        // Actualizar el resumen y pasar al paso 4
+        const serviceName = document.getElementById('selected-service-display').textContent;
+        const servicePrice = document.getElementById('selected-price-display').textContent;
+        
+        document.getElementById('summary-service').textContent = serviceName;
+        document.getElementById('summary-datetime').textContent = `${selectedTimeSlot.date} a las ${selectedTimeSlot.time} hrs.`;
+        document.getElementById('summary-price').textContent = servicePrice;
+        
+        showStep(4);
+    }
+
+
+    // PASO 3: CONFIRMACIÓN Y RESERVA (Paso 4 en el flujo visual)
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const statusMessage = document.getElementById('booking-status-message');
+        const confirmBtn = document.getElementById('confirm-booking-btn');
+        confirmBtn.disabled = true;
+        statusMessage.textContent = 'Procesando tu reserva...';
+        statusMessage.style.color = var(--accent);
+
+        if (!selectedTimeSlot || !selectedServiceId || !selectedProfessionalId) {
+            statusMessage.textContent = 'Error: Faltan datos de la selección. Vuelve al Paso 1.';
+            statusMessage.style.color = 'red';
+            confirmBtn.disabled = false;
+            return;
+        }
+
+        // Datos del formulario
+        const nombre = document.getElementById('paciente_nombre').value;
+        const rut = document.getElementById('paciente_rut').value;
+        const email = document.getElementById('paciente_email').value;
+        const celular = document.getElementById('paciente_celular').value;
+        const prevision = document.getElementById('paciente_prevision').value;
+        const comentarios = document.getElementById('comentarios').value;
+
+        try {
+            // 1. Marcar la hora como NO disponible y actualizar datos del paciente en la tabla 'agendas'
+            const { error: updateError } = await supabaseClient
+                .from('agendas')
+                .update({
+                    disponible: false,
+                    paciente_nombre: nombre,
+                    paciente_rut: rut,
+                    paciente_email: email,
+                    paciente_celular: celular,
+                    paciente_prevision: prevision,
+                    comentarios: comentarios
+                })
+                .eq('id', selectedTimeSlot.id); // Usamos el ID del slot seleccionado
+
+            if (updateError) throw updateError;
+            
+            // Éxito: Mostrar el resumen final y pasar al paso 5
+            const finalSummary = `Hora: ${selectedTimeSlot.date} a las ${selectedTimeSlot.time} | Paciente: ${nombre}`;
+            document.getElementById('final-summary').textContent = finalSummary;
+
+            showStep(5);
+
+        } catch (error) {
+            console.error('Error al confirmar la reserva:', error);
+            statusMessage.textContent = `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada. Error: ${error.message}`;
+            statusMessage.style.color = 'red';
+            confirmBtn.disabled = false;
+        }
+    });
+
+    // Inicialización
+    document.addEventListener('DOMContentLoaded', () => {
+        loadServices(); // Inicia el flujo en el paso 1
+        showStep(1); 
+    });
+</script>
+</body>
+</html>
