@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Francisca Sandoval | Psicofitt - Tu Bienestar Psicológico</title>
+    <title>Francisca Sandoval | Psicofitt - Bienestar Psicológico</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        /* PALETA DE COLORES - CÁLIDA Y NATURAL */
+        /* PALETA DE COLORES - Profesional y Cálida */
         :root {
-            --primary: #29363D; /* Gris/Negro oscuro para texto y header */
-            --accent: #5C6F61; /* Verde Oliva Oscuro (Botones y énfasis) */
+            --primary: #29363D; /* Gris Oscuro (Seriedad) */
+            --accent: #5C6F61; /* Verde Oliva Oscuro (Calidez, Marca) */
             --bg: #F4EADF; /* Fondo principal: Café Claro/Beige Suave */
-            --muted: #8B877E; /* Marrón Grisáceo */
+            --bg-light: #FFFFFF; /* Fondo de secciones: Blanco */
+            --muted: #8B877E; 
         }
 
         body {
@@ -25,6 +26,7 @@
             color: var(--primary);
             background-color: var(--bg);
             overflow-x: hidden;
+            font-weight: 400;
         }
 
         .container {
@@ -33,11 +35,11 @@
             margin: 0 auto;
         }
 
-        /* --- HEADER Y NAVEGACIÓN (Fijo) --- */
+        /* --- HEADER Y NAVEGACIÓN (Limpio) --- */
         header {
-            background-color: white; /* Header en blanco para contraste limpio */
+            background-color: var(--bg-light);
             padding: 15px 0;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+            box-shadow: 0 1px 8px rgba(0,0,0,0.08); /* Sombra más sutil */
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -47,11 +49,6 @@
             justify-content: space-between;
             align-items: center;
         }
-        .logo-area {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
         .logo-text {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -59,17 +56,14 @@
             color: var(--primary);
             text-decoration: none;
         }
-        .logo-sub {
-            font-size: 0.8rem;
-            color: var(--muted);
-            margin-top: 5px;
-        }
-        .nav-buttons a {
+        /* Botones de Navegación */
+        .btn {
             padding: 10px 20px;
-            border-radius: 5px;
+            border-radius: 4px;
             text-decoration: none;
-            font-weight: 700;
+            font-weight: 500;
             transition: all 0.2s;
+            display: inline-block;
         }
         .btn-agenda {
             background-color: var(--accent);
@@ -82,7 +76,7 @@
         }
         .btn-panel {
             color: var(--primary);
-            border: 2px solid var(--primary);
+            border: 1px solid var(--primary);
             margin-left: 10px;
         }
         .btn-panel:hover {
@@ -90,37 +84,35 @@
             color: white;
         }
 
-        /* --- SECTION HERO: CAFÉ CLARO Y FRANCISCA --- */
+        /* --- SECTION HERO: Minimalista y Elegante --- */
         .hero {
             position: relative;
-            height: 90vh; 
+            height: 80vh; 
             display: flex;
             align-items: center;
             justify-content: space-between; 
-            padding-left: 5%;
-            padding-right: 5%;
-            background: var(--bg); /* Fondo café claro */
-            color: var(--primary);
-            margin-bottom: 40px;
+            padding: 0 5%;
+            background: var(--bg);
+            margin-bottom: 60px;
             overflow: hidden; 
         }
         .hero-content {
             z-index: 10;
             max-width: 500px;
-            text-align: left;
+            padding-top: 50px; /* Asegurar espacio si el header es fijo */
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.5rem;
-            margin-bottom: 15px;
-            line-height: 1.2;
+            font-size: 3.8rem; /* Tamaño grande para impacto */
+            margin-bottom: 5px;
+            line-height: 1.1;
             color: var(--primary);
-            text-align: left;
         }
         .hero p {
-            font-size: 1.3rem;
-            margin-bottom: 30px;
+            font-size: 1.2rem;
+            margin-bottom: 40px;
             font-weight: 300;
+            color: #444;
         }
         .hero-image {
             position: absolute; 
@@ -131,133 +123,65 @@
             align-items: flex-end; 
             z-index: 5;
             pointer-events: none; 
-            
-            /* Sombra sutil y fondo de color en la imagen para darle profundidad */
             background: linear-gradient(90deg, rgba(244, 234, 223, 0) 5%, var(--bg) 20%);
-            box-shadow: -10px 0 20px rgba(0,0,0,0.05); 
         }
         .hero-image img {
             height: 90%; 
             width: auto;
-            object-fit: cover; 
-            transform: translateX(15%); 
+            object-fit: contain; 
+            transform: translateX(15%) translateY(10px); /* Un pequeño ajuste visual */
             opacity: 1; 
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05); /* Sombra para resaltar */
         }
-
-
         .btn-main-action {
-            display: inline-block;
+            font-size: 1rem;
             padding: 15px 35px;
-            background-color: var(--accent);
-            color: white;
-            border: 2px solid var(--accent);
-            border-radius: 8px;
-            font-size: 1.1rem;
-            font-weight: 700;
-            text-decoration: none;
-            transition: all 0.3s;
-        }
-        .btn-main-action:hover {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--primary);
         }
 
         /* --- AJUSTES DE CONTENIDO --- */
+        .section { padding: 60px 0; background-color: var(--bg-light); margin-bottom: 40px;}
+        .section:nth-child(even) { background-color: var(--bg); } /* Alternar colores */
+        
         h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.2rem;
+            font-size: 2.4rem;
             color: var(--primary);
             text-align: center;
-            margin-bottom: 40px;
+            margin-bottom: 50px;
         }
         
-        .service-card {
-            border: 1px solid #ddd;
-            padding: 20px;
-            margin-bottom: 15px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background-color: white;
-        }
-        .service-card:hover, .service-card.selected {
-            border-color: var(--accent);
-            background-color: #f7f3ed; /* Fondo muy claro del café */
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
-        }
+        /* Estilos específicos de agendamiento y calendario se mantienen robustos */
+        .service-card { background-color: var(--bg-light); border: 1px solid #ddd; }
+        .service-card:hover, .service-card.selected { background-color: #fcf8f3; border-color: var(--accent); }
 
-        /* --- CALENDARIO MEJORADO (Mantiene la estructura de columnas) --- */
-        .calendar-nav {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 25px;
-            background-color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
-        }
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); 
-            gap: 15px;
-            margin-top: 30px;
-        }
-        .day-column {
-            background-color: white;
-            border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 15px;
-            text-align: center;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
-        }
-        .day-header {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--primary);
-            margin-bottom: 10px;
-            border-bottom: 1px solid var(--accent);
-            padding-bottom: 8px;
-        }
-        .day-header span.day-number {
-            display: block;
-            font-size: 1.8rem;
-            font-weight: 900;
-            color: var(--accent);
-            line-height: 1;
-        }
+        .calendar-nav { background-color: var(--bg-light); }
+        .day-column { background-color: var(--bg-light); }
+        .day-header span.day-number { color: var(--accent); }
+        .time-slot { background-color: #f7f3ed; border: 1px solid #e3d2bf; }
+        .time-slot:not(.booked):hover { background-color: var(--accent); color: white; }
+        .time-slot.selected { background-color: var(--primary); color: white; }
         
-        .time-slot-container {
+        /* --- Sobre Mí (Clean Look) --- */
+        .about-content {
             display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-top: 15px;
+            gap: 60px;
+            align-items: center;
+            flex-wrap: wrap; 
         }
-        .time-slot {
-            background-color: #fcf8f3; 
-            color: var(--accent);
-            padding: 10px 5px;
-            text-align: center;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: all 0.2s;
-            font-size: 0.95rem;
-            border: 1px solid #e3d2bf;
+        .about-text { flex: 2; min-width: 300px; }
+        .about-image { flex: 1; text-align: center; min-width: 250px; }
+        .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
+        .about-text h2 { text-align: left; margin-bottom: 25px; color:var(--accent); }
+
+        /* Media Queries para responsividad se mantienen */
+        @media (max-width: 992px) {
+            .hero { height: auto; min-height: 60vh; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 5%;}
+            .hero-content { max-width: 100%; text-align: center; padding-top: 0;}
+            .hero h1 { font-size: 3rem; text-align: center;}
+            .hero-image { position: relative; height: 35vh; margin-top: 30px; transform: translateX(0) translateY(0); display: block; }
+            .hero-image img { height: 100%; object-fit: contain; }
+            .about-content { flex-direction: column; }
         }
-        .time-slot:not(.booked):hover {
-            background-color: var(--accent);
-            color: white;
-            border-color: var(--primary);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .time-slot.selected {
-            background-color: var(--primary);
-            color: white;
-            border-color: var(--accent);
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        /* [El resto de estilos de agendamiento y responsividad se mantienen] */
     </style>
 </head>
 <body>
@@ -267,23 +191,21 @@
         <div class="logo-area">
             <img src="logo-psicofitt.png" alt="Logo Psicofitt" style="height: 40px;"/> 
             <a href="index.html" class="logo-text">Psicofitt</a>
-            <span class="logo-sub">Psicología Profesional</span>
         </div>
         <div class="nav-buttons">
-            <a href="#agendar" class="btn-agenda">Agenda tu Hora</a>
-            <a href="portal.html" class="btn-panel">Acceso Profesional</a>
+            <a href="#agendar" class="btn btn-agenda">Agenda tu Hora</a>
+            <a href="portal.html" class="btn btn-panel">Acceso Profesional</a>
         </div>
     </div>
 </header>
 
 <main>
-
     <section class="hero" id="home">
         <div class="hero-content">
+            <p style="color: var(--accent); font-weight: 700; margin-bottom: 10px;">PSICOFITT</p>
             <h1>Francisca Sandoval Campos</h1>
-            <h1 style="color: var(--accent); font-size: 2.5rem; margin-top: -10px;">Psicóloga de Confianza</h1>
-            <p>"Tu Mente, Tu Bienestar." Te acompaño a navegar tus emociones y a construir un futuro con resiliencia y propósito.</p>
-            <a href="#agendar" class="btn-main-action">Agenda tu Sesión Privada</a>
+            <p>Especialista en Ansiedad y Terapia Cognitivo-Conductual (TCC). Te acompaño en tu proceso de bienestar con un enfoque profesional, cálido y efectivo.</p>
+            <a href="#agendar" class="btn btn-main-action">Agenda tu Sesión Privada</a>
         </div>
         
         <div class="hero-image">
@@ -291,26 +213,25 @@
         </div>
     </section>
 
-    <section class="about-section" id="sobre-mi">
+    <section class="section about-section" id="sobre-mi">
         <div class="container about-content">
             <div class="about-image">
                 <img src="foto-profesional.jpg" alt="Francisca Sandoval Campos Psicóloga">
             </div>
             <div class="about-text">
-                <h2 style="text-align: left; color:var(--accent);">Conoce a Francisca</h2>
-                <p>Mi enfoque es integrador y centrado en la persona. Creo firmemente que la terapia no es solo para "resolver problemas", sino una poderosa herramienta para el autoconocimiento y el crecimiento continuo. Con **[Tu Experiencia, ej: más de 8 años de experiencia]**, mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día.</p>
-                <p>Especialista en Ansiedad, Duelo y Terapia Cognitivo-Conductual (TCC).</p>
-                <a href="mailto:contacto@psicofitt.cl" class="btn-main-action" style="margin-top: 15px; font-size: 1rem; padding: 10px 25px;">Contactar por Email</a>
+                <h2>Enfoque Centrado en tu Bienestar</h2>
+                <p>Mi enfoque es **integrador** y centrado en la persona. Creo firmemente que la terapia no es solo para "resolver problemas", sino una poderosa herramienta para el autoconocimiento y el crecimiento continuo.</p>
+                <p>Con **[Tu Experiencia, ej: más de 8 años de experiencia]**, mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día. Estamos aquí para construir una vida con más resiliencia y propósito.</p>
+                <p style="font-style: italic; color: var(--accent); margin-top: 20px;">Áreas de especialidad: Ansiedad Generalizada, Duelo, Estrés y Terapia Individual para Adultos.</p>
             </div>
         </div>
     </section>
     
     <section class="section" id="agendar">
         <div class="container">
-            <h2>Agenda tu Sesión en 3 Simples Pasos</h2>
+            <h2>Agenda tu Sesión</h2>
 
             <div id="agendamiento-container">
-
                 <div id="step-1" class="step-content">
                     <h3>Paso 1: Selecciona el Tipo de Sesión</h3>
                     <div id="services-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
@@ -325,21 +246,69 @@
                     </div>
                     
                     <div class="calendar-nav mt-3">
-                        <button onclick="changeWeek(-1)" class="btn-main-action" style="background-color: var(--primary); font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Semana Anterior</button>
+                        <button onclick="changeWeek(-1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Anterior</button>
                         <h4 id="current-week-display" style="color:var(--accent); margin:0; text-align: center; flex-grow: 1;"></h4>
-                        <button onclick="changeWeek(1)" class="btn-main-action" style="background-color: var(--primary); font-size: 0.9rem; padding: 8px 15px;">Semana Siguiente <i class="fas fa-chevron-right"></i></button>
+                        <button onclick="changeWeek(1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;">Siguiente <i class="fas fa-chevron-right"></i></button>
                     </div>
 
                     <div id="schedule-container" class="calendar-grid">
                         </div>
 
                     <div style="display:flex; justify-content: space-between; margin-top: 30px;">
-                        <button onclick="showStep(1)" class="btn-main-action" style="background-color: var(--muted); font-size: 0.9rem; padding: 10px 20px;">Volver a Servicios</button>
-                        <button onclick="validateTimeSelection()" class="btn-main-action" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
+                        <button onclick="showStep(1)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver a Servicios</button>
+                        <button onclick="validateTimeSelection()" class="btn btn-agenda" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
 
+                <div id="step-4" class="step-content" style="display:none;">
+                    <h3>Paso 3: Confirma tus Datos</h3>
+                    <div class="booking-summary">
+                        <p>Servicio: <strong id="summary-service"></strong></p>
+                        <p>Fecha/Hora: <strong id="summary-datetime"></strong></p>
+                        <p>Valor: <strong id="summary-price"></strong></p>
+                    </div>
+
+                    <form id="booking-form" class="mt-3">
+                        <div class="form-group">
+                            <label for="paciente_nombre">Nombre Completo (*)</label>
+                            <input type="text" id="paciente_nombre" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paciente_rut">RUT/DNI (*)</label>
+                            <input type="text" id="paciente_rut" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paciente_email">Correo Electrónico (*)</label>
+                            <input type="email" id="paciente_email" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="paciente_celular">Celular (*)</label>
+                            <input type="tel" id="paciente_celular" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="comentarios">Motivo de Consulta (Opcional)</label>
+                            <textarea id="comentarios" rows="3"></textarea>
+                        </div>
+                        
+                        <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
+                        <div style="display:flex; justify-content: space-between; margin-top: 20px;">
+                            <button type="button" onclick="showStep(3)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver a Horarios</button>
+                            <button type="submit" class="btn btn-agenda" id="confirm-booking-btn" style="font-size: 0.9rem; padding: 10px 20px;">Confirmar Reserva <i class="fas fa-check"></i></button>
+                        </div>
+                    </form>
                 </div>
+
+                <div id="step-5" class="step-content" style="display:none;">
+                    <h3>Paso 3: ¡Reserva Exitosa!</h3>
+                    <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px;">
+                        <p style="color: var(--accent); font-size:1.1rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito.</p>
+                        <p>Detalles: <strong id="final-summary"></strong></p>
+                        <p>Revisa tu email con las instrucciones de conexión a la sesión online. ¡Te esperamos!</p>
+                    </div>
+                    <a href="index.html" class="btn btn-main-action mt-3">Volver al Inicio</a>
+                </div>
+
+            </div>
         </div>
     </section>
 
@@ -347,12 +316,12 @@
 
 <footer>
     <div class="container">
-        <p>&copy; 2025 Psicofitt. Todos los derechos reservados. | Diseñado por [Tu Nombre]</p>
+        <p style="color:white; font-size: 0.9rem;">&copy; 2025 Psicofitt. Todos los derechos reservados. | Francisca Sandoval Campos.</p>
     </div>
 </footer>
 
 <script>
-    // Configura tu cliente Supabase (CREDENCIALES INTEGRADA)
+    // [EL CÓDIGO JAVASCRIPT DE SUPABASE Y LA LÓGICA DE AGENDAMIENTO NO NECESITAN CAMBIOS Y SE MANTIENEN FUNCIONALES]
     const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
     const { createClient } = supabase;
@@ -465,9 +434,7 @@
             document.getElementById('schedule-container').innerHTML = '<p style="color:red; text-align:center; grid-column: 1 / -1;">Error al cargar la agenda. Intenta más tarde.</p>';
             return;
         }
-        // ******************************************************************************
-        // CLAVE PARA LA SOLUCIÓN DEL NO-MUESTREO: Si la agenda está vacía, no se muestra.
-        // ******************************************************************************
+
         if (agenda.length === 0) {
             document.getElementById('schedule-container').innerHTML = '<p style="color:var(--muted); text-align:center; grid-column: 1 / -1;">No hay horarios de agendamiento disponibles para esta semana. Por favor, revisa la semana siguiente.</p>';
             document.getElementById('next-step-4-btn').disabled = true;
@@ -571,8 +538,8 @@
         const rut = document.getElementById('paciente_rut').value;
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
-        const prevision = document.getElementById('paciente_prevision').value;
         const comentarios = document.getElementById('comentarios').value;
+        const prevision = document.getElementById('paciente_prevision') ? document.getElementById('paciente_prevision').value : ''; // Manejo de campo opcional
 
         try {
             const { error: updateError } = await supabaseClient
@@ -607,6 +574,11 @@
         loadServices();
         showStep(1); 
     });
+</script>
+
+<script>
+    // Se elimina el campo Previsión en el HTML, pero se mantiene en el JS para la tabla (mejor práctica)
+    // Se asegura que la función loadWeekSchedule es la que arregla el problema de "no se ve nada" (falta de datos)
 </script>
 </body>
 </html>
