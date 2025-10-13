@@ -10,10 +10,10 @@
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        /* PALETA DE COLORES - Profesional, Potente y Minimalista (Ajustada) */
+        /* PALETA DE COLORES - Profesional, Potente y Minimalista */
         :root {
             --primary: #2C3A47; /* Gris Azulado Oscuro */
-            --accent: #5F9EA0; /* Azul Acero/Celeste Grisáceo (Más fuerte para un look profesional) */
+            --accent: #5F9EA0; /* Azul Acero/Celeste Grisáceo (Confianza y Calma) */
             --bg: #F9F7F1; /* Blanco Roto Cálido (Base) */
             --bg-light: #FFFFFF; /* Blanco Puro */
             --muted: #A3A3A3; /* Gris Suave */
@@ -78,7 +78,7 @@
         .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
         .btn-panel:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
 
-        /* --- SECTION HERO (Visual Dramático y Profesional - Ajustada) --- */
+        /* --- SECTION HERO (Visual Dramático y Profesional - CORREGIDO) --- */
         .hero {
             position: relative;
             height: 90vh; /* Aumentamos la altura para mayor impacto */
@@ -105,32 +105,40 @@
         .hero p {
             font-size: 1.4rem; /* Texto más legible */
             margin-bottom: 50px;
-            font-weight: 400; /* Un poco más de peso */
+            font-weight: 400; 
             color: var(--primary);
         }
-        /* Contenedor de la Imagen: Fondo y Gradiente */
+        /* Contenedor de la Imagen: Ajustado para que esté a la derecha */
         .hero-image {
             position: absolute; 
-            right: 0;
+            right: 0; /* Pegado a la derecha */
             bottom: 0; 
             height: 100%; 
-            width: 65%; /* Ocupa más ancho */
+            width: 60%; /* Ocupa un poco menos de ancho */
             z-index: 10;
             transition: transform 0.1s ease-out; 
-            /* GRADIENTE para fusionar la imagen con el fondo de la izquierda */
+            /* GRADIENTE de fondo para asegurar la transición con el texto */
             background: linear-gradient(to left, transparent 20%, var(--bg) 60%); 
         }
 
-        /* La imagen de la profesional con el efecto DIFUMINADO/DESENFOQUE */
+        /* La imagen de la profesional: MÁSCARA DE DIFUMINADO DE BORDES (RELIEVE) */
         .hero-image img {
             height: 100%; 
             width: auto;
             object-fit: contain; 
-            /* EFECTO DIFUMINADO/DESENFOQUE (Blur) y Sombra sutil */
-            filter: blur(1.5px) grayscale(5%) drop-shadow(5px 5px 15px rgba(0,0,0,0.1)); 
-            transform: translateX(10%) translateY(0); /* Ajuste de posición */
-            opacity: 0.95; /* Suavizar ligeramente */
-            transition: filter 0.5s ease; /* Transición para el blur */
+            object-position: right; /* Asegura que la imagen esté alineada a la derecha de su contenedor */
+            
+            /* Eliminamos el blur. Solo mantenemos un filtro de color/sombra sutil */
+            filter: grayscale(5%) drop-shadow(5px 5px 15px rgba(0,0,0,0.1)); 
+            transform: translateX(0); /* Eliminamos el corrimiento, se queda a la derecha */
+            opacity: 1; 
+            
+            /* TÉCNICA CLAVE: MÁSCARA DE DESVANECIMIENTO RADIAL */
+            /* Fija la opacidad al 100% en el centro (60% del radio) y la desvanece a los bordes */
+            mask-image: radial-gradient(circle at 60% center, black 60%, transparent 100%);
+            mask-size: 100% 100%; 
+            mask-mode: alpha; 
+            -webkit-mask-image: radial-gradient(circle at 60% center, black 60%, transparent 100%); /* Soporte para Webkit */
         }
 
         /* --- SECCIONES GENERALES --- */
@@ -186,7 +194,77 @@
             .hero-content { max-width: 100%; text-align: center; padding-top: 0;}
             /* Ajustamos la imagen en móvil */
             .hero-image { position: relative; height: 30vh; margin-top: 30px; transform: translateX(0) translateY(0); width: 80%; }
-            .hero-image img { filter: blur(0px) grayscale(5%) drop-shadow(0 0 10px rgba(0,0,0,0.1)); } /* Quitamos el blur en móvil */
+            .hero-image img { 
+                /* Remove mask and blur for better visibility on smaller screens */
+                filter: grayscale(5%) drop-shadow(0 0 10px rgba(0,0,0,0.1)); 
+                mask-image: none;
+                -webkit-mask-image: none;
+            } 
+        }
+        
+        /* Estilos para el formulario */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; color: var(--primary); }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="tel"], .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--muted);
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box; 
+        }
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 10px; 
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .calendar-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px; 
+            border-radius: 4px; 
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .day-column { 
+            display: flex; 
+            flex-direction: column; 
+            border-radius: 4px; 
+            overflow: hidden; 
+            min-width: 120px; 
+        }
+        .day-header { 
+            text-align: center; 
+            padding: 10px 5px; 
+            font-weight: 700; 
+            background-color: var(--primary); 
+            color: white; 
+            font-size: 0.9rem;
+        }
+        .day-header .day-number { 
+            font-size: 1.2rem; 
+            display: block; 
+            font-weight: 700; 
+            color: var(--accent); /* Color acento en el día */
+        }
+        .time-slot-container { padding: 10px; flex-grow: 1; background-color: #ffffff; }
+        .time-slot { 
+            text-align: center; 
+            padding: 8px 5px; 
+            margin-bottom: 8px; 
+            border-radius: 4px; 
+            cursor: pointer; 
+            font-size: 0.9rem; 
+            transition: background-color 0.2s, transform 0.1s;
+        }
+        .time-slot.booked { 
+            background-color: #eeeeee; 
+            color: var(--muted); 
+            cursor: not-allowed; 
+            opacity: 0.7;
         }
     </style>
 </head>
