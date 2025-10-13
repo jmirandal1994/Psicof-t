@@ -190,7 +190,7 @@
             font-size: 2.2rem; 
         }
         
-        /* --- ESTILOS PARA EL CARRUSEL DE LOGOS DE REEMBOLSO --- */
+        /* --- ESTILOS PARA EL CARRUSEL DE LOGOS DE REEMBOLSO (¡A COLOR!) --- */
         .slider-container {
             width: 100%;
             overflow: hidden;
@@ -209,11 +209,14 @@
             width: auto;
             margin: 0 40px;
             vertical-align: middle;
-            filter: grayscale(100%) opacity(70%); /* Logos grises y sutiles */
+            
+            /* AJUSTE CLAVE: Eliminamos grayscale, mantenemos opacidad a 85% */
+            filter: opacity(85%); 
+            
             transition: filter 0.3s;
         }
         .slider-logo:hover {
-            filter: grayscale(0%) opacity(100%);
+            filter: opacity(100%); /* Opacidad total al pasar el mouse */
         }
         @keyframes scroll-logos {
             0% {
