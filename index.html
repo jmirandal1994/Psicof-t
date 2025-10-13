@@ -295,7 +295,7 @@
 
     <section class="section" id="agendar">
         <div class="container">
-            <h2>Agenda tu Sesión en 4 Simples Pasos</h2>
+            <h2>Agenda tu Sesión en 3 Simples Pasos</h2>
 
             <div id="agendamiento-container">
 
@@ -366,7 +366,7 @@
                 </div>
 
                 <div id="step-5" class="step-content" style="display:none;">
-                    <h3>Paso 4: ¡Reserva Exitosa!</h3>
+                    <h3>Paso 3: ¡Reserva Exitosa!</h3>
                     <div class="booking-summary" style="background-color: #e6f7e6; border-color: var(--accent);">
                         <p style="color: var(--accent); font-size:1.1rem;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito. Recibirás un correo de confirmación.</p>
                         <p>Detalles: <strong id="final-summary"></strong></p>
@@ -389,8 +389,8 @@
 
 <script>
     // Configura tu cliente Supabase
-    const supabaseUrl = '[TU_NUEVA_URL_SUPABASE]'; // <--- PEGA TU URL
-    const supabaseAnonKey = '[TU_NUEVA_KEY_SUPABASE]'; // <--- PEGA TU ANON KEY
+    const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
