@@ -68,9 +68,16 @@
             z-index: 1000;
         }
         .navbar { display: flex; justify-content: space-between; align-items: center; }
+        /* AJUSTE LOGO SIZE */
         .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-area img { height: 45px; }
-        .logo-text { font-family: 'Playfair Display', serif; font-size: 1.8rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+        .logo-area img { height: 60px; } 
+        .logo-text { 
+            font-family: 'Playfair Display', serif; 
+            font-size: 2.2rem; /* AJUSTADO */
+            font-weight: 700; 
+            color: var(--primary); 
+            text-decoration: none; 
+        }
         
         /* Botones y Hover */
         .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; }
@@ -79,7 +86,7 @@
         .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
         .btn-panel:hover { background-color: var(--primary); color: white; border-color: var(--primary); }
 
-        /* --- SECTION HERO (Fondo de Puesta de Sol y Overlay Mejorado) --- */
+        /* --- SECTION HERO --- */
         .hero {
             position: relative;
             height: 85vh; 
@@ -90,15 +97,15 @@
             margin-bottom: 80px; 
             overflow: hidden; 
             
-            /* NUEVO FONDO DE PUESTA DE SOL */
+            /* FONDO PUESTA DE SOL */
             background-image: url('7B7421AF-ED37-47DE-BCD2-4C0A4346C38A.jpg');
             background-size: cover; 
             background-repeat: no-repeat; 
             
-            /* CORRECCIÓN CRÍTICA: Mueve el punto focal de la imagen 30% desde la parte superior para mostrar el horizonte */
+            /* CORRECCIÓN DE POSICIÓN PARA IMAGEN VERTICAL */
             background-position: center 30%;
             
-            /* OVERLAY OSCURO PARA LEGIBILIDAD (55% de opacidad) */
+            /* OVERLAY OSCURO PARA LEGIBILIDAD */
             box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.55); 
         }
         .hero-content {
@@ -111,23 +118,22 @@
             font-size: 5rem; 
             margin-bottom: 15px;
             line-height: 1;
-            color: white; /* Texto blanco sobre el overlay */
+            color: white; 
             text-shadow: 1px 1px 5px rgba(0,0,0,0.7); 
         }
         .hero p {
             font-size: 1.4rem; 
             margin-bottom: 50px;
             font-weight: 400; 
-            color: rgba(255, 255, 255, 0.9); /* Texto blanco suave */
+            color: rgba(255, 255, 255, 0.9); 
             text-shadow: 1px 1px 5px rgba(0,0,0,0.5); 
         }
-        /* Ajuste específico para el texto de acento en el Hero */
         .hero-content p:nth-child(1) {
-             color: var(--bright-accent) !important; /* Dorado brillante */
+             color: var(--bright-accent) !important; 
              text-shadow: none;
         }
 
-        /* Contenedor de la Imagen: Ahora más pequeño y centrado a la derecha */
+        /* Contenedor de la Imagen: Más pequeño y contenido */
         .hero-image {
             position: absolute; 
             right: 5%; 
@@ -139,20 +145,14 @@
             transition: transform 0.1s ease-out; 
             background: none; 
         }
-
-        /* La imagen de la profesional: Contenida y con desvanecimiento de bordes */
         .hero-image img {
             height: 100%; 
             width: 100%;
             object-fit: contain; 
             object-position: right bottom; 
-            
-            /* Ajuste de filtros para que se vea mejor sobre el fondo oscuro */
             filter: grayscale(1%) drop-shadow(0 10px 20px rgba(0,0,0,0.1)) brightness(1.1); 
             transform: translateX(0); 
             opacity: 1; 
-            
-            /* MÁSCARA DE DESVANECIMIENTO RADIAL (Relieve) */
             mask-image: radial-gradient(circle at 75% 75%, black 60%, transparent 100%);
             mask-size: 100% 100%; 
             mask-mode: alpha; 
@@ -175,7 +175,7 @@
             text-align: center;
             margin-bottom: 60px;
         }
-        /* Servicios y Hover 3D */
+        /* Servicios y Hover */
         .service-card {
             background-color: var(--bg-light); 
             border: 1px solid #E0E0E0;
@@ -186,13 +186,7 @@
             transform: translateY(-5px); 
             box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
         }
-        /* Calendario */
-        .calendar-nav { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
-        .day-column { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
-        .day-header span.day-number { color: var(--accent); }
-        .time-slot { background-color: #f7f3ed; border: 1px solid #e3d2bf; color: var(--primary); }
-        .time-slot:not(.booked):hover { background-color: var(--accent); color: white; border-color: var(--primary); }
-        .time-slot.selected { background-color: var(--primary); color: white; border-color: var(--accent); }
+
         /* Sobre Mí */
         .about-content { display: flex; gap: 60px; align-items: center; flex-wrap: wrap; }
         .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
@@ -253,25 +247,59 @@
             box-sizing: border-box; 
         }
 
-        /* Media Queries */
+        /* ======================================================= */
+        /* === MEDIA QUERIES PARA ADAPTACIÓN A CELULAR (MÓVIL) === */
+        /* ======================================================= */
+
         @media (max-width: 992px) {
+            
+            /* HEADER: Los botones se apilan */
+            .navbar { flex-direction: column; gap: 15px; }
+            .nav-buttons { display: flex; justify-content: center; width: 100%; gap: 10px;}
+            .btn-agenda, .btn-panel { flex-grow: 1; text-align: center; margin-left: 0; }
+            .logo-area { margin-bottom: 10px; }
+
+
+            /* HERO SECTION: Contenido centrado y apilado */
             .hero { 
                 height: auto; 
-                min-height: 60vh; 
+                min-height: 80vh; 
                 flex-direction: column; 
                 justify-content: center; 
                 align-items: center; 
                 text-align: center; 
                 padding: 40px 5%;
-                /* Overlay en móvil */
-                box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); 
+                background-position: center center; /* Centramos el fondo para móvil */
+                box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); /* Overlay más ligero en móvil */
             }
-            .hero-content { max-width: 100%; padding-right: 0; }
-            .hero h1 { font-size: 3.5rem; text-align: center;}
+            .hero-content { 
+                max-width: 100%; 
+                padding-right: 0; 
+                order: 2; /* Movemos el texto debajo de la imagen */
+            }
+            .hero h1 { 
+                font-size: 3rem; /* Título reducido para móvil */
+                line-height: 1.1;
+                text-align: center;
+            }
+            .hero p {
+                font-size: 1.2rem; /* Párrafo reducido */
+            }
             
-            /* Ajustamos la imagen en móvil */
-            .hero-image { position: relative; height: 35vh; margin-top: 30px; width: 60%; max-width: 300px; right: auto; transform: translateX(0) translateY(0); }
+            /* IMAGEN FRANCISCA: Adaptada y encima del texto */
+            .hero-image { 
+                position: relative; 
+                height: 40vh; /* La hacemos un poco más alta */
+                margin-top: 0; 
+                margin-bottom: 20px;
+                width: 70%; 
+                max-width: 350px; 
+                right: auto; 
+                transform: translateX(0) translateY(0); 
+                order: 1; /* Movemos la imagen encima del texto */
+            }
             .hero-image img { 
+                /* Se eliminan filtros y máscaras para una visualización más limpia y simple en móvil */
                 filter: none; 
                 mask-image: none;
                 -webkit-mask-image: none;
@@ -279,6 +307,30 @@
                 border-radius: 8px; 
                 object-position: center;
             } 
+            
+            /* ABOUT SECTION: Apilamos el contenido */
+            .about-content { flex-direction: column; }
+            .about-image { order: 1; margin-bottom: 20px; }
+            .about-text { order: 2; text-align: center; }
+            .about-text h2 { text-align: center; }
+            
+            /* AGENDAMIENTO: Apilamos los servicios */
+            #services-container { flex-direction: column; }
+            .service-card { min-width: 100%; }
+            
+            /* CALENDARIO: Aseguramos el apilamiento del calendario */
+            .calendar-grid { 
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Hace que se adapten mejor al ancho */
+            }
+            
+            /* FOOTER */
+            footer .container { text-align: center; }
+        }
+        
+        /* Ajuste fino para pantallas de celular muy pequeñas (iPhone SE, etc.) */
+        @media (max-width: 576px) {
+             .hero h1 { font-size: 2.5rem; }
+             .hero-image { height: 30vh; }
         }
     </style>
 </head>
@@ -287,7 +339,7 @@
 <header>
     <div class="container navbar">
         <div class="logo-area fade-in-on-load">
-            <img src="logo-psicofit.png" alt="Logo Psicofit" style="height: 45px;"/> 
+            <img src="logo-psicofit.png" alt="Logo Psicofit"/> 
             <a href="index.html" class="logo-text">Psicofit</a>
         </div>
         <div class="nav-buttons fade-in-on-load">
@@ -314,7 +366,7 @@
     <section class="section about-section animate-section" id="sobre-mi">
         <div class="container about-content">
             <div class="about-image">
-                <img src="foto-profesional.jpg" alt="Francisca Sandoval Campos Psicóloga">
+                <img src="IMG_0821.jpg" alt="Persona reflexionando sobre el agua">
             </div>
             <div class="about-text">
                 <h2>Enfoque Centrado en tu Bienestar</h2>
@@ -411,7 +463,7 @@
 <script>
     // CREDENCIALES INTEGRADAS Y FUNCIONALES
     const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrakb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
