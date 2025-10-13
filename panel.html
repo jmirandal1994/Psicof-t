@@ -15,208 +15,279 @@
     /* ---------- Estilos (preservados + mejoras) ---------- */
     :root{
       --primary:#2b3a67;
-      --accent:#6A9B7A; /* NUEVO VERDE SALVIA */
+      --accent:#6A9B7A; /* VERDE SALVIA */
       --bg:#f8f9fa;
+      --bg-card: #ffffff;
       --muted:#6c757d;
-      --success: #1e7e34; /* Verde para citas/confirmación */
-      --danger: #d9534f; /* Rojo para pendiente/alerta */
+      --success: #1e7e34;
+      --danger: #d9534f;
       --info: #007bff;
+      --shadow-subtle: 0 4px 10px rgba(0,0,0,0.05);
     }
     *{box-sizing:border-box}
     body{
-      font-family:'Montserrat',sans-serif;
-      background:var(--bg);
-      color:#495057;
+      font-family:'Montserrat', sans-serif;
       margin:0;
+      background-color:var(--bg);
+      color:var(--primary);
     }
-
-    /* Layout */
-    .dashboard-layout{display:flex;min-height:100vh;}
+    .wrapper{
+      display:flex;
+      min-height:100vh;
+    }
     .sidebar{
       width:250px;
-      background:var(--primary);
+      background-color:var(--primary);
       color:white;
       padding:20px;
-      box-shadow:2px 0 5px rgba(0,0,0,0.1);
-      display:flex;flex-direction:column;
+      box-shadow:2px 0 10px rgba(0,0,0,0.3);
+      display:flex;
+      flex-direction:column;
+      position:sticky;
+      top:0;
+      height:100vh;
     }
-    .main-content{flex-grow:1;padding:30px;}
-
-    /* Sidebar Content */
     .logo-text{
-      font-family:'Playfair Display',serif;
+      font-family:'Playfair Display', serif;
       font-size:1.8rem;
-      margin-bottom:30px;
-      text-align:center;
+      font-weight:700;
+      margin-bottom:20px;
       color:white;
-    }
-    .user-info{
       text-align:center;
-      margin-bottom:30px;
+    }
+    .profile-info{
+      text-align:center;
       padding-bottom:20px;
       border-bottom:1px solid rgba(255,255,255,0.2);
-    }
-    .user-info h4{margin:5px 0 0;font-size:1.1rem;color:var(--accent);}
-    .user-info p{margin:0;font-size:0.9rem;color:#ccc;}
-
-    /* Menu */
-    .menu a{
-      display:flex;
-      align-items:center;
-      padding:12px 15px;
-      color:white;
-      text-decoration:none;
-      margin-bottom:10px;
-      border-radius:5px;
-      transition:background 0.2s;
-      font-weight:bold;
-    }
-    .menu a i{margin-right:10px;}
-    .menu a:hover{background:rgba(255,255,255,0.1);}
-    .menu a.active{background:var(--accent);color:var(--primary);}
-    .menu a.active:hover{background:var(--accent);}
-
-    /* Main Content Styling */
-    h1{
-      font-family:'Playfair Display',serif;
-      color:var(--primary);
-      margin-top:0;
-      font-size:2.5rem;
-    }
-    .welcome-message{
-        color:var(--muted);
-        margin-bottom:20px;
-        font-size:1.1rem;
-    }
-    .tab-content{display:none;}
-    .tab-content.active{display:block;}
-
-    /* Cards */
-    .card{
-      background:white;
-      padding:20px;
-      border-radius:8px;
-      box-shadow:0 4px 8px rgba(0,0,0,0.05);
       margin-bottom:20px;
     }
-    .card h2{
-      font-family:'Playfair Display',serif;
-      color:var(--accent);
-      margin-top:0;
-      font-size:1.5rem;
+    .profile-info h4{margin:0;font-size:1.1rem;}
+    .profile-info p{margin:5px 0 0;font-size:0.8rem;color:rgba(255,255,255,0.7);}
+    
+    .sidebar-menu a, .sidebar-menu button{
+      display:block;
+      padding:12px;
+      color:white;
+      text-decoration:none;
+      border-radius:5px;
+      margin-bottom:10px;
+      transition:background-color 0.2s;
+      font-size:1rem;
+      border:none;
+      background:none;
+      width:100%;
+      text-align:left;
+      cursor:pointer;
     }
-
-    /* Listas de Agenda/Evoluciones */
-    .appointment-list, .evolution-list{list-style:none;padding:0;}
-    .appointment-item{
-      border-bottom:1px solid #eee;
-      padding:15px 0;
+    .sidebar-menu a:hover, .sidebar-menu button:hover, .menu-btn.active{
+      background-color:var(--accent);
+    }
+    .sidebar-menu i{margin-right:10px;}
+    
+    .content{
+      flex-grow:1;
+      padding:40px;
+    }
+    .header-content{
+      margin-bottom:40px;
       display:flex;
       justify-content:space-between;
       align-items:center;
+      border-bottom:1px solid #e9ecef;
+      padding-bottom:20px;
+    }
+    .header-content h1{
+      font-family:'Playfair Display', serif;
+      color:var(--primary);
+      margin:0;
+      font-size:2.5rem;
+    }
+    .status-area{
+      font-size:0.9rem;
+      color:var(--muted);
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
+    .card{
+      background-color:var(--bg-card);
+      padding:30px;
+      border-radius:8px;
+      box-shadow:var(--shadow-subtle);
+      margin-bottom:30px;
+    }
+    h3{
+      color:var(--primary);
+      border-bottom:2px solid var(--accent);
+      padding-bottom:10px;
+      margin-top:0;
+    }
+
+    /* Tabs y Contenido */
+    .tab-content{display:none;}
+    .tab-content.active{display:block;}
+
+    /* Listas de Citas/Disponibilidad */
+    .appointment-list{
+      list-style:none;
+      padding:0;
+    }
+    .appointment-item{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      padding:15px;
+      border-bottom:1px solid #eee;
     }
     .appointment-item:last-child{border-bottom:none;}
-    .appointment-details h5{margin:0 0 5px;font-size:1.1rem;color:var(--primary);}
-    .appointment-details p{margin:0;font-size:0.9rem;}
+    .appointment-details h5{margin:0 0 5px;font-size:1.1rem;}
+    .appointment-details p{margin:0;font-size:0.9rem;color:var(--muted);}
+    
     .status-badge{
       padding:5px 10px;
       border-radius:4px;
-      font-size:0.85rem;
-      font-weight:bold;
-      color:white;
+      font-size:0.8rem;
+      font-weight:700;
     }
-    .status-pending{background:var(--danger);}
-    .status-completed{background:var(--success);}
-    .status-available{background:var(--info);}
+    .status-available{background-color:#d4edda;color:var(--success);}
+    .status-completed{background-color:#cce5ff;color:var(--info);}
 
-    /* Formulario de Evolución */
-    #evolution-form textarea{
-        width:100%;
-        padding:10px;
-        border:1px solid #ccc;
-        border-radius:5px;
-        margin-bottom:15px;
-        box-sizing:border-box;
-    }
-    #evolution-form label{display:block;margin-bottom:5px;font-weight:700;}
+    /* Botones de Acción */
     .btn-action{
-        background-color:var(--accent);
-        color:white;
-        padding:10px 15px;
-        border:none;
-        border-radius:5px;
-        cursor:pointer;
-        transition:background-color 0.3s;
+      background-color:var(--accent);
+      color:white;
+      padding:8px 15px;
+      border:none;
+      border-radius:5px;
+      cursor:pointer;
+      font-size:0.9rem;
+      transition:background-color 0.2s;
+      margin-left:10px;
     }
     .btn-action:hover{background-color:#5d8c6b;}
-    .btn-secondary{background-color:var(--muted);margin-left:10px;}
+    .btn-secondary{background-color:var(--muted);}
     .btn-secondary:hover{background-color:#5a6268;}
 
-    /* Footer / Estado */
-    .sidebar-footer{margin-top:auto;padding-top:20px;border-top:1px solid rgba(255,255,255,0.1);}
-    .sidebar-footer p{font-size:0.8rem;color:#ccc;margin:5px 0;}
+    /* Formulario para agregar slot */
+    #add-slot-form{
+      display:flex;
+      gap:15px;
+      align-items:flex-end;
+      margin-bottom:30px;
+      border:1px solid #e9ecef;
+      padding:20px;
+      border-radius:8px;
+    }
+    #add-slot-form input{
+      padding:10px;
+      border:1px solid #ccc;
+      border-radius:4px;
+    }
+    #add-slot-form .form-group{
+      flex:1;
+    }
+    #add-slot-form .form-group label{
+      display:block;
+      margin-bottom:5px;
+      font-weight:700;
+      font-size:0.9rem;
+      color:var(--primary);
+    }
+    #add-slot-form button{
+      flex:0 0 auto;
+      height:40px;
+      padding:0 20px;
+    }
+    
+    /* Evolución Modal */
+    #evolution-modal textarea {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+        box-sizing: border-box;
+        margin-top: 5px;
+        margin-bottom: 15px;
+    }
+
+    @media (max-width: 768px) {
+        .wrapper { flex-direction: column; }
+        .sidebar { width: 100%; position: relative; height: auto; }
+        .content { padding: 20px; }
+        .header-content { flex-direction: column; align-items: flex-start; }
+        .header-content h1 { margin-bottom: 10px; font-size: 2rem; }
+        .status-area { margin-top: 10px; }
+    }
   </style>
 </head>
 <body>
 
-<div class="dashboard-layout">
-  <div class="sidebar">
-    <div class="logo-text">Psicofitt Panel</div>
-    <div class="user-info">
-      <h4 id="sidebar-name-el">Cargando...</h4>
-      <p id="sidebar-sub-el">cargando@email.com</p>
-    </div>
-    <nav class="menu">
-      <a href="#" class="menu-btn active" data-tab="agenda-tab"><i class="fas fa-calendar-alt"></i> Agenda de Hoy</a>
-      <a href="#" class="menu-btn" data-tab="schedule-tab"><i class="fas fa-clock"></i> Horarios Disponibles</a>
-      <a href="#" class="menu-btn" data-tab="evolution-list-tab"><i class="fas fa-history"></i> Historial de Evoluciones</a>
-    </nav>
-    <div class="sidebar-footer">
-        <p>Estado de la Conexión: <span id="agenda-status" style="color:var(--accent)">Conectando...</span></p>
-        <button id="logout-btn" class="btn-action" style="width:100%; background-color:var(--danger); margin-top:10px;">Cerrar Sesión</button>
-    </div>
-  </div>
+<div class="wrapper">
+    <div class="sidebar">
+        <div class="logo-text">Psicofitt Panel</div>
+        <div class="profile-info">
+            <h4 id="sidebar-name-el">Cargando...</h4>
+            <p id="sidebar-sub-el">Estado: <span id="agenda-status">Desconectado</span></p>
+        </div>
 
-  <div class="main-content">
-    <h1 id="welcome-message">¡Hola, [Nombre]!</h1>
+        <div class="sidebar-menu">
+            <button class="menu-btn active" data-tab="agenda-tab"><i class="fas fa-calendar-check"></i> Citas de Hoy</button>
+            <button class="menu-btn" data-tab="schedule-tab"><i class="fas fa-clock"></i> Horarios y Disponibilidad</button>
+            <button class="menu-btn" data-tab="evolution-list-tab"><i class="fas fa-notes-medical"></i> Notas Clínicas (Historial)</button>
+        </div>
 
-    <div id="agenda-tab" class="tab-content active card">
-      <h2><i class="fas fa-calendar-day"></i> Citas Agendadas para Hoy (<span id="today-date-display"></span>)</h2>
-      <ul class="appointment-list" id="today-appointments-list">
-        <p style="color:var(--muted); font-style:italic;">Cargando citas...</p>
-      </ul>
-      
-      <div id="evolution-modal-container">
+        <div style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.2);">
+            <button id="logout-btn" style="background-color: var(--danger);"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
         </div>
     </div>
 
-    <div id="schedule-tab" class="tab-content card">
-      <h2><i class="fas fa-plus-circle"></i> Gestión de Horarios de Agendamiento</h2>
-      <p style="color:var(--muted);">Aquí puedes ver y agregar nuevos bloques de disponibilidad para la agenda pública.</p>
-      
-      <div style="display:flex; gap:10px; margin-bottom:20px;">
-        <input type="date" id="new-date" style="padding:10px; border:1px solid #ccc; border-radius:4px; flex-grow:1;">
-        <input type="time" id="new-time" style="padding:10px; border:1px solid #ccc; border-radius:4px; flex-grow:1;">
-        <button id="add-slot-btn" class="btn-action" style="background-color:var(--info);">Agregar Bloque</button>
-      </div>
-      
-      <div class="card" style="padding:15px; background:var(--bg);">
-        <h3>Horarios Próximos Disponibles</h3>
-        <ul class="appointment-list" id="future-availability-list">
-          <p style="color:var(--muted); font-style:italic;">Cargando horarios...</p>
-        </ul>
-      </div>
-    </div>
+    <div class="content">
+        <div class="header-content">
+            <div>
+                <h1 id="welcome-message">Bienvenido al Panel</h1>
+                <p style="color:var(--muted); font-size:1.1rem;">Gestión de la Agenda: <span id="today-date-display"></span></p>
+            </div>
+            <div class="status-area">
+                </div>
+        </div>
 
-    <div id="evolution-list-tab" class="tab-content card">
-      <h2><i class="fas fa-history"></i> Historial Clínico Registrado</h2>
-      <ul class="evolution-list" id="completed-evolutions-list">
-        <p style="color:var(--muted); font-style:italic;">Cargando historial...</p>
-      </ul>
-    </div>
+        <div id="agenda-tab" class="tab-content active card">
+            <h3><i class="fas fa-calendar-day"></i> Citas Agendadas para Hoy</h3>
+            <ul class="appointment-list" id="today-appointments-list">
+                <p style="color:var(--muted); font-style:italic;">Cargando...</p>
+            </ul>
+        </div>
 
-  </div>
+        <div id="schedule-tab" class="tab-content card">
+            <h3><i class="fas fa-plus-circle"></i> Agregar Nuevo Bloque de Disponibilidad</h3>
+            <div id="add-slot-form">
+                <div class="form-group">
+                    <label for="new-date">Fecha</label>
+                    <input type="date" id="new-date" required>
+                </div>
+                <div class="form-group">
+                    <label for="new-time">Hora de Inicio</label>
+                    <input type="time" id="new-time" required>
+                </div>
+                <button type="button" id="add-slot-btn" class="btn-action">Agregar Horario</button>
+            </div>
+            
+            <h3><i class="fas fa-list-ul"></i> Horarios Disponibles Futuros</h3>
+            <ul class="appointment-list" id="future-availability-list">
+                <p style="color:var(--muted); font-style:italic;">Cargando...</p>
+            </ul>
+        </div>
+
+        <div id="evolution-list-tab" class="tab-content card">
+            <h3><i class="fas fa-file-medical-alt"></i> Historial de Evoluciones Clínicas</h3>
+            <ul class="appointment-list" id="completed-evolutions-list">
+                <p style="color:var(--muted); font-style:italic;">Cargando...</p>
+            </ul>
+        </div>
+    </div>
 </div>
+
+<div id="evolution-modal-container"></div>
 
 <script>
   // Configura tu cliente Supabase
@@ -243,44 +314,48 @@
   const addSlotBtn = document.getElementById('add-slot-btn');
 
   
-  /****************** Autenticación y Carga Inicial ******************/
+  /****************** Autenticación y Carga Inicial (Punto CLAVE) ******************/
   async function checkAuth() {
     agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--info)">Verificando...</span>';
-    const { data: { user } } = await supabaseClient.auth.getUser();
+    
+    // 1. Verificar sesión activa
+    const { data: { session } } = await supabaseClient.auth.getSession();
+    const user = session ? session.user : null;
 
     if (!user) {
-      window.location.href = 'portal.html'; // Redirigir al login si no hay usuario
+      // Si no hay usuario, redirigir al login
+      window.location.href = 'portal.html'; 
       return;
     }
 
-    // 1. Obtener datos del profesional desde la tabla 'profesionales'
+    // 2. Cargar perfil del profesional
+    // CRUCIAL: El ID del usuario autenticado DEBE ser el ID en la tabla 'profesionales'
     const { data: prof, error } = await supabaseClient
       .from('profesionales')
       .select('*')
-      .eq('id', user.id)
+      .eq('id', user.id) // <--- Usamos el UID de Supabase Auth para buscar en tu tabla 'profesionales'
       .single();
 
     if (error || !prof) {
       console.error('Error al obtener perfil del profesional:', error);
       welcomeMessage.textContent = 'Error al cargar perfil.';
-      // Forzar cierre de sesión si no se encuentra el perfil
+      agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--danger)">Error de perfil. Verifique el ID en la tabla.</span>';
+      // Forzar cierre de sesión si el perfil no existe o hay error
       await supabaseClient.auth.signOut();
       window.location.href = 'portal.html';
       return;
     }
 
+    // 3. Establecer datos y cargar listas
     currentProfessionalId = prof.id;
-    welcomeMessage.textContent = `¡Hola, ${prof.nombre}!`;
-    sidebarNameEl.textContent = prof.nombre;
-    sidebarSubEl.textContent = prof.email || '';
+    welcomeMessage.textContent = `¡Hola, ${prof.nombre || user.email}!`;
+    sidebarNameEl.textContent = prof.nombre || user.email;
+    sidebarSubEl.textContent = user.email || '';
+    agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--success)">Conectado</span>';
 
-    // Carga de datos
-    setTimeout(async () => {
-        await loadTodayAppointments(); // Citas de hoy
-        await loadFutureAvailability(); // Horarios disponibles
-        await loadCompletedEvolutions(); // Historial de evoluciones
-        agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--success)">Conectado</span>';
-    }, 50); 
+    await loadTodayAppointments(); // Citas de hoy
+    await loadFutureAvailability(); // Horarios disponibles
+    await loadCompletedEvolutions(); // Historial de evoluciones
   }
 
   /****************** Citas de Hoy (agenda-tab) ******************/
@@ -431,7 +506,7 @@
   });
 
   // 2. Eliminar Slot de Disponibilidad
-  async function deleteSlot(slotId) {
+  window.deleteSlot = async (slotId) => {
     if (!confirm('¿Estás seguro de que quieres eliminar este bloque de disponibilidad?')) return;
 
     const { error } = await supabaseClient
@@ -451,7 +526,7 @@
   }
 
   // 3. Mostrar Modal de Evolución
-  function showEvolutionModal(agendaId, pacienteNombre, pacienteRut, fechaAtencion) {
+  window.showEvolutionModal = function(agendaId, pacienteNombre, pacienteRut, fechaAtencion) {
     evolutionModalContainer.innerHTML = `
         <div id="evolution-modal" class="card" style="position:fixed; top:50%; left:50%; transform:translate(-50%,-50%); z-index:1000; width:90%; max-width:600px; padding:30px; border:2px solid var(--accent);">
             <h3 style="color:var(--primary); margin-top:0;">Registro de Evolución Clínica</h3>
@@ -487,7 +562,7 @@
     const modal = document.getElementById('evolution-modal');
     const statusEl = document.getElementById('evolution-status');
     statusEl.textContent = 'Guardando datos...';
-    statusEl.style.color = var(--accent);
+    statusEl.style.color = 'var(--accent)';
 
     const agendaId = document.getElementById('modal-agenda-id').value;
     const pacienteNombre = document.getElementById('modal-paciente-nombre').value;
@@ -498,7 +573,7 @@
 
     if (!descripcionEvol) {
         statusEl.textContent = 'La nota clínica no puede estar vacía.';
-        statusEl.style.color = var(--danger);
+        statusEl.style.color = 'var(--danger)';
         return;
     }
 
@@ -527,7 +602,7 @@
         
         // Éxito
         statusEl.textContent = 'Evolución guardada con éxito.';
-        statusEl.style.color = var(--success);
+        statusEl.style.color = 'var(--success)';
 
         // Recargar las listas
         await loadTodayAppointments();
@@ -539,28 +614,28 @@
     } catch (error) {
         console.error('Error al guardar evolución:', error);
         statusEl.textContent = `Error al guardar. (${error.message})`;
-        statusEl.style.color = var(--danger);
+        statusEl.style.color = 'var(--danger)';
     }
   }
 
-  /****************** Logout ******************/
+  // 5. Logout
   logoutBtn.addEventListener('click', async () => {
     await supabaseClient.auth.signOut();
     window.location.href = 'portal.html';
   });
 
-  /****************** Tabs UI ******************/
+  // 6. Tabs UI
   document.querySelectorAll('.menu-btn').forEach(btn=>{
-    btn.addEventListener('click', ()=>{{
+    btn.addEventListener('click', ()=>{
       document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
       document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
       btn.classList.add('active');
       const tab = btn.dataset.tab;
       if (tab) document.getElementById(tab).classList.add('active');
-    }});
+    });
   });
 
-  /****************** Inicializar ******************/
+  // 7. Inicializar
   document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
   });
