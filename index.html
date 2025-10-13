@@ -6,7 +6,7 @@
     <title>Francisca Sandoval | Psicofitt - Tu Bienestar Psicológico</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
@@ -90,26 +90,24 @@
             color: white;
         }
 
-        /* --- SECTION HERO: EL DISEÑO POTENTE --- */
+        /* --- SECTION HERO: EL DISEÑO POTENTE CON IMAGEN DE FRANCISCA --- */
         .hero {
             position: relative;
-            height: 90vh; /* Más alto para impacto */
+            height: 90vh; 
             display: flex;
             align-items: center;
-            justify-content: flex-start; /* Contenido a la izquierda */
-            text-align: left;
+            justify-content: space-between; /* Espacio entre texto e imagen */
             padding-left: 5%;
-            
-            /* Fondo: Imagen de paisaje suave y filtro de color */
-            background: linear-gradient(90deg, var(--primary) 50%, rgba(43, 58, 103, 0.4) 100%), 
-                        url('hero-psicologia.jpg') no-repeat center center/cover;
-            background-blend-mode: multiply; /* Mezcla el color primario con la imagen */
+            padding-right: 5%;
+            background: var(--primary); /* Fondo azul sólido */
             color: white;
             margin-bottom: 40px;
+            overflow: hidden; /* Para que la imagen no se desborde */
         }
         .hero-content {
             z-index: 10;
             max-width: 500px;
+            text-align: left;
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
@@ -124,6 +122,24 @@
             margin-bottom: 30px;
             font-weight: 300;
         }
+        .hero-image {
+            position: absolute; /* Para colocarla a la derecha */
+            right: 0;
+            bottom: 0; /* Asegura que la base de la imagen esté en la parte inferior del hero */
+            height: 100%; /* Ajusta la altura al 100% del hero */
+            display: flex;
+            align-items: flex-end; /* Alinea la imagen a la parte inferior */
+            z-index: 5;
+            pointer-events: none; /* Para que no interfiera con clics */
+        }
+        .hero-image img {
+            height: 100%; /* La imagen ocupa toda la altura disponible */
+            width: auto; /* Ancho automático para mantener proporciones */
+            object-fit: cover; /* Asegura que la imagen cubra el espacio sin distorsionarse */
+            transform: translateX(10%); /* Empuja la imagen un poco hacia afuera para que se vea bien */
+            opacity: 0.9; /* Un poco de transparencia para integrarla mejor */
+        }
+
 
         .btn-main-action {
             display: inline-block;
@@ -151,10 +167,225 @@
             text-align: center;
             margin-bottom: 40px;
         }
-        /* [El resto de tus estilos de agendamiento y otros se mantienen] */
+        
+        .service-card {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
         .service-card:hover, .service-card.selected {
             border-color: var(--accent);
             background-color: #f0f7f2; /* Fondo muy claro del salvia */
+        }
+        .service-card h4 {
+            color: var(--primary);
+            margin-top: 0;
+            font-size: 1.1rem;
+        }
+
+        /* --- CALENDARIO MEJORADO --- */
+        .calendar-nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            background-color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.03);
+        }
+        .calendar-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); /* Columnas responsivas */
+            gap: 15px;
+            margin-top: 30px;
+        }
+        .day-column {
+            background-color: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            text-align: center;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        }
+        .day-header {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 10px;
+            border-bottom: 1px solid var(--accent);
+            padding-bottom: 8px;
+        }
+        .day-header.past-day {
+            color: var(--muted);
+            opacity: 0.7;
+        }
+        .day-header span.day-number {
+            display: block;
+            font-size: 1.8rem;
+            font-weight: 900;
+            color: var(--accent);
+            line-height: 1;
+        }
+        .day-header.past-day span.day-number {
+            color: var(--muted);
+        }
+
+        .time-slot-container {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            margin-top: 15px;
+        }
+        .time-slot {
+            background-color: #f3f9f5; /* Fondo más suave para slots disponibles */
+            color: var(--accent);
+            padding: 10px 5px;
+            text-align: center;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.95rem;
+            border: 1px solid #d0e7d6;
+        }
+        .time-slot:not(.booked):hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--primary);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .time-slot.selected {
+            background-color: var(--primary);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .time-slot.booked {
+            background-color: #f8f8f8;
+            color: var(--muted);
+            cursor: not-allowed;
+            text-decoration: line-through;
+            border-color: #eee;
+            opacity: 0.7;
+        }
+        /* --- Formulario de Datos --- */
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: 700;
+        }
+        .form-group input, .form-group select, .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box; /* Importante para que el padding no afecte el width */
+        }
+        
+        /* --- Detalle de la Reserva --- */
+        .booking-summary {
+            background-color: var(--bg);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #eee;
+            margin-top: 20px;
+        }
+        .booking-summary p strong {
+            color: var(--primary);
+        }
+
+        /* --- Footer y Sección Sobre Mí --- */
+        footer {
+            background-color: var(--primary);
+            color: white;
+            text-align: center;
+            padding: 20px 0;
+            margin-top: 40px;
+        }
+        
+        .about-section {
+            background-color: white;
+            padding: 60px 0;
+            border-top: 1px solid #eee;
+        }
+        .about-content {
+            display: flex;
+            gap: 40px;
+            align-items: center;
+            flex-wrap: wrap; /* Permite que los elementos se envuelvan en pantallas pequeñas */
+        }
+        .about-text h2 {
+            text-align: left;
+            margin-bottom: 20px;
+        }
+        .about-text {
+            flex: 2;
+            min-width: 300px; /* Asegura que el texto no se haga demasiado pequeño */
+        }
+        .about-image {
+            flex: 1;
+            text-align: center;
+            min-width: 250px; /* Asegura que la imagen no se haga demasiado pequeña */
+        }
+        .about-image img {
+            max-width: 100%;
+            height: auto;
+            border-radius: 10px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        /* Media Queries para responsividad */
+        @media (max-width: 992px) {
+            .hero { 
+                height: auto; /* Altura automática para evitar recorte excesivo */
+                min-height: 70vh; /* Mínimo para que se vea bien */
+                flex-direction: column; /* Coloca el contenido en columna */
+                justify-content: center;
+                align-items: center;
+                text-align: center;
+                padding: 40px 5%;
+            }
+            .hero-content {
+                max-width: 100%;
+                text-align: center;
+            }
+            .hero h1 { font-size: 2.8rem; text-align: center;}
+            .hero p { font-size: 1.1rem; }
+            .hero-image {
+                position: relative; /* Quita el posicionamiento absoluto */
+                bottom: auto;
+                right: auto;
+                height: 40vh; /* Reduce el tamaño de la imagen en móviles */
+                margin-top: 30px;
+                transform: translateX(0); /* Resetea la transformación */
+                display: block; /* Asegura que se muestre */
+            }
+            .hero-image img {
+                height: 100%;
+                width: auto;
+                object-fit: contain; /* Para que la imagen se ajuste dentro del contenedor */
+            }
+            .about-content { flex-direction: column; }
+            .navbar { flex-direction: column; gap: 15px; }
+            .nav-buttons { display: flex; flex-direction: column; gap: 10px; width: 100%; }
+            .nav-buttons a { width: 100%; text-align: center; margin-left: 0; }
+            .logo-area { flex-direction: column; text-align: center; }
+            .logo-sub { display: none; } /* Ocultar el subtítulo para ahorrar espacio */
+            .logo-text { font-size: 1.8rem; }
+            h2 { font-size: 1.8rem; }
+
+            .calendar-grid {
+                grid-template-columns: 1fr; /* Una columna en pantallas pequeñas */
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.2rem; }
+            .btn-main-action { padding: 12px 25px; font-size: 1rem; }
         }
     </style>
 </head>
@@ -180,19 +411,22 @@
         <div class="hero-content">
             <h1>Francisca Sandoval Campos</h1>
             <h1 style="color: var(--accent); font-size: 2.5rem; margin-top: -10px;">Psicóloga de Confianza</h1>
-            <p>**"Tu Mente, Tu Bienestar."** Te acompaño a navegar tus emociones y a construir un futuro con resiliencia y propósito.</p>
+            <p>"Tu Mente, Tu Bienestar." Te acompaño a navegar tus emociones y a construir un futuro con resiliencia y propósito.</p>
             <a href="#agendar" class="btn-main-action">Agenda tu Sesión Privada</a>
+        </div>
+        <div class="hero-image">
+            <img src="francisca-sin-fondo.png" alt="Psicóloga Francisca Sandoval Campos">
         </div>
     </section>
 
     <section class="about-section" id="sobre-mi">
         <div class="container about-content">
             <div class="about-image">
-                <img src="foto-profesional.jpg" alt="[Nombre de la Psicóloga] Psicóloga">
+                <img src="foto-profesional.jpg" alt="Francisca Sandoval Campos Psicóloga">
             </div>
             <div class="about-text">
                 <h2 style="text-align: left; color:var(--accent);">Conoce a Francisca</h2>
-                <p>Mi enfoque es integrador y centrado en la persona. Creo firmemente que la terapia no es solo para "resolver problemas", sino una poderosa herramienta para el autoconocimiento y el crecimiento continuo. Con más de [X] años de experiencia, mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día.</p>
+                <p>Mi enfoque es integrador y centrado en la persona. Creo firmemente que la terapia no es solo para "resolver problemas", sino una poderosa herramienta para el autoconocimiento y el crecimiento continuo. Con **[Tu Experiencia, ej: más de 8 años de experiencia]**, mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día.</p>
                 <p>Especialista en Ansiedad, Duelo y Terapia Cognitivo-Conductual (TCC).</p>
                 <a href="mailto:contacto@psicofitt.cl" class="btn-main-action" style="margin-top: 15px; font-size: 1rem; padding: 10px 25px;">Contactar por Email</a>
             </div>
@@ -207,7 +441,7 @@
 
                 <div id="step-1" class="step-content">
                     <h3>Paso 1: Selecciona el Tipo de Sesión</h3>
-                    <div id="services-container">
+                    <div id="services-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
                         </div>
                 </div>
 
@@ -220,15 +454,17 @@
                     
                     <div class="calendar-nav mt-3">
                         <button onclick="changeWeek(-1)" class="btn-main-action" style="background-color: var(--primary); font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Semana Anterior</button>
-                        <h4 id="current-week-display" style="color:var(--accent); margin:0;"></h4>
+                        <h4 id="current-week-display" style="color:var(--accent); margin:0; text-align: center; flex-grow: 1;"></h4>
                         <button onclick="changeWeek(1)" class="btn-main-action" style="background-color: var(--primary); font-size: 0.9rem; padding: 8px 15px;">Semana Siguiente <i class="fas fa-chevron-right"></i></button>
                     </div>
 
-                    <div id="schedule-container" class="mt-3">
+                    <div id="schedule-container" class="calendar-grid">
                         </div>
 
-                    <button onclick="showStep(1)" class="btn-main-action" style="background-color: var(--muted); margin-top:20px; font-size: 0.9rem; padding: 10px 20px;">Volver a Servicios</button>
-                    <button onclick="validateTimeSelection()" class="btn-main-action mt-3 float-end" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
+                    <div style="display:flex; justify-content: space-between; margin-top: 30px;">
+                        <button onclick="showStep(1)" class="btn-main-action" style="background-color: var(--muted); font-size: 0.9rem; padding: 10px 20px;">Volver a Servicios</button>
+                        <button onclick="validateTimeSelection()" class="btn-main-action" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
+                    </div>
                 </div>
 
                 <div id="step-4" class="step-content" style="display:none;">
@@ -266,8 +502,10 @@
                         </div>
                         
                         <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
-                        <button type="button" onclick="showStep(3)" class="btn-main-action" style="background-color: var(--muted); margin-top:20px; font-size: 0.9rem; padding: 10px 20px;">Volver a Horarios</button>
-                        <button type="submit" class="btn-main-action mt-3 float-end" id="confirm-booking-btn" style="font-size: 0.9rem; padding: 10px 20px;">Confirmar Reserva <i class="fas fa-check"></i></button>
+                        <div style="display:flex; justify-content: space-between; margin-top: 20px;">
+                            <button type="button" onclick="showStep(3)" class="btn-main-action" style="background-color: var(--muted); font-size: 0.9rem; padding: 10px 20px;">Volver a Horarios</button>
+                            <button type="submit" class="btn-main-action" id="confirm-booking-btn" style="font-size: 0.9rem; padding: 10px 20px;">Confirmar Reserva <i class="fas fa-check"></i></button>
+                        </div>
                     </form>
                 </div>
 
@@ -296,7 +534,7 @@
 <script>
     // Configura tu cliente Supabase
     const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrak9lYWRyYXdrc2ZkZnp4aXQiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTY2MDM1NzAxOCwiZXhwIjoyMDc1OTMzMDE4fQ.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -310,7 +548,10 @@
     function getStartOfWeek(date) {
         const day = date.getDay();
         const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
-        return new Date(date.setDate(diff));
+        const monday = new Date(date);
+        monday.setDate(diff);
+        monday.setHours(0, 0, 0, 0); // Limpiar la hora
+        return monday;
     }
 
     currentWeekStart = getStartOfWeek(currentWeekStart);
@@ -380,7 +621,7 @@
 
     // PASO 2: CARGA DE HORARIO (Paso 3 en el flujo visual)
     function formatDate(date) {
-        return date.toLocaleDateString('es-ES', { weekday: 'short', day: '2-digit', month: 'short' });
+        return date.toLocaleDateString('es-ES', { weekday: 'short' }); // Muestra solo el día de la semana
     }
 
     function formatTime(timeString) {
@@ -392,9 +633,10 @@
         const startDate = new Date(currentWeekStart);
         const endDate = new Date(startDate);
         endDate.setDate(startDate.getDate() + 6); // Siete días después
+        endDate.setHours(23, 59, 59, 999); // Ajustar al final del día para la consulta
 
         document.getElementById('current-week-display').textContent = 
-            `${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
+            `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} al ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
         
         // Cargar horarios disponibles y reservados para este profesional
         const { data: agenda, error } = await supabaseClient
@@ -408,43 +650,48 @@
 
         if (error) {
             console.error('Error al cargar agenda:', error);
-            document.getElementById('schedule-container').innerHTML = '<p style="color:red;">Error al cargar la agenda. Intenta más tarde.</p>';
+            document.getElementById('schedule-container').innerHTML = '<p style="color:red; text-align:center; grid-column: 1 / -1;">Error al cargar la agenda. Intenta más tarde.</p>';
             return;
         }
 
         const scheduleContainer = document.getElementById('schedule-container');
         scheduleContainer.innerHTML = ''; // Limpiar el contenedor
 
-        let currentDay = new Date(startDate);
-        const today = new Date(); today.setHours(0, 0, 0, 0);
+        let currentDayIter = new Date(startDate);
+        const today = new Date(); today.setHours(0, 0, 0, 0); // Para comparar solo fechas
 
         for (let i = 0; i < 7; i++) {
-            const dayKey = currentDay.toISOString().split('T')[0];
-            const isPastDay = currentDay < today && currentDay.toDateString() !== today.toDateString();
+            const dayKey = currentDayIter.toISOString().split('T')[0];
+            const isPastDay = currentDayIter < today; // Determina si el día ya pasó
 
             const dayAgenda = agenda.filter(item => item.fecha === dayKey);
-            const daySlots = dayAgenda.map(slot => {
+            const daySlotsHTML = dayAgenda.map(slot => {
                 const isBooked = !slot.disponible;
-                // Si la hora ya pasó hoy, o es un día anterior
-                const isUnavailable = isPastDay || (currentDay.toDateString() === today.toDateString() && new Date(`${dayKey}T${slot.hora_inicio}`) < new Date());
+                // Si la hora ya pasó hoy (solo si es el día actual)
+                const isPastHour = currentDayIter.toDateString() === today.toDateString() && new Date(`${dayKey}T${slot.hora_inicio}`) < new Date();
+                
+                const isUnavailable = isPastDay || isPastHour || isBooked;
 
-                return `<div class="time-slot ${isBooked || isUnavailable ? 'booked' : ''}" 
+                return `<div class="time-slot ${isUnavailable ? 'booked' : ''}" 
                              data-id="${slot.id}" 
                              data-date="${dayKey}" 
                              data-time="${formatTime(slot.hora_inicio)}"
-                             onclick="${isBooked || isUnavailable ? '' : 'selectTimeSlot(this)'}">
+                             onclick="${isUnavailable ? '' : 'selectTimeSlot(this)'}">
                            ${formatTime(slot.hora_inicio)}
                         </div>`;
             }).join('');
 
             scheduleContainer.innerHTML += `
-                <div style="margin-bottom: 25px; border: 1px solid #ddd; padding: 15px; border-radius: 8px;">
-                    <h4 style="color:var(--primary); margin-top:0;">${formatDate(currentDay)}</h4>
-                    ${daySlots.length > 0 ? `<div class="time-slot-container">${daySlots}</div>` : 
-                        '<p>No hay horarios disponibles.</p>'}
+                <div class="day-column">
+                    <div class="day-header ${isPastDay ? 'past-day' : ''}">
+                        ${formatDate(currentDayIter)}<br><span class="day-number">${currentDayIter.getDate()}</span>
+                    </div>
+                    <div class="time-slot-container">
+                        ${daySlotsHTML.length > 0 ? daySlotsHTML : '<p style="font-size:0.85rem; color:var(--muted);">No hay horas.</p>'}
+                    </div>
                 </div>
             `;
-            currentDay.setDate(currentDay.getDate() + 1); // Siguiente día
+            currentDayIter.setDate(currentDayIter.getDate() + 1); // Siguiente día
         }
 
         // Resetear la selección de hora
