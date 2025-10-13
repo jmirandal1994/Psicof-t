@@ -29,7 +29,7 @@
             color: var(--primary);
             background-color: var(--bg);
             overflow-x: hidden;
-            font-weight: 400;
+            font-weight: 300; /* AJUSTE SUTILEZA: Peso de fuente general más ligero */
         }
 
         .container {
@@ -68,17 +68,13 @@
             z-index: 1000;
         }
         .navbar { display: flex; justify-content: space-between; align-items: center; }
-        /* AJUSTE LOGO SIZE */
-        .logo-area { display: flex; align-items: center; gap: 15px; }
-        .logo-area img { height: 60px; } 
-        .logo-text { 
-            font-family: 'Playfair Display', serif; 
-            font-size: 2.2rem; /* AJUSTADO */
-            font-weight: 700; 
-            color: var(--primary); 
-            text-decoration: none; 
-        }
         
+        /* LOGO: AJUSTES DE TAMAÑO Y ELIMINACIÓN DE TEXTO */
+        .logo-area { display: flex; align-items: center; gap: 0; }
+        .logo-area img { height: 90px; } /* MÁS GRANDE */
+        .logo-text { display: none; } /* OCULTAMOS EL TEXTO */
+        .logo-text-only-icon { display: flex; align-items: center; }
+
         /* Botones y Hover */
         .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; }
         .btn-agenda { background-color: var(--accent); color: white; border: 2px solid var(--accent); transition: transform 0.3s ease, background-color 0.3s ease; }
@@ -97,15 +93,11 @@
             margin-bottom: 80px; 
             overflow: hidden; 
             
-            /* FONDO PUESTA DE SOL */
             background-image: url('7B7421AF-ED37-47DE-BCD2-4C0A4346C38A.jpg');
             background-size: cover; 
             background-repeat: no-repeat; 
-            
-            /* CORRECCIÓN DE POSICIÓN PARA IMAGEN VERTICAL */
             background-position: center 30%;
             
-            /* OVERLAY OSCURO PARA LEGIBILIDAD */
             box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.55); 
         }
         .hero-content {
@@ -115,14 +107,14 @@
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 5rem; 
+            font-size: 4.5rem; /* REDUCCIÓN SUTILEZA */
             margin-bottom: 15px;
             line-height: 1;
             color: white; 
             text-shadow: 1px 1px 5px rgba(0,0,0,0.7); 
         }
         .hero p {
-            font-size: 1.4rem; 
+            font-size: 1.3rem; /* REDUCCIÓN SUTILEZA */
             margin-bottom: 50px;
             font-weight: 400; 
             color: rgba(255, 255, 255, 0.9); 
@@ -170,8 +162,8 @@
         
         h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.6rem;
-            color: var(--primary);
+            font-size: 2.8rem; /* AJUSTE SUTILEZA */
+            color: var(--accent); /* AJUSTE SUTILEZA: Color de acento para títulos */
             text-align: center;
             margin-bottom: 60px;
         }
@@ -258,6 +250,7 @@
             .nav-buttons { display: flex; justify-content: center; width: 100%; gap: 10px;}
             .btn-agenda, .btn-panel { flex-grow: 1; text-align: center; margin-left: 0; }
             .logo-area { margin-bottom: 10px; }
+            .logo-area img { height: 60px; } /* Reducido para celular */
 
 
             /* HERO SECTION: Contenido centrado y apilado */
@@ -269,37 +262,36 @@
                 align-items: center; 
                 text-align: center; 
                 padding: 40px 5%;
-                background-position: center center; /* Centramos el fondo para móvil */
-                box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); /* Overlay más ligero en móvil */
+                background-position: center center; 
+                box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.4); 
             }
             .hero-content { 
                 max-width: 100%; 
                 padding-right: 0; 
-                order: 2; /* Movemos el texto debajo de la imagen */
+                order: 2; 
             }
             .hero h1 { 
-                font-size: 3rem; /* Título reducido para móvil */
+                font-size: 3rem; 
                 line-height: 1.1;
                 text-align: center;
             }
             .hero p {
-                font-size: 1.2rem; /* Párrafo reducido */
+                font-size: 1.2rem; 
             }
             
             /* IMAGEN FRANCISCA: Adaptada y encima del texto */
             .hero-image { 
                 position: relative; 
-                height: 40vh; /* La hacemos un poco más alta */
+                height: 40vh; 
                 margin-top: 0; 
                 margin-bottom: 20px;
                 width: 70%; 
                 max-width: 350px; 
                 right: auto; 
                 transform: translateX(0) translateY(0); 
-                order: 1; /* Movemos la imagen encima del texto */
+                order: 1; 
             }
             .hero-image img { 
-                /* Se eliminan filtros y máscaras para una visualización más limpia y simple en móvil */
                 filter: none; 
                 mask-image: none;
                 -webkit-mask-image: none;
@@ -320,7 +312,7 @@
             
             /* CALENDARIO: Aseguramos el apilamiento del calendario */
             .calendar-grid { 
-                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); /* Hace que se adapten mejor al ancho */
+                grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
             }
             
             /* FOOTER */
@@ -339,9 +331,10 @@
 <header>
     <div class="container navbar">
         <div class="logo-area fade-in-on-load">
-            <img src="logo-psicofit.png" alt="Logo Psicofit"/> 
-            <a href="index.html" class="logo-text">Psicofit</a>
-        </div>
+            <a href="index.html" class="logo-text-only-icon">
+                <img src="logo-psicofit.png" alt="Logo Psicofit"/> 
+            </a>
+            </div>
         <div class="nav-buttons fade-in-on-load">
             <a href="#agendar" class="btn btn-agenda">Agenda tu Hora</a>
             <a href="portal.html" class="btn btn-panel">Acceso Profesional</a>
@@ -550,10 +543,6 @@
         }
         
         selectedProfessionalId = profData[0].id;
-
-        // Opcional: Inyectar datos dinámicos en la sección Hero/About si la tabla 'profesionales' tiene los campos necesarios.
-        // const professional = profData[0];
-        // document.querySelector('.hero-content h1').textContent = professional.nombre; 
         
         return true;
     }
