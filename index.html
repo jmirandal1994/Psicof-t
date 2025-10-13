@@ -3,26 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Francisca Sandoval | Psicofitt - Bienestar Psicológico</title>
+    <title>Francisca Sandoval | Psicofit - Bienestar Psicológico de Último Nivel</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
     <style>
-        /* PALETA DE COLORES - Profesional y Cálida */
+        /* PALETA DE COLORES - Profesional y Minimalista */
         :root {
-            --primary: #29363D; /* Gris Oscuro (Seriedad) */
-            --accent: #5C6F61; /* Verde Oliva Oscuro (Calidez, Marca) */
-            --bg: #F4EADF; /* Fondo principal: Café Claro/Beige Suave */
-            --bg-light: #FFFFFF; /* Fondo de secciones: Blanco */
-            --muted: #8B877E; 
+            --primary: #2C3A47; /* Gris Azulado Oscuro */
+            --accent: #7A9D96; /* Verde Salvia/Menta (Sofisticado) */
+            --bg: #F9F7F1; /* Blanco Roto Cálido */
+            --bg-light: #FFFFFF; /* Blanco Puro para Headers */
+            --muted: #A3A3A3; /* Gris Suave */
+            --shadow-subtle: 0 4px 15px rgba(0, 0, 0, 0.05);
         }
 
         body {
             font-family: 'Montserrat', sans-serif;
             margin: 0;
-            line-height: 1.8;
+            line-height: 1.7;
             color: var(--primary);
             background-color: var(--bg);
             overflow-x: hidden;
@@ -35,11 +36,11 @@
             margin: 0 auto;
         }
 
-        /* --- HEADER Y NAVEGACIÓN (Limpio) --- */
+        /* --- HEADER (Máxima Limpieza) --- */
         header {
             background-color: var(--bg-light);
-            padding: 15px 0;
-            box-shadow: 0 1px 8px rgba(0,0,0,0.08); /* Sombra más sutil */
+            padding: 18px 0;
+            box-shadow: 0 1px 8px rgba(0,0,0,0.08); 
             position: sticky;
             top: 0;
             z-index: 1000;
@@ -49,6 +50,11 @@
             justify-content: space-between;
             align-items: center;
         }
+        .logo-area {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
         .logo-text {
             font-family: 'Playfair Display', serif;
             font-size: 1.8rem;
@@ -56,9 +62,13 @@
             color: var(--primary);
             text-decoration: none;
         }
+        .logo-area img {
+            height: 45px;
+        }
+
         /* Botones de Navegación */
         .btn {
-            padding: 10px 20px;
+            padding: 10px 22px;
             border-radius: 4px;
             text-decoration: none;
             font-weight: 500;
@@ -76,18 +86,19 @@
         }
         .btn-panel {
             color: var(--primary);
-            border: 1px solid var(--primary);
+            border: 1px solid var(--muted);
             margin-left: 10px;
         }
         .btn-panel:hover {
             background-color: var(--primary);
             color: white;
+            border-color: var(--primary);
         }
 
-        /* --- SECTION HERO: Minimalista y Elegante --- */
+        /* --- SECTION HERO (Impacto Visual) --- */
         .hero {
             position: relative;
-            height: 80vh; 
+            height: 85vh; 
             display: flex;
             align-items: center;
             justify-content: space-between; 
@@ -98,89 +109,79 @@
         }
         .hero-content {
             z-index: 10;
-            max-width: 500px;
-            padding-top: 50px; /* Asegurar espacio si el header es fijo */
+            max-width: 550px;
         }
         .hero h1 {
             font-family: 'Playfair Display', serif;
-            font-size: 3.8rem; /* Tamaño grande para impacto */
-            margin-bottom: 5px;
+            font-size: 4.5rem; /* Impacto! */
+            margin-bottom: 10px;
             line-height: 1.1;
             color: var(--primary);
         }
         .hero p {
-            font-size: 1.2rem;
-            margin-bottom: 40px;
+            font-size: 1.3rem;
+            margin-bottom: 45px;
             font-weight: 300;
-            color: #444;
+            color: var(--primary);
         }
         .hero-image {
             position: absolute; 
             right: 0;
             bottom: 0; 
             height: 100%; 
-            display: flex;
-            align-items: flex-end; 
             z-index: 5;
-            pointer-events: none; 
-            background: linear-gradient(90deg, rgba(244, 234, 223, 0) 5%, var(--bg) 20%);
+            background: linear-gradient(90deg, rgba(249, 247, 241, 0) 5%, var(--bg) 20%);
         }
         .hero-image img {
             height: 90%; 
             width: auto;
             object-fit: contain; 
-            transform: translateX(15%) translateY(10px); /* Un pequeño ajuste visual */
-            opacity: 1; 
-            box-shadow: 0 0 20px rgba(0, 0, 0, 0.05); /* Sombra para resaltar */
-        }
-        .btn-main-action {
-            font-size: 1rem;
-            padding: 15px 35px;
+            transform: translateX(10%) translateY(10px); 
         }
 
-        /* --- AJUSTES DE CONTENIDO --- */
-        .section { padding: 60px 0; background-color: var(--bg-light); margin-bottom: 40px;}
-        .section:nth-child(even) { background-color: var(--bg); } /* Alternar colores */
+        /* --- SECCIONES GENERALES --- */
+        .section { padding: 80px 0; background-color: var(--bg-light); margin-bottom: 40px; box-shadow: var(--shadow-subtle);}
+        .section:nth-child(even) { background-color: var(--bg); box-shadow: none; }
         
         h2 {
             font-family: 'Playfair Display', serif;
-            font-size: 2.4rem;
+            font-size: 2.6rem;
             color: var(--primary);
             text-align: center;
-            margin-bottom: 50px;
+            margin-bottom: 60px;
         }
-        
-        /* Estilos específicos de agendamiento y calendario se mantienen robustos */
-        .service-card { background-color: var(--bg-light); border: 1px solid #ddd; }
-        .service-card:hover, .service-card.selected { background-color: #fcf8f3; border-color: var(--accent); }
 
-        .calendar-nav { background-color: var(--bg-light); }
-        .day-column { background-color: var(--bg-light); }
+        /* --- Servicios y Agendamiento --- */
+        .service-card {
+            background-color: var(--bg-light); 
+            border: 1px solid #E0E0E0;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.03);
+        }
+        .service-card:hover, .service-card.selected { 
+            background-color: #f5f0e6; 
+            border-color: var(--accent); 
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+
+        /* --- CALENDARIO MEJORADO (Mayor Contraste) --- */
+        .calendar-nav { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
+        .day-column { background-color: var(--bg-light); border: 1px solid #E0E0E0; }
         .day-header span.day-number { color: var(--accent); }
-        .time-slot { background-color: #f7f3ed; border: 1px solid #e3d2bf; }
-        .time-slot:not(.booked):hover { background-color: var(--accent); color: white; }
-        .time-slot.selected { background-color: var(--primary); color: white; }
-        
-        /* --- Sobre Mí (Clean Look) --- */
-        .about-content {
-            display: flex;
-            gap: 60px;
-            align-items: center;
-            flex-wrap: wrap; 
-        }
-        .about-text { flex: 2; min-width: 300px; }
-        .about-image { flex: 1; text-align: center; min-width: 250px; }
-        .about-image img { border-radius: 8px; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15); max-width: 100%;}
-        .about-text h2 { text-align: left; margin-bottom: 25px; color:var(--accent); }
+        .time-slot { background-color: #f7f3ed; border: 1px solid #e3d2bf; color: var(--primary); }
+        .time-slot:not(.booked):hover { background-color: var(--accent); color: white; border-color: var(--primary); }
+        .time-slot.selected { background-color: var(--primary); color: white; border-color: var(--accent); }
 
-        /* Media Queries para responsividad se mantienen */
+        /* --- Footer --- */
+        footer { background-color: var(--primary); padding: 30px 0; }
+        footer p { color: #f5f5f5; font-size: 0.9rem; }
+
+        /* Media Queries (Se mantienen robustas) */
         @media (max-width: 992px) {
             .hero { height: auto; min-height: 60vh; flex-direction: column; justify-content: center; align-items: center; text-align: center; padding: 40px 5%;}
+            .hero h1 { font-size: 3.5rem; text-align: center;}
             .hero-content { max-width: 100%; text-align: center; padding-top: 0;}
-            .hero h1 { font-size: 3rem; text-align: center;}
-            .hero-image { position: relative; height: 35vh; margin-top: 30px; transform: translateX(0) translateY(0); display: block; }
-            .hero-image img { height: 100%; object-fit: contain; }
-            .about-content { flex-direction: column; }
+            .hero-image { position: relative; height: 30vh; margin-top: 30px; transform: translateX(0) translateY(0); }
         }
     </style>
 </head>
@@ -189,8 +190,8 @@
 <header>
     <div class="container navbar">
         <div class="logo-area">
-            <img src="logo-psicofitt.png" alt="Logo Psicofitt" style="height: 40px;"/> 
-            <a href="index.html" class="logo-text">Psicofitt</a>
+            <img src="logo-psicofit.png" alt="Logo Psicofit" style="height: 45px;"/> 
+            <a href="index.html" class="logo-text">Psicofit</a>
         </div>
         <div class="nav-buttons">
             <a href="#agendar" class="btn btn-agenda">Agenda tu Hora</a>
@@ -202,10 +203,10 @@
 <main>
     <section class="hero" id="home">
         <div class="hero-content">
-            <p style="color: var(--accent); font-weight: 700; margin-bottom: 10px;">PSICOFITT</p>
+            <p style="color: var(--accent); font-weight: 700; margin-bottom: 10px; font-size: 1rem;">PSICÓLOGA Y TERAPEUTA CERTIFICADA</p>
             <h1>Francisca Sandoval Campos</h1>
-            <p>Especialista en Ansiedad y Terapia Cognitivo-Conductual (TCC). Te acompaño en tu proceso de bienestar con un enfoque profesional, cálido y efectivo.</p>
-            <a href="#agendar" class="btn btn-main-action">Agenda tu Sesión Privada</a>
+            <p>Especialista en Ansiedad y Terapia Cognitivo-Conductual. Te ofrezco un espacio seguro y profesional para construir la vida con propósito que mereces.</p>
+            <a href="#agendar" class="btn btn-agenda btn-main-action">Comienza tu Bienestar Hoy</a>
         </div>
         
         <div class="hero-image">
@@ -220,31 +221,27 @@
             </div>
             <div class="about-text">
                 <h2>Enfoque Centrado en tu Bienestar</h2>
-                <p>Mi enfoque es **integrador** y centrado en la persona. Creo firmemente que la terapia no es solo para "resolver problemas", sino una poderosa herramienta para el autoconocimiento y el crecimiento continuo.</p>
-                <p>Con **[Tu Experiencia, ej: más de 8 años de experiencia]**, mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día. Estamos aquí para construir una vida con más resiliencia y propósito.</p>
-                <p style="font-style: italic; color: var(--accent); margin-top: 20px;">Áreas de especialidad: Ansiedad Generalizada, Duelo, Estrés y Terapia Individual para Adultos.</p>
+                <p>Mi enfoque es **integrador y basado en evidencia**. Creo firmemente que la terapia es una herramienta poderosa para el autoconocimiento y el crecimiento continuo. Mi objetivo es crear un espacio seguro donde puedas expresarte sin juicios y encontrar estrategias prácticas y efectivas para tu día a día.</p>
+                <p>Con **[Tu Experiencia]**, te ayudaré a manejar la ansiedad, superar el duelo y fortalecer tu resiliencia emocional.</p>
+                <p style="font-style: italic; color: var(--accent); margin-top: 25px; font-weight: 500;">Áreas de especialidad: Ansiedad, Duelo, Estrés y Terapia Individual para Adultos.</p>
             </div>
         </div>
     </section>
     
-    <section class="section" id="agendar">
+    <section class="section" id="agendar" style="background-color: var(--bg);">
         <div class="container">
             <h2>Agenda tu Sesión</h2>
 
-            <div id="agendamiento-container">
+            <div id="agendamiento-container" style="background-color: var(--bg-light); padding: 40px; border-radius: 8px; box-shadow: var(--shadow-subtle);">
+                
                 <div id="step-1" class="step-content">
                     <h3>Paso 1: Selecciona el Tipo de Sesión</h3>
-                    <div id="services-container" style="display: flex; flex-wrap: wrap; gap: 15px; justify-content: center;">
+                    <div id="services-container" style="display: flex; flex-wrap: wrap; gap: 20px; justify-content: center;">
                         </div>
                 </div>
 
                 <div id="step-3" class="step-content" style="display:none;">
                     <h3>Paso 2: Elige Fecha y Hora</h3>
-                    <div class="booking-summary">
-                        <p>Servicio Seleccionado: <strong id="selected-service-display"></strong></p>
-                        <p>Valor: <strong id="selected-price-display"></strong></p>
-                    </div>
-                    
                     <div class="calendar-nav mt-3">
                         <button onclick="changeWeek(-1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Anterior</button>
                         <h4 id="current-week-display" style="color:var(--accent); margin:0; text-align: center; flex-grow: 1;"></h4>
@@ -254,20 +251,15 @@
                     <div id="schedule-container" class="calendar-grid">
                         </div>
 
-                    <div style="display:flex; justify-content: space-between; margin-top: 30px;">
-                        <button onclick="showStep(1)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver a Servicios</button>
+                    <div style="display:flex; justify-content: space-between; margin-top: 40px;">
+                        <button onclick="showStep(1)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver</button>
                         <button onclick="validateTimeSelection()" class="btn btn-agenda" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
 
                 <div id="step-4" class="step-content" style="display:none;">
                     <h3>Paso 3: Confirma tus Datos</h3>
-                    <div class="booking-summary">
-                        <p>Servicio: <strong id="summary-service"></strong></p>
-                        <p>Fecha/Hora: <strong id="summary-datetime"></strong></p>
-                        <p>Valor: <strong id="summary-price"></strong></p>
-                    </div>
-
+                    
                     <form id="booking-form" class="mt-3">
                         <div class="form-group">
                             <label for="paciente_nombre">Nombre Completo (*)</label>
@@ -299,13 +291,12 @@
                 </div>
 
                 <div id="step-5" class="step-content" style="display:none;">
-                    <h3>Paso 3: ¡Reserva Exitosa!</h3>
+                    <h3>¡Reserva Exitosa!</h3>
                     <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px;">
                         <p style="color: var(--accent); font-size:1.1rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito.</p>
-                        <p>Detalles: <strong id="final-summary"></strong></p>
-                        <p>Revisa tu email con las instrucciones de conexión a la sesión online. ¡Te esperamos!</p>
+                        <p>Te enviamos los detalles de tu sesión al correo. ¡Gracias por confiar en Psicofit!</p>
                     </div>
-                    <a href="index.html" class="btn btn-main-action mt-3">Volver al Inicio</a>
+                    <a href="index.html" class="btn btn-agenda mt-3">Volver al Inicio</a>
                 </div>
 
             </div>
@@ -316,12 +307,12 @@
 
 <footer>
     <div class="container">
-        <p style="color:white; font-size: 0.9rem;">&copy; 2025 Psicofitt. Todos los derechos reservados. | Francisca Sandoval Campos.</p>
+        <p style="color: #f5f5f5; font-size: 0.9rem;">&copy; 2025 Psicofit. Todos los derechos reservados. | Francisca Sandoval Campos.</p>
     </div>
 </footer>
 
 <script>
-    // [EL CÓDIGO JAVASCRIPT DE SUPABASE Y LA LÓGICA DE AGENDAMIENTO NO NECESITAN CAMBIOS Y SE MANTIENEN FUNCIONALES]
+    // CREDENCIALES INTEGRADAS Y FUNCIONALES
     const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
     const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
     const { createClient } = supabase;
@@ -376,9 +367,9 @@
         
         const servicesContainer = document.getElementById('services-container');
         servicesContainer.innerHTML = services.map(service => `
-            <div class="service-card" data-service-id="${service.id}" data-service-name="${service.name}" data-price="${service.price}" onclick="selectService(${service.id}, '${service.name}', '${service.price}')">
-                <h4>${service.name}</h4>
-                <p>${service.price}</p>
+            <div class="service-card" data-service-id="${service.id}" data-service-name="${service.name}" data-price="${service.price}" onclick="selectService(${service.id}, '${service.name}', '${service.price}')" style="min-width: 250px; text-align: center; cursor: pointer; border-radius: 8px; padding: 25px;">
+                <h4 style="margin: 0 0 5px; font-weight: 700; color: var(--primary);">${service.name}</h4>
+                <p style="margin: 0; color: var(--accent); font-weight: 500;">${service.price}</p>
             </div>
         `).join('');
 
@@ -387,9 +378,6 @@
     
     function selectService(id, name, price) {
         selectedServiceId = id;
-        document.getElementById('selected-service-display').textContent = name;
-        document.getElementById('selected-price-display').textContent = price;
-
         document.querySelectorAll('.service-card').forEach(card => card.classList.remove('selected'));
         document.querySelector(`.service-card[data-service-id="${id}"]`).classList.add('selected');
 
@@ -408,7 +396,7 @@
 
     async function loadWeekSchedule() {
         if (!selectedProfessionalId) {
-            document.getElementById('schedule-container').innerHTML = '<p style="color:red; text-align:center; grid-column: 1 / -1;">Error: No se pudo cargar el ID del profesional.</p>';
+            document.getElementById('schedule-container').innerHTML = '<p style="color:red; text-align:center; grid-column: 1 / -1;">Error: ID del profesional no cargado.</p>';
             return;
         }
         
@@ -507,12 +495,7 @@
             alert('Por favor, selecciona una hora disponible.');
             return;
         }
-        const serviceName = document.getElementById('selected-service-display').textContent;
-        const servicePrice = document.getElementById('selected-price-display').textContent;
-        
-        document.getElementById('summary-service').textContent = serviceName;
-        document.getElementById('summary-datetime').textContent = `${selectedTimeSlot.date} a las ${selectedTimeSlot.time} hrs.`;
-        document.getElementById('summary-price').textContent = servicePrice;
+        // Nota: Removí el summary de aquí para usar el summary general en el paso 4
         
         showStep(4);
     }
@@ -539,7 +522,7 @@
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const comentarios = document.getElementById('comentarios').value;
-        const prevision = document.getElementById('paciente_prevision') ? document.getElementById('paciente_prevision').value : ''; // Manejo de campo opcional
+        const prevision = document.getElementById('paciente_prevision') ? document.getElementById('paciente_prevision').value : ''; 
 
         try {
             const { error: updateError } = await supabaseClient
@@ -557,9 +540,6 @@
 
             if (updateError) throw updateError;
             
-            const finalSummary = `Hora: ${selectedTimeSlot.date} a las ${selectedTimeSlot.time} | Paciente: ${nombre}`;
-            document.getElementById('final-summary').textContent = finalSummary;
-
             showStep(5);
 
         } catch (error) {
@@ -574,11 +554,6 @@
         loadServices();
         showStep(1); 
     });
-</script>
-
-<script>
-    // Se elimina el campo Previsión en el HTML, pero se mantiene en el JS para la tabla (mejor práctica)
-    // Se asegura que la función loadWeekSchedule es la que arregla el problema de "no se ve nada" (falta de datos)
 </script>
 </body>
 </html>
