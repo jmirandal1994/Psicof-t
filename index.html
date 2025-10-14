@@ -543,7 +543,7 @@
 <script>
     // CREDENCIALES INTEGRADAS Y FUNCIONALES
     const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrc2VraXQiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc2MDM1NzAxOCwiZXhwIjoyMDc1OTMzMDE4fQ.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -588,17 +588,20 @@
         });
     }
     
-    // --- [FUNCIÓN DE INICIO DE PROCESO] ---
+    // --- [FUNCIÓN DE INICIO DE PROCESO - CORRECCIÓN SCROLL PRINCIPAL] ---
     function startBookingProcess(event) {
         event.preventDefault(); // Detiene el salto del hash (#)
         
         // 1. Mostrar el Paso 1 (Selección de Servicio)
         showStep(1); 
         
-        // 2. Hacer el scroll suave
+        // 2. Hacer el scroll suave DESPUÉS de un pequeño retraso para asegurar que el contenido esté visible.
         const targetElement = document.getElementById('agendamiento-container');
         if (targetElement) {
-            window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+             // Se añadió el setTimeout para resolver el problema de que el scroll no se ejecutara al inicio.
+             setTimeout(() => {
+                window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+            }, 50); 
         }
     }
     
@@ -617,7 +620,7 @@
     function showStep(step) {
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         
-        // CORRECCIÓN #2: Aseguramos que el Paso 1 tenga display: block para ser visible al iniciar el proceso
+        // Aseguramos que el Paso 1 tenga display: block para ser visible al iniciar el proceso
         if (step === 1) {
              document.getElementById(`step-1`).style.display = 'block';
         } else {
@@ -626,12 +629,10 @@
 
         currentStep = step;
         
-        // CORRECCIÓN #1: Se ajusta la condición para evitar el scroll forzado (salto) al pasar del Paso 1 al Paso 3, 
-        // ya que el scroll inicial de startBookingProcess ya posicionó al usuario.
+        // Se mantiene el scroll solo para la parte final de la confirmación (Paso 4) si el usuario no lo ve.
         if (step >= 4) { 
             const targetElement = document.getElementById('agendamiento-container');
             if (targetElement) {
-                // Pequeño retraso para asegurar que la reestructuración del DOM termine antes del scroll
                 setTimeout(() => {
                      window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
                 }, 50);
@@ -686,7 +687,7 @@
         document.querySelector(`.service-card[data-service-id="${id}"]`).classList.add('selected');
 
         loadWeekSchedule(); 
-        showStep(3); // Muestra el paso 3 sin forzar un scroll adicional
+        showStep(3); 
     }
 
     function formatDate(date) {
@@ -804,7 +805,7 @@
             time: element.dataset.time
         };
         
-        // CORRECCIÓN #3: Avanza automáticamente al formulario (Paso 4) al seleccionar una hora
+        // Avanza automáticamente al formulario (Paso 4) al seleccionar una hora
         validateTimeSelection();
     }
 
@@ -872,9 +873,6 @@
         applyLoadEffects(); 
         setupIntersectionObserver(); 
         setupParallax(); 
-        
-        // Se elimina la instrucción original de ocultar el paso 1 aquí, ya que 'showStep(1)' se encarga de mostrarlo
-        // al presionar los botones, y 'showStep' lo mantiene oculto hasta que se llama.
         
         // Mostrar el Paso 1 inmediatamente si el usuario navega directamente a #agendar (por si acaso).
         if (window.location.hash === '#agendar') {
