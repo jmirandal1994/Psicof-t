@@ -616,10 +616,10 @@
 
     currentWeekStart = getStartOfWeek(currentWeekStart);
 
+    // FUNCIÓN SIMPLIFICADA: SOLO MANEJA LA VISIBILIDAD (EL SCROLL SE MANEJA AL LLAMARLA)
     function showStep(step) {
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         
-        // 1. Mostrar el paso
         if (step === 1) {
              document.getElementById(`step-1`).style.display = 'block';
         } else {
@@ -627,19 +627,6 @@
         }
 
         currentStep = step;
-        
-        // 2. 💥 CORRECCIÓN DE FUERZA BRUTA PARA EL SCROLL INTERNO (Pasos 3 y 4)
-        if (step === 3 || step === 4) { 
-            // Apuntamos al contenedor *interno* para un scroll más preciso dentro de la sección visible
-            const targetContainer = document.getElementById('agendamiento-container');
-            if (targetContainer) {
-                 // Usamos requestAnimationFrame para asegurar que el DOM se haya renderizado antes del scroll, 
-                 // lo que elimina el "salto al inicio" que intenta hacer el navegador.
-                 window.requestAnimationFrame(() => {
-                    window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'smooth' });
-                });
-            }
-        }
     }
 
     async function loadServices() {
@@ -690,6 +677,15 @@
 
         loadWeekSchedule(); 
         showStep(3); 
+        
+        // **ACCIÓN DE SCROLL DEFINITIVA (Paso 1 -> Paso 3):**
+        const targetContainer = document.getElementById('agendamiento-container');
+        if (targetContainer) {
+            window.requestAnimationFrame(() => {
+                 // SCROLL INSTANTÁNEO Y FORZADO
+                 window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'instant' }); 
+            });
+        }
     }
 
     function formatDate(date) {
@@ -818,6 +814,15 @@
         }
         
         showStep(4);
+        
+        // **ACCIÓN DE SCROLL DEFINITIVA (Paso 3 -> Paso 4):**
+        const targetContainer = document.getElementById('agendamiento-container');
+        if (targetContainer) {
+            window.requestAnimationFrame(() => {
+                 // SCROLL INSTANTÁNEO Y FORZADO
+                 window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'instant' }); 
+            });
+        }
     }
 
 
@@ -882,3 +887,5 @@
         }
     });
 </script>
+</body>
+</html>
