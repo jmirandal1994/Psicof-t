@@ -203,7 +203,7 @@
         .form-group input[type="email"], 
         .form-group input[type="tel"], 
         .form-group input[type="date"],
-        .form-group select, /* Estilo para el nuevo desplegable */
+        .form-group select,
         .form-group textarea {
             width: 100%;
             padding: 12px 10px;
@@ -213,7 +213,7 @@
             box-sizing: border-box; 
             transition: border-color 0.2s, box-shadow 0.2s;
             background-color: #fcfcfc;
-            appearance: none; /* Estilo para select en algunos navegadores */
+            appearance: none;
         }
         .form-group select {
             background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path fill="%232C3A47" d="M0,0 L5,6 L10,0 Z"/></svg>');
@@ -358,7 +358,7 @@
     let currentWeekStart = new Date(); 
     
     // Configuración de horario
-    const startHour = 8, endHour = 21, slotIntervalMin = 45; 
+    const startHour = 8, endHour = 21, slotIntervalMin = 60; // INTERVALO DE 60 MINUTOS SINCRONIZADO
     
     // Referencias DOM
     const modalConfirmacionEl = document.getElementById('modal-confirmacion');
@@ -413,10 +413,15 @@
         document.getElementById('booking-status-message').textContent = '';
         document.getElementById('confirm-booking-btn').disabled = false;
         
-        // **OPCIONAL:** Prefill the prevision based on selected service ID (1 or 2) if it corresponds to a specific type
+        // Cargar previsión predeterminada (si es FONASA o ISAPRE)
         const previsionSelect = document.getElementById('paciente_prevision');
-        const defaultPrevision = selectedServiceId === 2 ? 'Fonasa' : 'Particular'; 
-        previsionSelect.value = defaultPrevision;
+        if (selectedServiceName.includes('FONASA')) {
+            previsionSelect.value = 'Fonasa';
+        } else if (selectedServiceName.includes('ISAPRE')) {
+            previsionSelect.value = 'Isapre Colmena';
+        } else {
+             previsionSelect.value = '';
+        }
     }
 
     function hideModal() {
@@ -588,13 +593,13 @@
         // Recolección de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
-        const fechaNac = document.getElementById('paciente_fecha_nac').value; // RECOGEMOS FECHA DE NACIMIENTO
+        const fechaNac = document.getElementById('paciente_fecha_nac').value; 
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const comentarios = document.getElementById('comentarios').value;
-        const prevision = document.getElementById('paciente_prevision').value; // RECOGEMOS PREVISIÓN
+        const prevision = document.getElementById('paciente_prevision').value; 
         
-        // Calculamos la edad para guardarla en la base de datos (si la columna existe, para el panel)
+        // Datos calculados
         const edad = calculateAge(fechaNac);
 
         try {
@@ -604,24 +609,30 @@
                     disponible: false,
                     paciente_nombre: nombre,
                     paciente_rut: rut,
-                    paciente_fecha_nac: fechaNac, // ENVIAR FECHA DE NACIMIENTO
-                    paciente_edad: edad, // ENVIAR EDAD CALCULADA (opcional, si la columna existe)
+                    paciente_fecha_nac: fechaNac, 
+                    paciente_edad: edad, 
                     paciente_email: email,
                     paciente_celular: celular,
-                    paciente_prevision: prevision, // ENVIAR PREVISIÓN SELECCIONADA
+                    paciente_prevision: prevision, 
                     comentarios: comentarios
                 })
                 .eq('id', selectedTimeSlot.id);
 
             if (updateError) throw updateError;
             
-            hideModal(); // Oculta el modal
-            document.getElementById('step-3').style.display = 'none'; // Oculta el calendario
-            document.getElementById('step-5').style.display = 'block'; // Muestra éxito
+            // Éxito y UI
+            hideModal(); 
+            document.getElementById('step-3').style.display = 'none'; 
+            document.getElementById('step-5').style.display = 'block';
 
         } catch (error) {
-            console.error('Error al confirmar la reserva:', error);
-            statusMessage.textContent = `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada.`;
+            console.error('Error al confirmar la reserva en DB:', error);
+            // Muestra un mensaje de error detallado si es un error de base de datos
+            const errorMessage = error.message.includes('column') ? 
+                `Error de Base de Datos: Verifique que las columnas 'paciente_fecha_nac', 'paciente_edad', y 'paciente_prevision' existan en su tabla 'agendas'.` : 
+                `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada.`;
+                
+            statusMessage.textContent = errorMessage;
             confirmBtn.disabled = false;
         }
     });
