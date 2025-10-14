@@ -379,66 +379,6 @@
              .hero h1 { font-size: 2.5rem; }
              .hero-image { height: 30vh; }
         }
-        
-        /* --- ESTILOS DEL MODAL DE CONFIRMACIÓN (REEMPLAZA EL PASO 4) --- */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000; /* Asegura que esté por encima de todo */
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
-        }
-        .modal-overlay.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
-        .modal-content {
-            background: var(--bg-light);
-            padding: 0; /* Padding movido a modal-body */
-            border-radius: 10px;
-            width: 95%;
-            max-width: 550px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform: translateY(-50px);
-            transition: transform 0.3s ease;
-        }
-        .modal-overlay.visible .modal-content {
-            transform: translateY(0);
-        }
-        .modal-header {
-            background: var(--primary);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px 10px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .modal-header h3 {
-            margin: 0;
-            font-family: 'Playfair Display', serif;
-        }
-        .modal-body {
-            padding: 25px;
-            max-height: 80vh; /* Permite scroll si el formulario es muy largo */
-            overflow-y: auto;
-        }
-        .modal-close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            line-height: 1;
-        }
     </style>
 </head>
 <body>
@@ -944,7 +884,6 @@
             return;
         }
         
-        // CRÍTICO: Muestra el Modal que contiene el formulario.
         showModal();
     }
 
