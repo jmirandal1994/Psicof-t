@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1"/>
-  <title>Panel de Control | Psicofitt</title>
+  <title>Panel de Control | Speech Psychology</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com"/>
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
@@ -12,15 +12,14 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
   <style>
-    /* ---------- Estilos Base y Paleta ---------- */
+    /* ---------- Estilos (preservados + mejoras) ---------- */
     :root{
-      --primary:#2C3A47; /* Gris Azulado Oscuro (Headers/Textos) */
-      --accent:#B8860B; /* Ocre Suave/Bronce (Acción/Énfasis) */
-      --bg:#f8f H9fa; /* Fondo General */
+      --primary:#2b3a67;
+      --accent:#e0a35e;
+      --bg:#f8f9fa;
       --muted:#6c757d;
-      --success: #1e7e34; 
-      --danger: #d9534f;
-      --info: #007bff;
+      --success: #1e7e34; /* Verde para citas/confirmación */
+      --danger: #d9534f; /* Rojo para pendiente/alerta */
     }
     *{box-sizing:border-box}
     body{
@@ -28,242 +27,245 @@
       background:var(--bg);
       color:#495057;
       margin:0;
+      display:flex;
       min-height:100vh;
-      display:flex;
     }
 
-    /* Sidebar (Menú Lateral) */
+    /* Sidebar */
     .sidebar{
-      width:250px;
-      background:var(--primary);
-      color:white;
-      padding:20px;
-      flex-shrink:0;
-      height:100vh;
-      position:sticky;
-      top:0;
-      box-shadow:2px 0 5px rgba(0,0,0,0.2);
+      width:280px;
+      background:#fff;
+      padding:30px;
+      box-shadow:2px 0 10px rgba(0,0,0,0.05);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
     }
-    .sidebar h2{
-      font-family:'Playfair Display',serif;
-      font-size:1.8rem;
-      margin-bottom:30px;
-      text-align:center;
-    }
-    .profile-info{margin-bottom:30px;border-bottom:1px solid rgba(255,255,255,0.2);padding-bottom:15px;}
-    #sidebar-name{font-weight:700;font-size:1.1rem;display:block;}
-    #sidebar-sub{font-size:0.9rem;opacity:0.8;}
+    .profile-pic{width:150px;height:150px;border-radius:50%;background:#e9ecef;margin-bottom:20px;overflow:hidden;display:flex;align-items:center;justify-content:center}
+    .profile-pic img{width:100%;height:100%;object-fit:cover}
+    .sidebar h4{font-family:'Playfair Display',serif;color:var(--primary);margin-bottom:14px}
+    .sidebar .small-muted{color:var(--muted);font-size:0.95rem;margin-bottom:18px}
 
-    .menu-btn{
-      display:block;
-      padding:12px 15px;
-      margin-bottom:10px;
-      color:white;
-      text-decoration:none;
-      border-radius:6px;
-      transition:background 0.2s;
-      cursor:pointer;
-      font-weight:500;
-      border: none;
-      background: none;
-      width: 100%;
-      text-align: left;
+    .sidebar-menu{list-style:none;padding:0;width:100%}
+    .sidebar-menu li{margin-bottom:10px}
+    .sidebar-menu button{
+      background:transparent;border:none;width:100%;text-align:left;padding:12px 16px;border-radius:8px;font-weight:700;color:var(--muted);cursor:pointer;display:flex;align-items:center;gap:12px
     }
-    .menu-btn:hover{background:rgba(255,255,255,0.1);}
-    .menu-btn.active{background:var(--accent);font-weight:700;}
-    .menu-btn i{margin-right:10px;}
+    .sidebar-menu button.active,.sidebar-menu button:hover{background:var(--accent);color:#fff}
+    .sidebar-menu button i{color:var(--primary)}
+    .sidebar-menu button.active i{color:#fff}
 
-    #logout-btn{
-      margin-top:20px;
-      background:var(--danger);
-      text-align:center;
-      border:none;
-      cursor:pointer;
-      font-weight:700;
-      color:white;
-      padding:10px;
-      border-radius:6px;
-    }
-
-    /* Contenido Principal */
+    /* Main - Ajustado para la columna lateral */
     .main-content{
-      flex-grow:1;
-      padding:30px;
+        flex: 1;
+        padding: 40px;
+        display: flex; /* CLAVE para dividir en columnas */
+        gap: 30px; /* Espacio entre las columnas */
     }
-    .header-content{
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
-      margin-bottom:30px;
-      border-bottom:2px solid #ddd;
-      padding-bottom:15px;
+    
+    /* Nueva estructura de contenido */
+    .agenda-area {
+        flex: 2.5; /* Ocupa más espacio para el calendario */
+        display: flex;
+        flex-direction: column;
     }
-    .header-content h1{
-      font-family:'Playfair Display',serif;
-      color:var(--primary);
-      margin:0;
-    }
-    #welcome-message{font-size:1.5rem;font-weight:700;}
-    #agenda-status{font-size:0.9rem;}
 
-    /* Contenido de Tabs */
-    .tab-content{display:none; padding-top: 10px;}
-    .tab-content.active{display:block;}
+    .sidebar-reservas {
+        flex: 1; /* Ocupa 1/4 del espacio */
+        background: #fff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+        min-width: 250px; /* Ancho mínimo reducido */
+        max-height: calc(100vh - 80px); 
+        overflow-y: auto;
+    }
+    
+    .reserva-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .reserva-item {
+        background: #f8f9fa;
+        border: 1px solid #e9ecef;
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        cursor: pointer;
+        transition: background 0.2s;
+    }
+    .reserva-item:hover {
+        background: #e9ecef;
+    }
+    .reserva-time {
+        font-weight: 700;
+        color: var(--primary);
+        display: block;
+        margin-bottom: 5px;
+    }
+    .reserva-details {
+        font-size: 0.9rem;
+        color: var(--muted);
+    }
+    .reserva-details strong {
+        color: var(--success); /* Color verde para el nombre */
+    }
+    
+    /* Estilos para Evoluciones PENDIENTES (Diseño Profesional) */
+    .pending-item {
+        background: #fffafa;
+        border: 1px solid #ffeded;
+        border-left: 5px solid var(--danger); /* Rojo para indicar urgencia/pendiente */
+        padding: 15px;
+        margin-bottom: 10px;
+        border-radius: 8px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        transition: all 0.3s ease-out; 
+    }
+    .pending-item:hover {
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    }
+    .pending-item.fade-out {
+        opacity: 0;
+        height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin: 0;
+        overflow: hidden;
+    }
+    .pending-item button {
+        background: var(--success); /* Verde para 'Registrar' */
+        color: #fff;
+        border: none;
+        padding: 8px 12px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        white-space: nowrap;
+        font-weight: 600;
+    }
+    .pending-item-info {
+        max-width: 70%;
+    }
+    .pending-item .reserva-time {
+        color: var(--danger);
+    }
+    
+    /* Estilos para el formulario de Evolución */
+    #evolution-form-container input[type="text"],
+    #evolution-form-container textarea {
+        width: 100%;
+        padding: 12px;
+        margin-top: 5px;
+        border: 1px solid #ccc;
+        border-radius: 6px;
+        font-size: 1rem;
+        box-sizing: border-box;
+    }
+    #evolution-form-container label {
+        display: block;
+        font-weight: 600;
+        color: var(--primary);
+        margin-top: 10px;
+    }
+    
+    /* Estilos para Historial */
+    .patient-card-summary {
+        background: var(--primary);
+        color: #fff;
+        padding: 15px 25px;
+        border-radius: 8px;
+        margin-bottom: 10px;
+        cursor: pointer;
+        transition: transform 0.2s;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .patient-card-summary:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+    }
+    .patient-card-summary h4 {
+        color: #fff;
+        margin: 0;
+        font-family: 'Montserrat', sans-serif;
+    }
+    .patient-card-summary .fas {
+        font-size: 1.2rem;
+    }
 
-    /* Listas de Citas (Citas Hoy) */
-    .appointment-list .card{
-      background:white;
-      padding:15px;
-      margin-bottom:15px;
-      border-radius:8px;
-      box-shadow:0 2px 10px rgba(0,0,0,0.05);
-      border-left:5px solid var(--accent);
-      display:flex;
-      justify-content:space-between;
-      align-items:center;
+    .evolutions-detail-list {
+        display: none; 
+        padding-top: 15px;
+        border-top: 1px solid #eee;
+        margin-top: 10px;
     }
-    .appointment-list .card-body{flex-grow:1;}
-    .appointment-list .time{
-      font-weight:700;
-      color:var(--primary);
-      font-size:1.2rem;
-      margin-bottom:5px;
+    .evolutions-detail-list.active {
+        display: block; 
     }
-    .appointment-list .name{font-weight:500;}
-    .appointment-list .action-btn{
-      background:var(--success);
-      color:white;
-      padding:8px 12px;
-      border-radius:4px;
-      text-decoration:none;
-      font-size:0.9rem;
-      cursor:pointer;
-      border:none;
-    }
-    .appointment-list .action-btn:hover{opacity:0.9;}
 
-    /* Modal (Para Evolución) */
-    .modal-overlay{
-      position:fixed;
-      top:0;
-      left:0;
-      width:100%;
-      height:100%;
-      background:rgba(0,0,0,0.6);
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      z-index:1000;
+    .history-card {
+        background: #f8f9fa;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        text-align: left;
+        border-left: 4px solid var(--primary);
     }
-    .modal-content{
-      background:white;
-      padding:30px;
-      border-radius:8px;
-      width:90%;
-      max-width:600px;
-      box-shadow:0 5px 15px rgba(0,0,0,0.3);
-      position:relative;
+    .history-card h5 {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1rem;
+        color: var(--primary);
+        margin: 0 0 5px;
+        font-weight: 700;
     }
-    .modal-content h3{
-      font-family:'Playfair Display',serif;
-      color:var(--primary);
-      margin-top:0;
-    }
-    .modal-content textarea{
-      width:100%;
-      padding:12px;
-      margin-bottom:15px;
-      border:1px solid #ddd;
-      border-radius:4px;
-    }
-    .modal-content button{
-      padding:10px 15px;
-      border:none;
-      border-radius:4px;
-      cursor:pointer;
-      font-weight:700;
-    }
-    .modal-content .close-btn{
-      position:absolute;
-      top:10px;
-      right:10px;
-      background:none;
-      font-size:1.5rem;
-      color:var(--muted);
-    }
-    .modal-content .save-btn{background:var(--accent);color:white;}
-    .modal-content .cancel-btn{background:#eee;margin-right:10px;}
-
-    /* --- CALENDARIO DE TABLA (VISTA SEMANAL) --- */
-    .calendar-table{border-collapse:collapse;width:100%;min-width:700px; margin-top: 20px; font-size: 0.9rem;} 
-    .calendar-table thead th{
-        position:sticky;top:0;
-        background:var(--primary);
-        color:white;
-        border-bottom:1px solid #e9ecef;
-        padding:10px 8px;
-        text-align:center;
-        font-weight:700;
-        cursor:pointer; 
-        width: 10%;
-    } 
-    .time-col{
-        width:80px;
-        text-align:center;
-        padding:10px 5px;
-        background:var(--bg);
-        font-weight:700;
-        color:var(--primary);
-        border-right:1px solid #e9ecef
-    } 
-    .calendar-table td{height:50px;padding:6px; border: 1px solid #eee; background-color: white;}
-    .cell{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        border-radius:6px;
-        cursor:pointer;
-        user-select:none;
-        transition:background .2s, border-color .2s;
-        font-weight:500;
-        height:100%;
-        width:100%;
+    .history-card p {
         font-size: 0.85rem;
+        margin: 3px 0;
+        color: var(--muted);
     }
-    .cell.available{background:#fff;border:1px solid var(--accent);color:var(--accent);}
-    .cell.available:hover{background:var(--accent);color:#fff;}
-    .cell.booked{background:var(--danger);color:#fff;cursor:not-allowed;} 
-    .cell.set-available{background:var(--success);color:#fff;border:1px solid var(--success);} /* Estado que la profesional marca como disponible */
-    .cell.set-available:hover{background:var(--accent);border-color:var(--accent);}
+    .history-content {
+        margin-top: 10px;
+        padding-top: 10px;
+        border-top: 1px solid #eee;
+        font-style: italic;
+        color: #495057;
+        white-space: pre-wrap; 
+    }
 
-    .calendar-wrapper { overflow-x: auto; border-radius: 12px; border: 1px solid #e9ecef; background: #fff; padding: 12px; }
+
+    .header-panel{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #e9ecef}
+    .header-panel h2{font-family:'Playfair Display',serif;color:var(--primary);font-size:2.2rem;margin:0}
+    .logout-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700}
+    .logout-btn:hover{background:#d19a55}
+
+    .tab-content{display:none;background:#fff;padding:36px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-bottom:18px}
+    .tab-content.active{display:block}
+
+    .section-header{text-align:center;margin-bottom:18px}
+    .section-header h3{margin:0;color:var(--primary);font-family:'Playfair Display',serif}
+    .section-header p{color:var(--muted);margin:6px 0 0 0}
+
+    /* Calendario */
     .week-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
     .week-label{font-weight:700;color:var(--primary);font-size:1.05rem}
-
-    .btn-nav{background:#fff;color:var(--primary);border:1px solid #e9ecef;padding:8px 12px;cursor:pointer;font-weight:700;border-radius: 6px; transition: background-color 0.2s;}
-    .btn-nav:hover{background-color: #eee;}
-
-    /* Historial */
-    .evolution-list .card{border-left:5px solid var(--success);}
-    .evolution-list .card-body .name{color:var(--success);}
-    .evolution-list .action-btn{background:var(--info);}
-    .patient-card-summary {background: var(--primary);color: #fff;padding: 15px 25px;border-radius: 8px;margin-bottom: 10px;cursor: pointer;transition: transform 0.2s;display: flex;justify-content: space-between;align-items: center;}
-    .patient-card-summary:hover {transform: translateY(-2px);box-shadow: 0 4px 10px rgba(0,0,0,0.2);}
-    .patient-card-summary h4 {color: #fff;margin: 0;font-family: 'Montserrat', sans-serif;}
-    .patient-card-summary .fas {font-size: 1.2rem;}
-    .evolutions-detail-list {display: none; padding-top: 15px;border-top: 1px solid #eee;margin-top: 10px;}
-    .evolutions-detail-list.active {display: block;}
-    .history-card {background: #f8f9fa;padding: 15px;border-radius: 8px;margin-bottom: 15px;text-align: left;border-left: 4px solid var(--primary);}
-    .history-card h5 {font-family: 'Montserrat', sans-serif;font-size: 1rem;color: var(--primary);margin: 0 0 5px;font-weight: 700;}
-    .history-card p {font-size: 0.85rem;margin: 3px 0;color: var(--muted);}
-    .history-content {margin-top: 10px;padding-top: 10px;border-top: 1px solid #eee;font-style: italic;color: #495057;white-space: pre-wrap;}
-    .reserva-item {background: #f8f9fa;border: 1px solid #e9ecef;padding: 15px;margin-bottom: 10px;border-radius: 8px;cursor: pointer;transition: background 0.2s;}
-    .reserva-item:hover {background: #e9ecef;}
-
-    /* Utilitarios */
-    .mt-3{margin-top:1rem;}
-    .mb-3{margin-bottom:1rem;}
-    .p-3{padding:1rem;}
+    .calendar-wrapper{overflow-x: auto;border-radius:12px;border:1px solid #e9ecef;background:#fff;padding:12px} 
+    .calendar-table{border-collapse:collapse;width:100%;min-width:700px} 
+    .calendar-table thead th{position:sticky;top:0;background:#fff;border-bottom:1px solid #e9ecef;padding:10px 8px;text-align:center;font-weight:700;color:var(--primary);cursor:pointer; width: 10%;} 
+    .time-col{width:80px;text-align:left;padding-left:12px;background:#fafafa;position:sticky;left:0;z-index:2;font-weight:700;color:var(--primary);border-right:1px solid #e9ecef} 
+    .calendar-table td{height:56px;padding:6px}
+    .cell{display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;user-select:none;transition:transform .08s ease,box-shadow .12s ease;font-weight:700;height:100%;width:100%}
+    .cell.available{background:#fff;border:1px solid #f1f1f1;color:var(--primary)}
+    /* CLASES DE AGENDAMIENTO */
+    .cell.active{background:var(--accent);color:#fff}
+    .cell.booked{background:var(--success);color:#fff;cursor:not-allowed} 
+    .cell.booked-cell{background:var(--success);color:#fff;cursor:not-allowed}
+    /* FIN CLASES DE AGENDAMIENTO */
+    .info-msg{color:var(--muted);font-weight:600}
 
     /* Mensaje de error visual */
     .error-box{background:#fff0f0;border:1px solid #ffd6d6;color:#7a1f1f;padding:12px;border-radius:8px;margin:10px 0}
@@ -275,19 +277,23 @@
 
     /* Responsividad (Móvil/Tablet) */
     @media (max-width:1200px){
-      .main-content { padding: 20px; }
+        .main-content {
+            padding: 20px;
+        }
     }
+    
     @media (max-width:900px){
       .time-col{width:80px;font-size:.85rem}
       .calendar-table thead th{font-size:.85rem}
       .calendar-table td{height:48px}
       .main-content {
-          flex-direction: column;
+          flex-direction: column; /* Apila las columnas */
           gap: 20px;
       }
       .sidebar-reservas {
           min-width: unset;
           max-height: 400px;
+          /* Ocupa todo el ancho cuando se apila */
           width: 100%; 
       }
     }
@@ -296,17 +302,19 @@
 <body>
 
   <div class="sidebar">
-    <h2><i class="fas fa-brain"></i> Psicofitt Panel</h2>
-    <div class="profile-info">
-      <span id="sidebar-name">Cargando...</span>
-      <span id="sidebar-sub"></span>
+    <div class="profile-pic">
+      <img id="sidebar-avatar" src="https://via.placeholder.com/150" alt="avatar"/>
     </div>
-    
-    <button data-tab="tab-today" class="menu-btn active"><i class="fas fa-calendar-day"></i> Citas de Hoy</button>
-    <button data-tab="tab-schedule" class="menu-btn"><i class="fas fa-calendar-alt"></i> Agenda de la Semana</button>
-    <button data-tab="tab-history" class="menu-btn"><i class="fas fa-history"></i> Historial de Evoluciones</button>
+    <h4 id="sidebar-name">Cargando...</h4>
+    <div class="sidebar small-muted" id="sidebar-sub">Cargando...</div>
 
-    <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
+    <ul class="sidebar-menu">
+      <li><button class="menu-btn active" data-tab="agenda-tab"><i class="fas fa-calendar-alt"></i> Agenda y servicios</button></li>
+      <li><button class="menu-btn" data-tab="evoluciones-tab"><i class="fas fa-notes-medical"></i> Evoluciones</button></li>
+      <li><button class="menu-btn" data-tab="atenciones-completadas-tab"><i class="fas fa-history"></i> Historial Clínico</button></li> <li><button class="menu-btn" data-tab="datos-tab"><i class="fas fa-user-circle"></i> Mis datos</button></li>
+      <li><button class="menu-btn" data-tab="perfil-tab"><i class="fas fa-id-card"></i> Mi perfil</button></li>
+      <li><button class="menu-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button></li>
+    </ul>
   </div>
 
   <div class="main-content">
@@ -318,160 +326,183 @@
             <div id="header-actions"></div>
         </div>
 
-        <div id="tab-today" class="tab-content active">
+        <div id="agenda-tab" class="tab-content active">
           <div class="section-header">
-            <h3>Citas Pendientes para Hoy</h3>
-            <p>Lista de pacientes que deben ser atendidos hoy.</p>
+            <h3>Gestión de Agenda</h3>
+            <p>Selecciona los días y horarios para generar tu agenda semanal. Haz click sobre un slot disponible (<span style="color:var(--accent);font-weight:700">Naranja</span>) para eliminarlo.</p>
           </div>
-          <div id="appointments-today" class="appointment-list">
-            <p><span class="spinner"></span> Cargando citas...</p>
+
+          <div class="section-header">
+            <h3>Mi Agenda Semanal</h3>
+            <div id="agenda-status" class="info-msg"> <span class="spinner"></span> Cargando semana...</div>
           </div>
-          <div id="no-appointments-today" style="display:none" class="hint-box">
-            <i class="fas fa-check-circle" style="color:var(--success);"></i> No hay citas pendientes para hoy.
+
+          <div class="week-controls">
+            <div style="display:flex;gap:8px;align-items:center">
+              <button id="prev-week" class="logout-btn" style="background:#fff;color:var(--primary);border:1px solid #e9ecef;padding:8px 12px;">
+                <i class="fas fa-chevron-left"></i> Semana anterior
+              </button>
+              <button id="next-week" class="logout-btn" style="background:#fff;color:var(--primary);border:1px solid #e9ecef;padding:8px 12px;">
+                Semana siguiente <i class="fas fa-chevron-right"></i>
+              </button>
+            </div>
+            <div style="display:flex;align-items:center;gap:18px">
+              <div class="week-label" id="week-label">Cargando semana...</div>
+            </div>
           </div>
-          <div id="evolution-form-container" style="display: none;">
-              <div class="modal-overlay" id="evolution-modal">
-                  <div class="modal-content">
-                      <button class="close-btn" onclick="document.getElementById('evolution-modal').remove()">&times;</button>
-                      <h3>Evolución de Sesión</h3>
-                      <div class="hint-box" style="margin-bottom: 20px;">
-                          <p><strong>Paciente:</strong> <span id="evol_patient_name"></span> (<span id="evol_patient_rut"></span>)</p>
-                          <p><strong>Hora:</strong> <span id="evol_appointment_time"></span></p>
-                          <p><strong>Motivo Inicial:</strong> <span id="evol_patient_motivo"></span></p>
-                      </div>
-                      
-                      <form id="saveEvolutionForm">
-                          <input type="hidden" id="evol_agenda_id">
-                          <input type="hidden" id="evol_patient_rut_hidden">
-                          <input type="hidden" id="evol_patient_nombre_hidden">
-                          
-                          <div class="form-group" style="margin-bottom: 15px;">
-                              <label for="diagnostico">Diagnóstico (Opcional)</label>
-                              <input type="text" id="diagnostico" placeholder="Código CIE-10 o descripción breve">
-                          </div>
-                          
-                          <div class="form-group">
-                              <label for="evol_description">Descripción de la Atención y Evolución</label>
-                              <textarea id="evol_description" rows="10" required placeholder="Diagnóstico, tratamiento realizado, observaciones y plan de seguimiento..."></textarea>
-                          </div>
-                          <button type="submit" class="logout-btn" style="background:var(--success); width: 100%; margin-top: 15px;">Confirmar Atención y Guardar Evolución</button>
-                          <button type="button" id="cancelEvolutionBtn" class="logout-btn" style="background:var(--muted); width: 100%; margin-top: 10px;">Cancelar / Volver</button>
-                      </form>
-                  </div>
-              </div>
+
+          <div id="agenda-error" style="display:none" class="error-box"></div>
+
+          <div class="calendar-wrapper" id="calendar-wrap" style="display:none">
+            <table class="calendar-table" aria-label="Calendario semanal">
+              <thead>
+                <tr id="calendar-head">
+                  <th class="time-col">Hora</th>
+                </tr>
+              </thead>
+              <tbody id="calendar-body"></tbody>
+            </table>
           </div>
+
         </div>
 
-        <div id="tab-schedule" class="tab-content">
+        <div id="evoluciones-tab" class="tab-content">
             <div class="section-header">
-                <h3>Gestión de Disponibilidad Semanal</h3>
-                <p>Haz clic en una celda **vacía** para marcarla como **Disponible** (<span style="color:var(--accent); font-weight:700;">Ocre</span>) o haz clic en una celda disponible para **Bloquearla** (<span style="color:var(--primary); font-weight:700;">Gris Azulado</span>). Los horarios en <span style="color:var(--danger); font-weight:700;">Rojo</span> ya reservados no pueden modificarse.</p>
+                <h3>Evoluciones Pendientes y Registro</h3>
+                <p>Aquí se listan las citas reservadas. Selecciona una para registrar la evolución.</p>
             </div>
             
-            <div id="agenda-error" style="display:none" class="error-box"></div>
-
-            <div class="week-controls">
-                <div style="display:flex;gap:8px;align-items:center">
-                    <button id="prev-week" class="btn-nav" onclick="changeWeek(-7)">
-                        <i class="fas fa-chevron-left"></i> Semana anterior
-                    </button>
-                    <button id="next-week" class="btn-nav" onclick="changeWeek(7)">
-                        Semana siguiente <i class="fas fa-chevron-right"></i>
-                    </button>
-                </div>
-                <div style="display:flex;align-items:center;gap:18px">
-                    <div class="week-label" id="week-label">Cargando semana...</div>
+            <div id="evoluciones-main-view">
+                <h4>Citas Pendientes de Evolución</h4>
+                <div id="pendingAppointmentsList">
+                    <p><span class="spinner"></span> Cargando citas pendientes...</p>
                 </div>
             </div>
             
-            <div class="calendar-wrapper" id="calendar-wrap">
-                <table class="calendar-table" aria-label="Calendario semanal">
-                    <thead>
-                        <tr id="calendar-head">
-                            <th class="time-col">Hora</th>
-                        </tr>
-                    </thead>
-                    <tbody id="calendar-body"></tbody>
-                </table>
+            <div id="evolution-form-container" class="tab-content" style="display: none; padding: 0;">
+                <h4 style="color: var(--primary);">Registrar Evolución</h4>
+                <div class="hint-box" style="margin-bottom: 20px;">
+                    <p><strong>Paciente:</strong> <span id="evol_patient_name"></span> (<span id="evol_patient_rut"></span>)</p>
+                    <p><strong>Hora:</strong> <span id="evol_appointment_time"></span></p>
+                    <p><strong>Motivo Inicial:</strong> <span id="evol_patient_motivo"></span></p>
+                </div>
+                
+                <form id="saveEvolutionForm">
+                    <input type="hidden" id="evol_agenda_id">
+                    <input type="hidden" id="evol_patient_rut_hidden">
+                    <input type="hidden" id="evol_patient_nombre_hidden">
+                    
+                    <div class="form-group" style="margin-bottom: 15px;">
+                        <label for="diagnostico">Diagnóstico (Opcional)</label>
+                        <input type="text" id="diagnostico" placeholder="Código CIE-10 o descripción breve">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="evol_description">Descripción de la Atención y Evolución</label>
+                        <textarea id="evol_description" rows="10" required placeholder="Diagnóstico, tratamiento realizado, observaciones y plan de seguimiento..."></textarea>
+                    </div>
+                    <button type="submit" class="logout-btn" style="background:var(--success); width: 100%; margin-top: 15px;">Confirmar Atención y Guardar Evolución</button>
+                    <button type="button" id="cancelEvolutionBtn" class="logout-btn" style="background:var(--muted); width: 100%; margin-top: 10px;">Cancelar / Volver</button>
+                </form>
             </div>
         </div>
+        <div id="atenciones-completadas-tab" class="tab-content">
+            <div class="section-header">
+                <h3>Historial Clínico y Evoluciones Completadas</h3>
+                <p>Revisa el historial de atenciones. La lista muestra todas las evoluciones del último año.</p>
+            </div>
+            
+            <div style="text-align: center; margin-bottom: 20px;">
+                <input type="text" id="historyFilterInput" placeholder="Filtrar por Nombre, RUT o Fecha (Ej: 2025-10)" style="padding: 10px; width: 80%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px;">
+                <div id="historyStatus" style="margin-top: 10px; color: var(--muted);"></div>
+            </div>
+            
+            <div id="completedEvolutionsList">
+                <p>Cargando historial...</p>
+            </div>
+        </div>
+        <div id="datos-tab" class="tab-content">
+          <h3>Mis Datos</h3>
+          <p>Aquí irá el formulario para editar datos personales.</p>
+        </div>
 
-
-        <div id="tab-history" class="tab-content">
-          <div class="section-header">
-              <h3>Historial Clínico y Evoluciones Completadas</h3>
-              <p>Revisa el historial de atenciones. La lista muestra todas las evoluciones del último año.</p>
-          </div>
-          
-          <div style="text-align: center; margin-bottom: 20px;">
-              <input type="text" id="historyFilterInput" placeholder="Filtrar por Nombre, RUT o Fecha (Ej: 2025-10)" style="padding: 10px; width: 80%; max-width: 400px; border: 1px solid #ddd; border-radius: 6px;">
-              <div id="historyStatus" style="margin-top: 10px; color: var(--muted);"></div>
-          </div>
-          
-          <div id="completedEvolutionsList">
-              <p>Cargando historial...</p>
-          </div>
+        <div id="perfil-tab" class="tab-content">
+          <h3>Mi Perfil</h3>
+          <p>Aquí podrás editar tu biografía y servicios.</p>
         </div>
 
     </div> 
-    
     <div class="sidebar-reservas">
-        <h3>Detalles de la Cita</h3>
+        <h3>Reservas de la Semana</h3>
         <p id="reserva-dia-actual" style="font-weight: bold; color: var(--accent);">Selecciona un día en la agenda</p>
         <div id="reserva-list-container">
             <div class="hint-box">Haz click en los encabezados de los días (Lun, Mar, etc.) para ver la lista de citas de ese día y sus detalles.</div>
         </div>
     </div>
-    
-  </div>
-  
-<script>
-  // --- CREDENCIALES DE SUPABASE ---
-  const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
-  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
+    </div>
+  <script>
+  /****************** Supabase setup - CREDENCIALES CORREGIDAS ******************/
+  // Tomadas de panel-10.html
+  const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co';
+  const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU';
   const { createClient } = supabase;
   const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
-  // --- ESTADO GLOBAL ---
-  let currentProfessionalId = null;
-  let currentWeekStart = new Date(); 
-  let agendaMap = new Map();
-  const startHour = 9, endHour = 18, slotIntervalMin = 45; 
-  let timeSlots = [];
-  let currentReservas = []; 
-  let allCompletedEvolutions = []; 
-  let selectedReservaDate = null; 
-
-  // --- ELEMENTOS DOM ---
+  /****************** DOM refs ******************/
   const welcomeMessage = document.getElementById('welcome-message');
   const sidebarNameEl = document.getElementById('sidebar-name');
   const sidebarSubEl = document.getElementById('sidebar-sub');
-  const agendaStatus = document.getElementById('agenda-status');
-  const logoutBtn = document.getElementById('logout-btn');
   const calendarHead = document.getElementById('calendar-head');
   const calendarBody = document.getElementById('calendar-body');
   const weekLabel = document.getElementById('week-label');
+  const prevWeekBtn = document.getElementById('prev-week');
+  const nextWeekBtn = document.getElementById('next-week');
+  const agendaStatus = document.getElementById('agenda-status');
   const agendaErrorBox = document.getElementById('agenda-error');
   const calendarWrap = document.getElementById('calendar-wrap');
-  const pendingAppointmentsListEl = document.getElementById('appointments-today'); 
-  const completedEvolutionsListEl = document.getElementById('completedEvolutionsList');
-  const saveEvolutionFormEl = document.getElementById('saveEvolutionForm');
-  const cancelEvolutionBtnEl = document.getElementById('cancelEvolutionBtn');
-  const evolutionFormContainerEl = document.getElementById('evolution-form-container');
-  const evolMainViewEl = document.getElementById('tab-today');
+  const logoutBtn = document.getElementById('logout-btn');
   const reservaDiaActualEl = document.getElementById('reserva-dia-actual');
   const reservaListContainerEl = document.getElementById('reserva-list-container');
+  // Refs para Evoluciones
+  const pendingAppointmentsListEl = document.getElementById('pendingAppointmentsList');
+  const evolutionFormContainerEl = document.getElementById('evolution-form-container');
+  const saveEvolutionFormEl = document.getElementById('saveEvolutionForm');
+  const cancelEvolutionBtnEl = document.getElementById('cancelEvolutionBtn');
+  const evolMainViewEl = document.getElementById('evoluciones-main-view');
+  // Refs para Historial
+  const completedEvolutionsListEl = document.getElementById('completedEvolutionsList');
   const historyFilterInputEl = document.getElementById('historyFilterInput');
   const historyStatusEl = document.getElementById('historyStatus');
 
 
-  // --- UTILIDADES DE TIEMPO ---
+  /****************** Estado ******************/
+  let currentProfessionalId = null;
+  const startHour = 8, endHour = 21, slotIntervalMin = 45;
+  let timeSlots = [];
+  let startOfWeekDate = getStartOfWeek(new Date());
+  let agendaMap = new Map(); 
+  let currentReservas = []; 
+  let selectedReservaDate = null; 
+  let allCompletedEvolutions = []; // Nueva lista para almacenar el historial completo
+
+  /****************** Utilidades de fecha ******************/
   function pad(n){ return String(n).padStart(2,'0'); }
   function toISODate(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
   function formatDayName(dateStr) {
       const d = new Date(dateStr + 'T12:00:00'); 
       return d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long' });
   }
+  function getStartOfWeek(date){
+    const d = new Date(date);
+    const day = d.getDay(); 
+    const diff = (day === 0 ? -6 : 1) - day; 
+    d.setDate(d.getDate() + diff);
+    d.setHours(0,0,0,0);
+    return d;
+  }
+  function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+
+  // Función para calcular la edad
   function calculateAge(dateString) {
       if (!dateString) return 'N/D';
       const today = new Date();
@@ -484,310 +515,398 @@
       }
       return age >= 0 ? `${age} años` : 'N/D';
   }
-  function getStartOfWeek(date){
-    const d = new Date(date);
-    const day = d.getDay(); 
-    const diff = (day === 0 ? -6 : 1) - day; 
-    d.setDate(d.getDate() + diff);
-    d.setHours(0,0,0,0);
-    return d;
-  }
-  function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
+
+  /****************** Generar slots (sincrónico) ******************/
   function generateTimeSlots(){
-      timeSlots = [];
-      const temp = new Date();
-      temp.setHours(startHour,0,0,0);
-      while (temp.getHours() < endHour || (temp.getHours() === endHour && temp.getMinutes() === 0)) {
-          const t = `${pad(temp.getHours())}:${pad(temp.getMinutes())}`;
-          timeSlots.push(t);
-          temp.setMinutes(temp.getMinutes() + slotIntervalMin);
+    timeSlots = [];
+    const temp = new Date();
+    temp.setHours(startHour,0,0,0);
+    while (temp.getHours() < endHour || (temp.getHours() === endHour && temp.getMinutes() === 0)) {
+      const t = `${pad(temp.getHours())}:${pad(temp.getMinutes())}`;
+      timeSlots.push(t);
+      temp.setMinutes(temp.getMinutes() + slotIntervalMin);
+    }
+  }
+
+  /****************** LÓGICA DE EVOLUCIONES Y HISTORIAL ******************/
+  
+  // 1. Renderizar la lista de citas pendientes (slots reservados)
+  function renderPendingAppointments() {
+      pendingAppointmentsListEl.innerHTML = '';
+      
+      const todayDateStr = toISODate(new Date());
+      
+      // 🛑 CLAVE: Filtramos por slots reservados (disponible: false) Y que no tengan evolucion_registrada: TRUE
+      const appointments = currentReservas.filter(r => r.disponible === false && r.evolucion_registrada !== true).sort((a, b) => {
+          return (a.fecha + a.hora_inicio).localeCompare(b.fecha + b.hora_inicio);
+      });
+      
+      if (appointments.length === 0) {
+          pendingAppointmentsListEl.innerHTML = '<p>🎉 No hay citas reservadas pendientes de evolución.</p>';
+          return;
       }
-  }
-  generateTimeSlots();
-
-  /****************** 1. AUTENTICACIÓN Y CARGA INICIAL (ROBUSTO) ******************/
-  async function checkAuth() {
-    agendaStatus.innerHTML = '<span class="spinner"></span> Verificando sesión...';
-    
-    try {
-        const { data: { session } } = await supabaseClient.auth.getSession();
-        const user = session ? session.user : null;
-
-        if (!user) {
-            window.location.href = 'portal.html';
-            return;
-        }
-
-        const loggedInUserId = user.id;
-        
-        // Cargar perfil del profesional
-        const { data: prof, error } = await supabaseClient
-            .from('profesionales')
-            .select('*')
-            .eq('id', loggedInUserId) 
-            .maybeSingle(); 
-
-        if (error || !prof) {
-            // Mostrar mensaje de error en el panel
-            document.querySelector('.agenda-area').innerHTML = `
-                <div style="background:#fff3f4; border:1px solid var(--danger); padding:25px; border-radius:8px; margin-top:30px;">
-                    <h2>⚠️ Error Crítico: Perfil No Sincronizado ⚠️</h2>
-                    <p>El panel no pudo inicializar porque la fila de su perfil en la tabla <b>'profesionales'</b> (columna ID) no coincide con su usuario de inicio de sesión (UID).</p>
-                    <p><b>UID REQUERIDO:</b></p>
-                    <pre style="background:#eee; padding:10px; word-break:break-all; font-weight:700;">${loggedInUserId}</pre>
-                </div>
-            `;
-            document.querySelector('.sidebar').style.display = 'none'; 
-            return;
-        }
-
-        // Carga exitosa
-        currentProfessionalId = prof.id;
-        welcomeMessage.textContent = `¡Hola, ${prof.nombre || user.email}!`;
-        sidebarNameEl.textContent = prof.nombre || user.email;
-        sidebarSubEl.textContent = user.email || 'N/D';
-
-        // Carga de datos
-        await loadWeekSchedule(); 
-        await loadCompletedEvolutions(); 
-        
-        agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--success)">Conectado</span>';
-
-    } catch (err) {
-        console.error('checkAuth error (fatal):', err);
-        await supabaseClient.auth.signOut();
-        window.location.href = 'portal.html';
-    }
-  }
-
-  /****************** 2. CITAS PENDIENTES DE HOY ******************/
-  async function loadTodayAppointments() {
-    if (!currentProfessionalId) return;
-
-    const today = toISODate(new Date());
-    const container = pendingAppointmentsListEl;
-    const noAppts = document.getElementById('no-appointments-today');
-    container.innerHTML = 'Cargando...';
-    
-    const { data: appointments, error } = await supabaseClient
-        .from('agendas')
-        .select('*')
-        .eq('profesional_id', currentProfessionalId)
-        .eq('fecha', today)
-        .eq('disponible', false) // Solo citas reservadas
-        .eq('evolucion_registrada', false) // Solo pendientes de evolución
-        .order('hora_inicio', { ascending: true });
-
-    if (error) {
-        container.innerHTML = 'Error al cargar las citas.';
-        return;
-    }
-
-    if (appointments.length === 0) {
-        container.style.display = 'none';
-        noAppts.style.display = 'block';
-        return;
-    }
-
-    noAppts.style.display = 'none';
-    container.style.display = 'block';
-    
-    container.innerHTML = appointments.map(appt => `
-        <div class="card" data-agenda-id="${appt.id}" data-paciente="${appt.paciente_nombre}">
-            <div class="card-body">
-                <div class="time">${appt.hora_inicio.substring(0, 5)} hrs</div>
-                <div class="name">${appt.paciente_nombre} - ${appt.paciente_prevision || 'Particular'}</div>
-                <div style="font-size:0.85rem; color:var(--muted); margin-top:5px;">
-                  Motivo: ${appt.comentarios ? appt.comentarios.substring(0, 50) + '...' : 'N/D'}
-                </div>
-            </div>
-            <button class="action-btn" onclick="showEvolutionModal('${appt.id}')">
-                <i class="fas fa-file-medical"></i> Registrar Evolución
-            </button>
-        </div>
-    `).join('');
-  }
-
-  /****************** 3. GESTIÓN DE AGENDA SEMANAL ******************/
-  async function loadWeekSchedule() {
-      if (!currentProfessionalId) return;
-
-      const start = toISODate(currentWeekStart);
-      const end = toISODate(addDays(currentWeekStart, 6));
       
-      document.getElementById('week-label').textContent = `${start} — ${end}`;
+      const ul = document.createElement('ul');
+      ul.classList.add('reserva-list');
       
-      const { data, error } = await supabaseClient
-          .from('agendas')
-          .select('id, fecha, hora_inicio, disponible, paciente_nombre, paciente_rut, paciente_prevision, paciente_fecha_nac, comentarios')
-          .eq('profesional_id', currentProfessionalId)
-          .gte('fecha', start)
-          .lte('fecha', end);
+      appointments.forEach(cita => {
+          const li = document.createElement('li');
+          li.classList.add('pending-item');
+          li.id = `pending-item-${cita.id}`; 
+          
+          const hora = cita.hora_inicio.substring(0, 5);
+          const nombre = cita.paciente_nombre || 'Paciente Desconocido';
+          const isPast = cita.fecha < todayDateStr;
+          const statusColor = isPast ? 'var(--danger)' : 'var(--success)';
 
-      if (error) {
-          agendaErrorBox.style.display = 'block';
+          li.innerHTML = `
+              <div class="pending-item-info">
+                  <span class="reserva-time" style="color: ${statusColor};"><i class="fas fa-calendar-day"></i> ${cita.fecha} - ${hora} (${isPast ? 'PASADA' : 'PRÓXIMA'})</span>
+                  <div class="reserva-details">
+                      Paciente: <strong>${nombre}</strong> (RUT: ${cita.paciente_rut || 'N/A'})
+                  </div>
+              </div>
+              <button data-agenda-id="${cita.id}" class="register-evol-btn">Registrar Evolución</button>
+          `;
+          
+          ul.appendChild(li);
+      });
+      
+      pendingAppointmentsListEl.appendChild(ul);
+      
+      document.querySelectorAll('.register-evol-btn').forEach(button => {
+          button.addEventListener('click', (e) => {
+              const agendaId = e.target.dataset.agendaId;
+              const cita = currentReservas.find(r => r.id === agendaId);
+              if (cita) showEvolutionForm(cita);
+          });
+      });
+  }
+
+  // 2. Mostrar el formulario de evolución con datos precargados
+  function showEvolutionForm(cita) {
+      evolMainViewEl.style.display = 'none';
+      evolutionFormContainerEl.style.display = 'block';
+      
+      // Precargar datos del paciente
+      document.getElementById('evol_patient_name').textContent = cita.paciente_nombre || 'N/A';
+      document.getElementById('evol_patient_rut').textContent = cita.paciente_rut || 'N/A';
+      document.getElementById('evol_appointment_time').textContent = `${cita.fecha} a las ${cita.hora_inicio.substring(0, 5)}`;
+      document.getElementById('evol_patient_motivo').textContent = cita.comentarios || 'Sin motivo inicial';
+      
+      // Campos ocultos para el guardado
+      document.getElementById('evol_agenda_id').value = cita.id;
+      document.getElementById('evol_patient_rut_hidden').value = cita.paciente_rut || '';
+      document.getElementById('evol_patient_nombre_hidden').value = cita.paciente_nombre || '';
+      
+      // Limpiar formulario al abrir
+      document.getElementById('evol_description').value = ''; 
+      document.getElementById('diagnostico').value = ''; 
+  }
+
+  // 3. Volver a la lista
+  cancelEvolutionBtnEl.addEventListener('click', () => {
+      evolutionFormContainerEl.style.display = 'none';
+      evolMainViewEl.style.display = 'block';
+  });
+
+  // 4. Guardar la evolución
+  saveEvolutionFormEl.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      
+      const agendaId = document.getElementById('evol_agenda_id').value;
+      const pacienteRut = document.getElementById('evol_patient_rut_hidden').value;
+      const pacienteNombre = document.getElementById('evol_patient_nombre_hidden').value;
+      const contenidoEvol = document.getElementById('evol_description').value.trim();
+      const diagnostico = document.getElementById('diagnostico').value.trim(); 
+      
+      const cita = currentReservas.find(r => r.id === agendaId);
+      const fechaAtencion = cita ? cita.fecha : toISODate(new Date());
+
+      if (!contenidoEvol || !pacienteRut || !currentProfessionalId) {
+          alert('Error: Faltan datos esenciales (evolución, RUT o ID de profesional). No se puede guardar.');
+          return;
+      }
+      
+      const pendingItemEl = document.getElementById(`pending-item-${agendaId}`);
+      
+      // 1. Aplicar efecto de desaparición al elemento de la lista (Visual)
+      if (pendingItemEl) {
+          pendingItemEl.classList.add('fade-out');
+      }
+
+      // 2. Guardar la evolución en la tabla `evoluciones`
+      const { data: evolData, error: evolError } = await supabaseClient
+          .from('evoluciones')
+          .insert([{
+              profesional_id: currentProfessionalId, 
+              paciente_rut: pacienteRut,
+              paciente_nombre: pacienteNombre, 
+              fecha_atencion: fechaAtencion, 
+              descripcion_evol: contenidoEvol,
+              diagnostico_cie: diagnostico, 
+              estado: 'Completada',
+          }])
+          .select()
+          .single();
+
+      if (evolError) {
+          console.error('Error al guardar la evolución:', evolError);
+          alert('Ocurrió un error al guardar la evolución. Revisa la consola (F12).');
+          if (pendingItemEl) pendingItemEl.classList.remove('fade-out'); 
           return;
       }
 
-      agendaMap.clear();
-      currentReservas = [];
-      (data || []).forEach(item => {
-          const hora = item.hora_inicio.substring(0, 5);
-          const key = `${item.fecha}|${hora}`;
-          agendaMap.set(key, item);
-          if (item.disponible === false) currentReservas.push(item);
+      // 3. 🛑 CLAVE: Marcar la cita como evolucionada en la tabla 'agendas'
+      const { error: updateError } = await supabaseClient
+          .from('agendas')
+          .update({ evolucion_registrada: true })
+          .eq('id', agendaId);
+          
+      if (updateError) {
+          console.error('Error al actualizar la agenda como evolucionada:', updateError);
+          alert('Evolución guardada, pero hubo un error al marcar la cita como completada. Recarga la página.');
+      }
+      
+      alert(`Evolución para ${pacienteNombre} guardada con éxito.`);
+      
+      // 4. Recargar el flujo de la UI
+      setTimeout(async () => {
+          evolutionFormContainerEl.style.display = 'none';
+          evolMainViewEl.style.display = 'block';
+          await loadWeekSchedule(); 
+          await loadCompletedEvolutions(); // Recargar el historial
+          renderPendingAppointments();
+      }, 300); 
+  });
+
+  // 5. LÓGICA DE CARGA Y FILTRO DE HISTORIAL COMPLETO
+  async function loadCompletedEvolutions() {
+      historyStatusEl.innerHTML = '<span class="spinner"></span> Cargando historial...';
+      
+      // 1. Traer todas las evoluciones del profesional
+      const { data, error } = await supabaseClient
+          .from('evoluciones')
+          .select('*')
+          .eq('profesional_id', currentProfessionalId)
+          .order('fecha_atencion', { ascending: false });
+
+      if (error) {
+          console.error('Error al cargar historial completo:', error);
+          historyStatusEl.textContent = 'Error al cargar el historial.';
+          allCompletedEvolutions = [];
+          return;
+      }
+
+      allCompletedEvolutions = data || [];
+      renderHistoryCards(allCompletedEvolutions);
+  }
+  
+  // 6. Renderizar las tarjetas de historial y agrupar por paciente
+  function renderHistoryCards(evolutions) {
+      completedEvolutionsListEl.innerHTML = '';
+      
+      if (evolutions.length === 0) {
+          completedEvolutionsListEl.innerHTML = '<p>No se encontraron evoluciones que coincidan con el filtro.</p>';
+          historyStatusEl.textContent = 'Historial cargado: 0 resultados.';
+          return;
+      }
+
+      // Agrupar evoluciones por RUT del paciente
+      const groupedEvolutions = evolutions.reduce((acc, evol) => {
+          const rut = evol.paciente_rut;
+          if (!acc[rut]) {
+              acc[rut] = {
+                  nombre: evol.paciente_nombre,
+                  rut: rut,
+                  citas: []
+              };
+          }
+          acc[rut].citas.push(evol);
+          return acc;
+      }, {});
+
+      historyStatusEl.textContent = `Historial cargado: ${evolutions.length} atenciones. (${Object.keys(groupedEvolutions).length} pacientes)`;
+      
+      Object.values(groupedEvolutions).forEach(patientData => {
+          const patientCard = document.createElement('div');
+          patientCard.classList.add('patient-card-summary');
+          const collapseId = `evol-list-${patientData.rut.replace(/[^a-zA-Z0-9]/g, '')}`; // Crea un ID seguro
+
+          patientCard.innerHTML = `
+              <div>
+                  <h4><i class="fas fa-user-check"></i> ${patientData.nombre || 'Paciente Sin Nombre'}</h4>
+                  <p style="color: #eee; margin: 0;">RUT: ${patientData.rut}</p>
+              </div>
+              <i class="fas fa-chevron-down"></i>
+          `;
+          
+          const historyContainer = document.createElement('div');
+          historyContainer.classList.add('evolutions-detail-list');
+          historyContainer.id = collapseId;
+
+          patientData.citas.forEach(evol => {
+              const card = document.createElement('div');
+              card.classList.add('history-card');
+              card.innerHTML = `
+                  <h5><i class="fas fa-calendar-check"></i> Atención del ${new Date(evol.fecha_atencion).toLocaleDateString('es-ES')}</h5>
+                  <p>Diagnóstico: ${evol.diagnostico_cie || 'N/D'}</p>
+                  <div class="history-content">
+                      ${evol.descripcion_evol}
+                  </div>
+              `;
+              historyContainer.appendChild(card);
+          });
+
+          // Toggle logic (abrir/cerrar historial)
+          patientCard.addEventListener('click', () => {
+              historyContainer.classList.toggle('active');
+              const icon = patientCard.querySelector('.fas');
+              if (historyContainer.classList.contains('active')) {
+                  icon.classList.replace('fa-chevron-down', 'fa-chevron-up');
+              } else {
+                  icon.classList.replace('fa-chevron-up', 'fa-chevron-down');
+              }
+          });
+          
+          completedEvolutionsListEl.appendChild(patientCard);
+          completedEvolutionsListEl.appendChild(historyContainer);
+      });
+  }
+
+  // 7. Evento de filtro dinámico
+  historyFilterInputEl.addEventListener('input', (e) => {
+      const filterTerm = e.target.value.toLowerCase().trim();
+      
+      if (!allCompletedEvolutions.length) {
+          renderHistoryCards([]);
+          return;
+      }
+      
+      const filtered = allCompletedEvolutions.filter(evol => {
+          const nameMatch = (evol.paciente_nombre || '').toLowerCase().includes(filterTerm);
+          const rutMatch = (evol.paciente_rut || '').toLowerCase().includes(filterTerm);
+          const dateMatch = (evol.fecha_atencion || '').includes(filterTerm);
+
+          return nameMatch || rutMatch || dateMatch;
       });
       
-      renderCalendarTable();
-      renderReservasSidebar(selectedReservaDate); // Refresca el panel lateral
-  }
+      renderHistoryCards(filtered);
+  });
 
-  function renderCalendarTable() {
-      // 1. Renderizar encabezados de días
-      calendarHead.querySelectorAll('th:not(.time-col)').forEach(n => n.remove());
-      const dayNames = ['Lun', 'Mar', 'Mié', 'Jue', 'Vie', 'Sáb', 'Dom'];
 
-      for (let i = 0; i < 7; i++) {
-          const d = addDays(currentWeekStart, i);
-          const dateStr = toISODate(d);
-          const th = document.createElement('th');
-          th.innerHTML = `<div style="font-weight:700">${dayNames[i]}</div><div style="font-size:0.85rem;color:var(--accent)">${d.getDate()}/${pad(d.getMonth() + 1)}</div>`;
-          th.dataset.date = dateStr;
-          
-          th.addEventListener('click', () => {
-              selectedReservaDate = dateStr;
-              calendarHead.querySelectorAll('th').forEach(t => t.classList.remove('active-day-head'));
-              th.classList.add('active-day-head');
-              renderReservasSidebar(dateStr);
-          });
-          calendarHead.appendChild(th);
-      }
-
-      // 2. Renderizar filas por horario
-      calendarBody.innerHTML = '';
-      for (const time of timeSlots) {
-          const tr = document.createElement('tr');
-          const tdTime = document.createElement('td');
-          tdTime.className = 'time-col';
-          tdTime.textContent = time;
-          tr.appendChild(tdTime);
-
-          for (let i = 0; i < 7; i++) {
-              const d = addDays(currentWeekStart, i);
-              const dateStr = toISODate(d);
-              const key = `${dateStr}|${time}`;
-              const record = agendaMap.get(key);
-              
-              const isPast = d < new Date(new Date().setHours(0,0,0,0));
-              const isBooked = record && record.disponible === false && record.paciente_nombre && record.paciente_nombre !== 'BLOQUEADO';
-              const isBlocked = record && record.disponible === false && record.paciente_nombre === 'BLOQUEADO';
-              const isAvailable = record && record.disponible === true;
-              
-              const td = document.createElement('td');
-              const cell = document.createElement('div');
-              cell.className = 'cell';
-              cell.dataset.date = dateStr;
-              cell.dataset.time = time;
-              cell.dataset.key = key;
-              
-              if (isPast) {
-                  cell.innerHTML = 'Pasado';
-                  cell.classList.add('booked'); 
-                  cell.style.cursor = 'not-allowed';
-              } else if (isBooked) {
-                  cell.classList.add('booked');
-                  cell.innerHTML = `RESERVADO`;
-              } else if (isBlocked) {
-                  cell.classList.add('available'); // Usamos available, pero lo estilizamos como bloqueado
-                  cell.innerHTML = 'BLOQUEADO';
-                  cell.style.backgroundColor = 'var(--primary)';
-                  cell.style.color = 'white';
-                  cell.title = 'Clic para desbloquear (hacer disponible)';
-                  cell.addEventListener('click', () => toggleCellAvailability(cell));
-              } else if (isAvailable) {
-                  cell.classList.add('set-available');
-                  cell.innerHTML = 'DISPONIBLE';
-                  cell.title = 'Clic para bloquear';
-                  cell.addEventListener('click', () => toggleCellAvailability(cell));
-              } else {
-                  // Slot no existe en la DB, listo para ser creado como disponible
-                  cell.classList.add('available');
-                  cell.innerHTML = ''; 
-                  cell.title = 'Clic para marcar como DISPONIBLE';
-                  cell.addEventListener('click', () => toggleCellAvailability(cell));
-              }
-
-              td.appendChild(cell);
-              tr.appendChild(td);
-          }
-          calendarBody.appendChild(tr);
-      }
-  }
-
-  function changeWeek(direction) {
-      currentWeekStart = addDays(currentWeekStart, direction);
-      loadWeekSchedule();
-  }
-
-  async function toggleCellAvailability(cell){
-    const key = cell.dataset.key;
-    const date = cell.dataset.date;
-    const time = cell.dataset.time;
-    const existing = agendaMap.get(key);
-
-    try {
-      if (existing && existing.disponible === true) {
-        // 1. Marcar como NO DISPONIBLE (Bloquear)
-        const { error } = await supabaseClient
-            .from('agendas')
-            .update({ disponible: false, paciente_nombre: 'BLOQUEADO' })
-            .eq('id', existing.id);
-        if (error) throw error;
-
-      } else if (existing && existing.disponible === false && existing.paciente_nombre === 'BLOQUEADO') {
-        // 2. Marcar como DISPONIBLE (Elimina el BLOQUEADO)
-        const { error } = await supabaseClient
-            .from('agendas')
-            .delete()
-            .eq('id', existing.id);
-        if (error) throw error;
-      }
-      else {
-        // 3. Slot no existe, lo creamos como DISPONIBLE
-        const { error } = await supabaseClient
-          .from('agendas')
-          .insert([{
-            profesional_id: currentProfessionalId,
-            fecha: date,
-            hora_inicio: time + ':00', 
-            disponible: true
-          }]);
-        if (error) throw error;
-      }
-      await loadWeekSchedule(); 
-    } catch (err) {
-      alert('Ocurrió un error al guardar/eliminar la disponibilidad. Revisa la consola.');
-      console.error('Error guardando/eliminando disponibilidad:', err);
+  /****************** Render del calendario (Vista Agenda) ******************/
+  async function renderCalendar(){
+    // Limpiar y crear encabezados días
+    calendarHead.querySelectorAll('th:not(.time-col)').forEach(n=>n.remove());
+    const dayNames = ['Lun','Mar','Mié','Jue','Vie','Sáb','Dom'];
+    for (let i=0;i<7;i++){
+      const d = addDays(startOfWeekDate,i);
+      const th = document.createElement('th');
+      const dateStr = toISODate(d);
+      th.dataset.date = dateStr;
+      
+      // Listener para cargar reservas del día en el panel lateral
+      th.addEventListener('click', () => {
+          selectedReservaDate = dateStr;
+          calendarHead.querySelectorAll('th').forEach(t => t.classList.remove('active-day-head'));
+          th.classList.add('active-day-head');
+          renderReservasSidebar(dateStr);
+      });
+      
+      th.innerHTML = `<div style="font-weight:700">${dayNames[i]}</div><div style="font-size:.85rem;color:var(--muted)">${toISODate(d).substring(5)}</div>`;
+      calendarHead.appendChild(th);
     }
-  }
 
-  /****************** 4. PANEL LATERAL DE DETALLES ******************/
+    // Filas por horario
+    calendarBody.innerHTML = '';
+    for (const time of timeSlots) {
+      const tr = document.createElement('tr');
+      const tdTime = document.createElement('td');
+      tdTime.className = 'time-col';
+      tdTime.textContent = time;
+      tr.appendChild(tdTime);
+
+      for (let i=0;i<7;i++){
+        const d = addDays(startOfWeekDate,i);
+        const dateStr = toISODate(d);
+        const key = `${dateStr}|${time}`;
+
+        const td = document.createElement('td');
+        const cell = document.createElement('div');
+        cell.className = 'cell available';
+        cell.dataset.date = dateStr;
+        cell.dataset.time = time;
+        cell.dataset.key = key;
+        cell.title = `${dateStr} ${time}`;
+        cell.innerHTML = ``; 
+
+        const record = agendaMap.get(key);
+        if (record) {
+          if (record.disponible === false) {
+            // SLOTS RESERVADOS (booked)
+            const nombrePaciente = record.paciente_nombre || 'Paciente Desconocido'; 
+            const rutPaciente = record.paciente_rut || 'Sin RUT';
+            const prevision = record.paciente_prevision || 'N/D';
+            const edad = calculateAge(record.paciente_fecha_nac);
+            
+            cell.className = 'cell booked booked-cell';
+            // Title con todos los datos
+            cell.title = `RESERVADO:\nPaciente: ${nombrePaciente}\nRUT: ${rutPaciente}\nEdad: ${edad}\nPrevisión: ${prevision.toUpperCase()}\nMotivo: ${record.comentarios || 'N/D'}`;
+            cell.innerHTML = `<i class="fas fa-user-tag" style="margin-right:5px"></i> ${time}`;
+            cell.style.backgroundColor = 'var(--success)'; 
+            cell.style.color = '#fff';
+
+          } else {
+            // SLOTS DISPONIBLES (active)
+            cell.className = 'cell active';
+            cell.title = `Disponible - ${dateStr} ${time}`;
+            cell.style.backgroundColor = 'var(--accent)';
+            cell.innerHTML = `<i class="fas fa-check"></i> ${time}`;
+          }
+        } else {
+          // SLOTS NO AGENDADOS (available)
+          cell.className = 'cell available';
+          cell.title = `${dateStr} ${time}`;
+          cell.innerHTML = ``;
+        }
+
+        cell.addEventListener('click', async (ev) => {
+          if (cell.classList.contains('booked-cell')) return; 
+          await toggleCellAvailability(cell);
+        });
+
+        td.appendChild(cell);
+        tr.appendChild(td);
+      }
+
+      calendarBody.appendChild(tr);
+    }
+
+    weekLabel.textContent = `${toISODate(startOfWeekDate)} — ${toISODate(addDays(startOfWeekDate,6))}`;
+    
+    renderReservasSidebar(selectedReservaDate); 
+  }
+  
+  /****************** RENDERIZADO DEL PANEL LATERAL ******************/
   function renderReservasSidebar(dateStr = null) {
       let reservasToShow;
       
       if (dateStr) {
-          reservasToShow = currentReservas.filter(r => r.fecha === dateStr && r.paciente_nombre !== 'BLOQUEADO');
+          reservasToShow = currentReservas.filter(r => r.fecha === dateStr);
           reservaDiaActualEl.textContent = `Reservas para el ${formatDayName(dateStr)}`;
-          selectedReservaDate = dateStr;
       } else {
-          reservasToShow = currentReservas.filter(r => r.paciente_nombre !== 'BLOQUEADO');
+          reservasToShow = currentReservas;
           reservaDiaActualEl.textContent = 'Reservas de la Semana (Total)';
       }
 
       reservaListContainerEl.innerHTML = '';
       
       if (reservasToShow.length === 0) {
-          reservaListContainerEl.innerHTML = `<p class="hint-box">No hay reservas ${dateStr ? 'para este día' : 'en esta semana'}.</p>`;
+          reservaListContainerEl.innerHTML = `<p>No hay reservas ${dateStr ? 'para este día' : 'en esta semana'}.</p>`;
+          if (!dateStr) {
+              reservaListContainerEl.innerHTML = '<div class="hint-box">Haz click en los encabezados de los días (Lun, Mar, etc.) para ver la lista de citas de ese día y sus detalles.</div>';
+          }
           return;
       }
       
@@ -830,15 +949,189 @@
       reservaListContainerEl.appendChild(ul);
   }
 
+  /****************** Cargar agenda semana desde Supabase ******************/
+  async function loadWeekSchedule(){
+    agendaErrorBox.style.display = 'none';
+    agendaStatus.innerHTML = '<span class="spinner"></span> Cargando semana...';
+    calendarWrap.style.display = 'none';
+    try {
+      if (!currentProfessionalId) throw new Error('professional id undefined');
 
-  /****************** 5. HISTORIAL Y EVOLUCIONES (Simplificado) ******************/
-  // Funciones showEvolutionModal, saveEvolution, loadTodayAppointments, loadCompletedEvolutions, renderHistoryCards
-  // ... (Estas funciones requieren la lógica completa de las evoluciones que no cabe aquí, pero deben ser implementadas) ...
-  // Por el momento, la pestaña de Citas de Hoy y Evoluciones mostrará solo los placeholders y el listado simple.
+      const start = toISODate(startOfWeekDate);
+      const end = toISODate(addDays(startOfWeekDate,6));
+
+      // 🛑 SELECT FINAL: Incluye todos los campos de paciente.
+      const { data, error } = await supabaseClient
+        .from('agendas')
+        .select('id, profesional_id, fecha, hora_inicio, disponible, paciente_nombre, paciente_rut, paciente_fecha_nac, paciente_prevision, comentarios, evolucion_registrada') 
+        .eq('profesional_id', currentProfessionalId)
+        .gte('fecha', start)
+        .lte('fecha', end)
+        .order('fecha', {ascending:true});
+
+      if (error) {
+        console.error('Error al traer agendas (Supabase error object):', error);
+        throw error;
+      }
+
+      agendaMap.clear();
+      currentReservas = []; 
+      
+      (data || []).forEach(item => {
+        const horaRaw = item.hora_inicio || item.hora_fin || null;
+        if (!horaRaw) return;
+        
+        const hora = String(horaRaw).substring(0,5); 
+        const key = `${item.fecha}|${hora}`;
+        agendaMap.set(key, item);
+        
+        if (item.disponible === false) {
+             currentReservas.push(item); 
+        }
+      });
+
+      renderCalendar();
+      renderPendingAppointments(); // 🛑 Actualizar la lista de pendientes
+      calendarWrap.style.display = 'block';
+      agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--muted)">Agenda cargada</span>';
+    } catch (err) {
+      console.error('loadWeekSchedule error:', err);
+      agendaErrorBox.style.display = 'block';
+      agendaErrorBox.textContent = 'No se pudo cargar la agenda de la semana. Revisa la consola (F12) para más detalles.';
+      agendaStatus.innerHTML = '<span style="color:#7a1f1f">Error al cargar semana</span>';
+    }
+  }
+
+  /****************** Toggle disponibilidad (crear o ELIMINAR) ******************/
+  async function toggleCellAvailability(cell){
+    cell.classList.add('saving'); 
+    const date = cell.dataset.date;
+    const time = cell.dataset.time;
+    const key = cell.dataset.key;
+    try {
+      const existing = agendaMap.get(key);
+
+      if (existing) {
+        if (existing.disponible === true) {
+             // LÓGICA DE ELIMINACIÓN
+            const { error: deleteError } = await supabaseClient
+                .from('agendas')
+                .delete()
+                .eq('id', existing.id);
+
+            if (deleteError) throw deleteError;
+        } else {
+             console.warn('Acción bloqueada: Slot reservado.', key);
+             return; 
+        }
+
+        await loadWeekSchedule(); 
+        
+      } else {
+        // Slot no existe, lo creamos (disponible)
+        const { data, error } = await supabaseClient
+          .from('agendas')
+          .insert([{
+            profesional_id: currentProfessionalId,
+            fecha: date,
+            hora_inicio: time + ':00', 
+            disponible: true
+          }])
+          .select()
+          .single();
+
+        if (error) throw error;
+        data.hora_inicio = time;
+        agendaMap.set(key, data);
+        
+        await loadWeekSchedule(); 
+      }
+    } catch (err) {
+      console.error('Error guardando/eliminando disponibilidad:', err);
+      alert('Ocurrió un error al guardar/eliminar la disponibilidad. Revisa la consola.');
+    } finally {
+      cell.classList.remove('saving');
+    }
+  }
+
+  /****************** Navegación semanas ******************/
+  prevWeekBtn.addEventListener('click', async () => {
+    startOfWeekDate = addDays(startOfWeekDate, -7);
+    await loadWeekSchedule();
+  });
+  nextWeekBtn.addEventListener('click', async () => {
+    startOfWeekDate = addDays(startOfWeekDate, 7);
+    await loadWeekSchedule();
+  });
+
+  /****************** Auth y carga inicial ******************/
+  async function checkAuth(){
+    try {
+      agendaStatus.innerHTML = '<span class="spinner"></span> Verificando sesión...';
+      const resp = await supabaseClient.auth.getUser();
+      const user = resp?.data?.user ?? null;
+      
+      if (!user) {
+        window.location.href = 'portal.html';
+        return;
+      }
+
+      const { data: prof, error: profError } = await supabaseClient
+          .from('profesionales')
+          .select('id,nombre,email')
+          .eq('email', user.email)
+          .maybeSingle(); 
+
+      if (profError || !prof) {
+        welcomeMessage.textContent = 'Error cargando perfil';
+        sidebarNameEl.textContent = 'Usuario';
+        sidebarSubEl.textContent = `Error: Perfil no encontrado para ${user.email}`;
+        agendaStatus.innerHTML = '<span style="color:#7a1f1f">Necesita configuración</span>';
+        
+        await supabaseClient.auth.signOut();
+        window.location.href = 'portal.html';
+        return;
+      }
+
+      currentProfessionalId = prof.id;
+      welcomeMessage.textContent = `¡Hola, ${prof.nombre}!`;
+      sidebarNameEl.textContent = prof.nombre;
+      sidebarSubEl.textContent = prof.email || '';
+
+      generateTimeSlots();
+      
+      setTimeout(async () => {
+          await loadWeekSchedule();
+          await loadCompletedEvolutions(); // 🛑 Cargar historial al inicio
+          agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--muted)">Listo</span>';
+      }, 50); 
+
+    } catch (err) {
+      console.error('checkAuth error (fatal):', err);
+      await supabaseClient.auth.signOut();
+      window.location.href = 'portal.html';
+    }
+  }
+
+  /****************** Logout ******************/
+  logoutBtn.addEventListener('click', async () => {
+    await supabaseClient.auth.signOut();
+    window.location.href = 'portal.html';
+  });
+
+  /****************** Tabs UI ******************/
+  document.querySelectorAll('.menu-btn').forEach(btn=>{
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.menu-btn').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('.tab-content').forEach(t=>t.classList.remove('active'));
+      btn.classList.add('active');
+      const tab = btn.dataset.tab;
+      if (tab) document.getElementById(tab).classList.add('active');
+    });
+  });
 
   /****************** Inicializar ******************/
   document.addEventListener('DOMContentLoaded', () => {
-      currentWeekStart = getStartOfWeek(new Date());
       checkAuth();
   });
 
