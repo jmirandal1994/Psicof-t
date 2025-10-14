@@ -27,9 +27,9 @@
             margin: 0;
             line-height: 1.7;
             color: var(--primary);
-            background-color: var(--bg);
             overflow-x: hidden;
             font-weight: 300; 
+            background-color: var(--bg);
         }
 
         .container {
@@ -190,35 +190,41 @@
             font-size: 2.2rem; 
         }
         
-        /* --- ESTILOS PARA LA NUEVA GALERÍA DE LOGOS FLEXIBLE (CSS GRID) --- */
-        .logo-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr)); 
-            gap: 20px;
-            padding: 30px 0;
-            justify-items: center; 
-            align-items: center;
+        /* --- ESTILOS PARA EL CARRUSEL DE LOGOS (REIMPLEMENTADO) --- */
+        .slider-container {
+            width: 100%;
+            overflow: hidden;
+            white-space: nowrap; 
+            padding: 30px 0; /* Más padding para que respire */
             border-top: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
+            background-color: var(--bg-light);
         }
-
-        .grid-logo {
-            height: 70px; 
+        .slider-track {
+            display: inline-block;
+            animation: scroll-logos 30s linear infinite; /* Animación de desplazamiento */
+        }
+        .slider-logo {
+            height: 70px; /* Tamaño un poco más grande */
             width: auto;
-            max-width: 100%;
+            margin: 0 40px;
+            vertical-align: middle;
+            
             filter: opacity(85%); /* Mantenemos el color y la sutileza */
             transition: filter 0.3s;
         }
-
-        .grid-logo:hover {
-            filter: opacity(100%);
+        .slider-logo:hover {
+            filter: opacity(100%); /* Opacidad total al pasar el mouse */
+        }
+        @keyframes scroll-logos {
+            0% {
+                transform: translateX(0);
+            }
+            100% {
+                transform: translateX(-50%); /* Desplaza la mitad de los logos para el loop */
+            }
         }
 
-        /* MANEJO DE ERRORES: Si la imagen no carga, la oculta sin dejar un cuadro roto */
-        .grid-logo:not([src]) {
-            display: none !important;
-        }
-        
         footer { background-color: var(--primary); padding: 30px 0; }
         footer p { color: #f5f5f5; font-size: 0.9rem; }
         
@@ -236,7 +242,6 @@
             align-items: center; 
             padding: 15px; 
             border-radius: 4px; 
-            margin-bottom: 20px;
             box-shadow: 0 2px 4px rgba(0,0,0,0.05);
         }
         .day-column { 
@@ -310,14 +315,9 @@
             #services-container { flex-direction: column; }
             .service-card { min-width: 100%; }
             
-            /* GALERÍA DE LOGOS EN MÓVIL */
-            .logo-grid {
-                grid-template-columns: repeat(auto-fit, minmax(80px, 1fr)); 
-                gap: 15px;
-            }
-            .grid-logo {
-                height: 50px;
-            }
+            /* AJUSTE LOGOS EN MÓVIL */
+            .slider-logo { height: 40px; margin: 0 20px; }
+            .slider-container { padding: 15px 0; }
         }
         
         /* Ajuste fino para pantallas de celular muy pequeñas */
@@ -365,15 +365,26 @@
                 Como psicóloga certificada, mis servicios son **reembolsables** mediante la mayoría de las Isapres (a través de boleta) y Fonasa (según el tramo de tu plan). Consulta la cobertura con tu aseguradora.
             </p>
 
-            <div class="logo-grid">
-                <img src="logo-fonasa.png" alt="Logo Fonasa" class="grid-logo">
-                <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="grid-logo">
-                <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="grid-logo">
-                <img src="logo-isapre-concordia.png" alt="Logo Isapre Concordia" class="grid-logo">
-                <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="grid-logo">
-                <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="grid-logo">
-                <img src="logo-isapre-vidatres.png" alt="Logo Isapre Vida Tres" class="grid-logo">
-                <img src="logo-isapre-consalud.png" alt="Logo Isapre Consalud" class="grid-logo">
+            <div class="slider-container">
+                <div class="slider-track">
+                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-concordia.png" alt="Logo Isapre Concordia" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-vidatres.png" alt="Logo Isapre Vida Tres" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-consalud.png" alt="Logo Isapre Consalud" class="slider-logo" onerror="this.style.display='none'">
+                    
+                    <img src="logo-fonasa.png" alt="Logo Fonasa" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-colmena.png" alt="Logo Isapre Colmena" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-cruzblanca.png" alt="Logo Isapre Cruz Blanca" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-concordia.png" alt="Logo Isapre Concordia" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-banmedica.png" alt="Logo Isapre Banmédica" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-nueva-masvida.png" alt="Logo Isapre Nueva Masvida" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-vidatres.png" alt="Logo Isapre Vida Tres" class="slider-logo" onerror="this.style.display='none'">
+                    <img src="logo-isapre-consalud.png" alt="Logo Isapre Consalud" class="slider-logo" onerror="this.style.display='none'">
+                </div>
             </div>
         </div>
     </section>
