@@ -588,16 +588,19 @@
         });
     }
     
-    // --- FUNCIÓN DE INICIO DE PROCESO (USADA EN BOTONES PRINCIPALES) ---
+    // --- [FUNCIÓN DE INICIO DE PROCESO - CORRECCIÓN DEFINITIVA DE SCROLL] ---
     function startBookingProcess(event) {
-        event.preventDefault(); 
+        event.preventDefault(); // Detiene el salto del hash (#)
         
+        // 1. Mostrar el Paso 1 (Selección de Servicio)
         showStep(1); 
         
-        const targetSection = document.getElementById('agendar');
+        // 2. Hacer el scroll suave, apuntando al CONTENEDOR PRINCIPAL 'agendar'
+        const targetSection = document.getElementById('agendar'); // Apuntamos a la sección con el ID 'agendar'
         
         if (targetSection) {
-             // Scroll al contenedor principal para iniciar el proceso
+             // Utilizamos scrollIntoView, que es más confiable que offsetTop para secciones, 
+             // y se usa un retraso para asegurar que el contenido se ha mostrado.
              setTimeout(() => {
                 targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 50); 
@@ -616,10 +619,10 @@
 
     currentWeekStart = getStartOfWeek(currentWeekStart);
 
-    // FUNCIÓN SIMPLIFICADA: SOLO MANEJA LA VISIBILIDAD (EL SCROLL SE MANEJA AL LLAMARLA)
     function showStep(step) {
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         
+        // Aseguramos que el Paso 1 tenga display: block para ser visible al iniciar el proceso
         if (step === 1) {
              document.getElementById(`step-1`).style.display = 'block';
         } else {
@@ -627,6 +630,16 @@
         }
 
         currentStep = step;
+        
+        // Se mantiene el scroll solo para la parte final de la confirmación (Paso 4) si el usuario no lo ve.
+        if (step >= 4) { 
+            const targetElement = document.getElementById('agendamiento-container');
+            if (targetElement) {
+                setTimeout(() => {
+                     window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+                }, 50);
+            }
+        }
     }
 
     async function loadServices() {
@@ -677,15 +690,6 @@
 
         loadWeekSchedule(); 
         showStep(3); 
-        
-        // **ACCIÓN DE SCROLL DEFINITIVA (Paso 1 -> Paso 3):**
-        const targetContainer = document.getElementById('agendamiento-container');
-        if (targetContainer) {
-            window.requestAnimationFrame(() => {
-                 // SCROLL INSTANTÁNEO Y FORZADO
-                 window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'auto' }); 
-            });
-        }
     }
 
     function formatDate(date) {
@@ -814,15 +818,6 @@
         }
         
         showStep(4);
-        
-        // **ACCIÓN DE SCROLL DEFINITIVA (Paso 3 -> Paso 4):**
-        const targetContainer = document.getElementById('agendamiento-container');
-        if (targetContainer) {
-            window.requestAnimationFrame(() => {
-                 // SCROLL INSTANTÁNEO Y FORZADO
-                 window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'auto' }); 
-            });
-        }
     }
 
 
