@@ -173,11 +173,12 @@
             background-color: var(--bg-light); 
             border: 1px solid #E0E0E0;
             box-shadow: 0 5px 15px rgba(0,0,0,0.03);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
         }
         .service-card:hover, .service-card.selected { 
             transform: translateY(-5px); 
             box-shadow: 0 10px 20px rgba(0,0,0,0.15); 
+            border-color: var(--accent); /* Resaltar al seleccionar */
         }
 
         /* Sobre Mí (Ahora sección de Reembolso) */
@@ -262,7 +263,53 @@
             color: white; 
             font-size: 0.9rem;
         }
+        .day-number { font-size: 1.1rem; font-weight: 900; }
         .time-slot-container { padding: 10px; flex-grow: 1; background-color: #ffffff; }
+
+        /* NUEVOS ESTILOS PARA TIME SLOTS (HORAS) */
+        .time-slot {
+            padding: 8px 5px;
+            margin: 5px 0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--muted);
+            color: var(--primary);
+            background-color: #f5f5f5;
+        }
+        .time-slot:hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .time-slot.selected {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 8px rgba(184, 134, 11, 0.4);
+            transform: scale(1.05);
+        }
+        .time-slot.booked {
+            background-color: #eee;
+            color: var(--muted);
+            border: 1px solid #ccc;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+        .time-slot.booked:hover {
+             background-color: #eee;
+             color: var(--muted);
+             border-color: #ccc;
+             transform: none;
+             box-shadow: none;
+        }
+        .day-column .past-day, .day-column .time-slot-container .past-day {
+            background-color: #f0f0f0;
+            color: var(--muted);
+        }
 
         /* Estilos de Formulario */
         .form-group { margin-bottom: 20px; }
@@ -319,6 +366,12 @@
             /* AJUSTE LOGOS EN MÓVIL */
             .slider-logo { height: 40px; margin: 0 20px; }
             .slider-container { padding: 15px 0; }
+
+            /* Calendario en Móvil */
+            .calendar-grid { 
+                grid-template-columns: repeat(3, 1fr); /* 3 columnas en móvil para mejor visualización */
+                overflow-x: scroll;
+            }
         }
         
         /* Ajuste fino para pantallas de celular muy pequeñas */
@@ -428,8 +481,8 @@
                         </div>
 
                     <div style="display:flex; justify-content: space-between; margin-top: 40px;">
-                        <button onclick="showStep(1)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver</button>
-                        <button onclick="validateTimeSelection()" class="btn btn-agenda" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
+                        <button type="button" onclick="showStep(1)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver</button>
+                        <button type="button" onclick="validateTimeSelection()" class="btn btn-agenda" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
 
@@ -466,7 +519,7 @@
                     </form>
                 </div>
 
-                <div id="step-5" class="content" style="display:none;">
+                <div id="step-5" class="step-content" style="display:none;">
                     <h3>¡Reserva Exitosa!</h3>
                     <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px;">
                         <p style="color: var(--accent); font-size:1.1rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito.</p>
@@ -535,7 +588,7 @@
         });
     }
     
-    // --- [Resto de las funciones de agendamiento] ---
+    // --- [Funciones de Agendamiento Corregidas] ---
     function getStartOfWeek(date) {
         const day = date.getDay();
         const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
@@ -551,15 +604,16 @@
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         document.getElementById(`step-${step}`).style.display = 'block';
         currentStep = step;
-        // SOLUCIÓN: Agregamos un pequeño retraso antes del scroll para asegurar que el elemento esté visible
-        setTimeout(() => {
-            if (step !== 0) {
+        
+        // CORRECCIÓN DEL BUG DE SCROLL: Solo hacemos scroll después de que el contenido del paso 3 se ha cargado.
+        if (step >= 3) {
+            setTimeout(() => {
                 const targetElement = document.getElementById('agendamiento-container');
                 if (targetElement) {
                     window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
                 }
-            }
-        }, 100);
+            }, 100); 
+        }
     }
 
     // [MODIFICACIÓN CLAVE]: Nueva función loadServices para Isapre/Fonasa
@@ -611,7 +665,7 @@
         document.querySelector(`.service-card[data-service-id="${id}"]`).classList.add('selected');
 
         loadWeekSchedule(); 
-        showStep(3); 
+        showStep(3); // Muestra el paso 3 y luego hace scroll suave
     }
 
     function formatDate(date) {
@@ -652,18 +706,17 @@
             return;
         }
 
-        if (agenda.length === 0) {
-            document.getElementById('schedule-container').innerHTML = '<p style="color:var(--muted); text-align:center; grid-column: 1 / -1;">No hay horarios de agendamiento disponibles para esta semana. Por favor, revisa la semana siguiente.</p>';
-            document.getElementById('next-step-4-btn').disabled = true;
-            return;
-        }
-
-
         const scheduleContainer = document.getElementById('schedule-container');
         scheduleContainer.innerHTML = ''; 
 
         let currentDayIter = new Date(startDate);
         const today = new Date(); today.setHours(0, 0, 0, 0); 
+
+        // Reiniciar estado de la selección al cargar nueva semana/agenda
+        selectedTimeSlot = null;
+        document.getElementById('next-step-4-btn').disabled = true;
+
+        let hasAvailableSlots = false;
 
         for (let i = 0; i < 7; i++) {
             const dayKey = currentDayIter.toISOString().split('T')[0];
@@ -672,9 +725,14 @@
             const dayAgenda = agenda.filter(item => item.fecha === dayKey);
             const daySlotsHTML = dayAgenda.map(slot => {
                 const isBooked = !slot.disponible;
-                const isPastHour = currentDayIter.toDateString() === today.toDateString() && new Date(`${dayKey}T${slot.hora_inicio}`) < new Date();
+                const slotDateTime = new Date(`${dayKey}T${slot.hora_inicio}`);
+                const isPastHour = slotDateTime < new Date();
                 
                 const isUnavailable = isPastDay || isPastHour || isBooked;
+
+                if (!isUnavailable) {
+                    hasAvailableSlots = true;
+                }
 
                 return `<div class="time-slot ${isUnavailable ? 'booked' : ''}" 
                              data-id="${slot.id}" 
@@ -697,9 +755,12 @@
             `;
             currentDayIter.setDate(currentDayIter.getDate() + 1); 
         }
-
-        selectedTimeSlot = null;
-        document.getElementById('next-step-4-btn').disabled = true;
+        
+        // Mensaje de no disponibilidad solo si no se encontró NINGUNA hora
+        if (!hasAvailableSlots) {
+             scheduleContainer.innerHTML = '<p style="color:var(--muted); text-align:center; grid-column: 1 / -1; padding: 20px;">No hay horarios de agendamiento disponibles para esta semana. Por favor, revisa la semana siguiente.</p>';
+             document.getElementById('next-step-4-btn').disabled = true;
+        }
     }
 
     function changeWeek(direction) {
@@ -708,14 +769,23 @@
     }
 
     function selectTimeSlot(element) {
+        // Asegúrate de que el slot no esté "booked" (aunque el onClick ya lo filtra)
+        if (element.classList.contains('booked')) return; 
+
+        // Remueve la clase 'selected' de todos los slots
         document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+        
+        // Agrega la clase 'selected' al slot clickeado
         element.classList.add('selected');
         
+        // Almacena la hora seleccionada
         selectedTimeSlot = {
             id: element.dataset.id,
             date: element.dataset.date,
             time: element.dataset.time
         };
+        
+        // Habilita el botón de continuar
         document.getElementById('next-step-4-btn').disabled = false;
     }
 
@@ -725,6 +795,7 @@
             return;
         }
         
+        // Si hay una hora seleccionada, pasa al siguiente paso (Paso 4: Confirma Datos)
         showStep(4);
     }
 
@@ -750,7 +821,8 @@
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const comentarios = document.getElementById('comentarios').value;
-        const prevision = document.getElementById('paciente_prevision') ? document.getElementById('paciente_prevision').value : ''; 
+        // 'paciente_prevision' no está en el HTML, se deja como vacío por defecto
+        const prevision = ''; 
 
         try {
             const { error: updateError } = await supabaseClient
@@ -772,7 +844,7 @@
 
         } catch (error) {
             console.error('Error al confirmar la reserva:', error);
-            statusMessage.textContent = `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada. Error: ${error.message}`;
+            statusMessage.textContent = `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada.`;
             statusMessage.style.color = 'red';
             confirmBtn.disabled = false;
         }
