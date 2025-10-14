@@ -30,6 +30,7 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            justify-content: flex-start;
         }
 
         .container {
@@ -65,15 +66,25 @@
         /* Botones Generales */
         .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; border: none;}
         .btn-agenda { background-color: var(--accent); color: white; border: 2px solid var(--accent); }
-        .btn-agenda:hover { background-color: var(--primary); border-color: var(--primary); }
+        .btn-agenda:hover { transform: translateY(-2px); background-color: var(--primary); border-color: var(--primary); }
         .btn-nav { background: #fff; color: var(--primary); border: 1px solid #e9ecef; padding: 8px 12px; cursor: pointer; font-weight: 700; border-radius: 6px; }
 
-        /* Calendario y Grid */
+        /* Contenedor Principal */
         #agendamiento-container {
             background-color: var(--bg-light); 
             padding: 30px; 
             border-radius: 12px; 
             box-shadow: var(--shadow-subtle);
+            margin-bottom: 80px;
+        }
+
+        /* Estilos de Calendario */
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 10px; 
+            margin-top: 20px;
+            overflow-x: auto;
         }
         .calendar-nav { 
             display: flex; 
@@ -97,11 +108,10 @@
             overflow-x: auto;
         }
         @media (max-width: 768px) {
-            /* Forzar 4 columnas en móvil con scroll horizontal para días */
             .calendar-grid {
                 grid-template-columns: repeat(7, 120px); 
                 justify-content: flex-start;
-                padding-bottom: 10px; /* Espacio para scrollbar horizontal */
+                padding-bottom: 10px;
             }
         }
 
@@ -160,7 +170,7 @@
             background-color: #f0f0f0;
         }
 
-        /* Modal Overlay (Mantener limpio para evitar bugs de scroll) */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center;
@@ -179,6 +189,45 @@
         .modal-header h3 { margin: 0; font-family: 'Playfair Display', serif; }
         .modal-body { padding: 25px; max-height: 80vh; overflow-y: auto; }
         .modal-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
+
+        /* Estilos de Formulario MEJORADOS */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { 
+            display: block; 
+            font-weight: 600; 
+            margin-bottom: 5px; 
+            color: var(--primary); 
+            font-size: 0.95rem;
+        }
+        .form-group input[type="text"], 
+        .form-group input[type="email"], 
+        .form-group input[type="tel"], 
+        .form-group input[type="date"],
+        .form-group select, /* Estilo para el nuevo desplegable */
+        .form-group textarea {
+            width: 100%;
+            padding: 12px 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 1rem;
+            box-sizing: border-box; 
+            transition: border-color 0.2s, box-shadow 0.2s;
+            background-color: #fcfcfc;
+            appearance: none; /* Estilo para select en algunos navegadores */
+        }
+        .form-group select {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="10" height="6" viewBox="0 0 10 6"><path fill="%232C3A47" d="M0,0 L5,6 L10,0 Z"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            padding-right: 30px;
+        }
+
+        .form-group input:focus, .form-group textarea:focus, .form-group select:focus {
+            border-color: var(--accent);
+            box-shadow: 0 0 0 2px rgba(184, 134, 11, 0.2);
+            outline: none;
+            background-color: var(--bg-light);
+        }
 
         footer { background-color: var(--primary); padding: 20px 0; margin-top: auto; }
         footer p { color: #f5f5f5; font-size: 0.9rem; text-align: center; margin: 0;}
@@ -230,12 +279,13 @@
     <div class="modal-content">
         <div class="modal-header">
             <img src="logo-psicofit.png" alt="Logo Psicofit" style="height: 40px; margin-right: 10px; filter: brightness(0) invert(1);"/>
-            <h3>Confirma tu Reserva</h3>
+            <h3>Confirma tus Datos</h3>
             <button type="button" class="modal-close-btn" onclick="hideModal()">&times;</button>
         </div>
         <div class="modal-body">
             <div class="hint-box" style="margin-bottom: 20px;">
                 <p style="margin: 5px 0;">Hora seleccionada: **<span id="modal-date-time"></span>**</p>
+                <p style="margin: 5px 0; font-weight: 600;">**Tipo de Terapia:** <span id="modal-service-name"></span></p>
             </div>
             
             <form id="booking-form" class="mt-3">
@@ -247,6 +297,12 @@
                     <label for="paciente_rut">RUT/DNI (*)</label>
                     <input type="text" id="paciente_rut" required>
                 </div>
+                
+                <div class="form-group">
+                    <label for="paciente_fecha_nac">Fecha de Nacimiento (*)</label>
+                    <input type="date" id="paciente_fecha_nac" required>
+                </div>
+                
                 <div class="form-group">
                     <label for="paciente_email">Correo Electrónico (*)</label>
                     <input type="email" id="paciente_email" required>
@@ -255,6 +311,21 @@
                     <label for="paciente_celular">Celular (*)</label>
                     <input type="tel" id="paciente_celular" required>
                 </div>
+                
+                <div class="form-group">
+                    <label for="paciente_prevision">Previsión / Aseguradora (*)</label>
+                    <select id="paciente_prevision" required>
+                        <option value="">-- Selecciona tu Previsión --</option>
+                        <option value="Fonasa">Fonasa</option>
+                        <option value="Isapre Consalud">Isapre Consalud</option>
+                        <option value="Isapre Banmedica">Isapre Banmedica</option>
+                        <option value="Isapre Colmena">Isapre Colmena</option>
+                        <option value="Isapre Masvida">Isapre Masvida</option>
+                        <option value="Isapre Vidatres">Isapre Vidatres</option>
+                        <option value="Particular">Particular</option>
+                    </select>
+                </div>
+
                 <div class="form-group">
                     <label for="comentarios">Motivo de Consulta (Opcional)</label>
                     <textarea id="comentarios" rows="3"></textarea>
@@ -262,7 +333,7 @@
                 
                 <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
                 <div style="display:flex; justify-content: space-between; margin-top: 20px;">
-                    <button type="button" onclick="hideModal()" class="btn btn-nav" style="background-color: var(--muted); color:white;">Cancelar</button>
+                    <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar</button>
                     <button type="submit" class="btn btn-agenda" id="confirm-booking-btn">Confirmar Reserva <i class="fas fa-check"></i></button>
                 </div>
             </form>
@@ -281,6 +352,7 @@
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
     let selectedServiceId = null; 
+    let selectedServiceName = '';
     let selectedProfessionalId = null;
     let selectedTimeSlot = null;
     let currentWeekStart = new Date(); 
@@ -291,6 +363,7 @@
     // Referencias DOM
     const modalConfirmacionEl = document.getElementById('modal-confirmacion');
     const modalDateTimeEl = document.getElementById('modal-date-time');
+    const modalServiceNameEl = document.getElementById('modal-service-name');
     const loadingStatusEl = document.getElementById('loading-status');
     const selectedServiceDisplayEl = document.getElementById('selected-service-display');
 
@@ -310,17 +383,40 @@
         const [hours, minutes] = timeString.split(':');
         return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
     }
+    
+    /**
+     * Calcula la edad en años a partir de una fecha de nacimiento (string YYYY-MM-DD).
+     */
+    function calculateAge(dobString) {
+        if (!dobString) return null;
+        const today = new Date();
+        const birthDate = new Date(dobString);
+        let age = today.getFullYear() - birthDate.getFullYear();
+        const monthDiff = today.getMonth() - birthDate.getMonth();
+        
+        if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+            age--;
+        }
+        return age >= 0 ? age : null;
+    }
+
 
     // --- MANEJO DEL MODAL ---
     function showModal() {
         const datePart = new Date(selectedTimeSlot.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         modalDateTimeEl.textContent = `${datePart} a las ${selectedTimeSlot.time}`;
+        modalServiceNameEl.textContent = selectedServiceName;
         
         modalConfirmacionEl.classList.add('visible');
         document.body.style.overflow = 'hidden'; 
         
         document.getElementById('booking-status-message').textContent = '';
         document.getElementById('confirm-booking-btn').disabled = false;
+        
+        // **OPCIONAL:** Prefill the prevision based on selected service ID (1 or 2) if it corresponds to a specific type
+        const previsionSelect = document.getElementById('paciente_prevision');
+        const defaultPrevision = selectedServiceId === 2 ? 'Fonasa' : 'Particular'; 
+        previsionSelect.value = defaultPrevision;
     }
 
     function hideModal() {
@@ -330,7 +426,6 @@
     
     // --- LÓGICA DEL CALENDARIO ---
     async function loadUniqueProfessional() {
-        // Asumimos que solo hay un profesional o tomamos el primero
         const { data: profData, error: profError } = await supabaseClient
             .from('profesionales')
             .select('id')
@@ -490,12 +585,17 @@
             return;
         }
 
+        // Recolección de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
+        const fechaNac = document.getElementById('paciente_fecha_nac').value; // RECOGEMOS FECHA DE NACIMIENTO
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const comentarios = document.getElementById('comentarios').value;
-        const prevision = selectedServiceId === 1 ? 'ISAPRE' : 'FONASA'; 
+        const prevision = document.getElementById('paciente_prevision').value; // RECOGEMOS PREVISIÓN
+        
+        // Calculamos la edad para guardarla en la base de datos (si la columna existe, para el panel)
+        const edad = calculateAge(fechaNac);
 
         try {
             const { error: updateError } = await supabaseClient
@@ -504,9 +604,11 @@
                     disponible: false,
                     paciente_nombre: nombre,
                     paciente_rut: rut,
+                    paciente_fecha_nac: fechaNac, // ENVIAR FECHA DE NACIMIENTO
+                    paciente_edad: edad, // ENVIAR EDAD CALCULADA (opcional, si la columna existe)
                     paciente_email: email,
                     paciente_celular: celular,
-                    paciente_prevision: prevision,
+                    paciente_prevision: prevision, // ENVIAR PREVISIÓN SELECCIONADA
                     comentarios: comentarios
                 })
                 .eq('id', selectedTimeSlot.id);
@@ -527,9 +629,10 @@
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
-        // 1. Obtener ID del servicio de la URL (Ej: ?service_id=1)
+        // 1. Obtener ID y Nombre del servicio de la URL (Ej: ?service_id=1&service_name=Terapia%20ISAPRE)
         const params = new URLSearchParams(window.location.search);
         selectedServiceId = parseInt(params.get('service_id'));
+        selectedServiceName = params.get('service_name') ? decodeURIComponent(params.get('service_name')) : 'Terapia No Definida';
         
         if (!selectedServiceId) {
             selectedServiceDisplayEl.textContent = 'Error: ID de servicio no especificado.';
@@ -537,8 +640,7 @@
             return;
         }
         
-        const serviceName = selectedServiceId === 1 ? 'Terapia Psicológica (ISAPRE)' : 'Terapia Psicológica (FONASA)';
-        selectedServiceDisplayEl.textContent = serviceName;
+        selectedServiceDisplayEl.textContent = selectedServiceName;
 
         // 2. Cargar Profesional y Agenda
         if (await loadUniqueProfessional()) {
