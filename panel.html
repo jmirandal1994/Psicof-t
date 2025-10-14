@@ -31,7 +31,9 @@
       min-height:100vh;
     }
 
-    /* Sidebar */
+    /* ---------------------------------------------------- */
+    /* SIDEBAR                      */
+    /* ---------------------------------------------------- */
     .sidebar{
       width:280px;
       background:#fff;
@@ -40,6 +42,10 @@
       display:flex;
       flex-direction:column;
       align-items:center;
+      flex-shrink: 0; /* Evita que se encoja en escritorio */
+      position: sticky; /* Fijo en escritorio */
+      top: 0;
+      height: 100vh;
     }
     .profile-pic{width:150px;height:150px;border-radius:50%;background:#e9ecef;margin-bottom:20px;overflow:hidden;display:flex;align-items:center;justify-content:center}
     .profile-pic img{width:100%;height:100%;object-fit:cover}
@@ -55,246 +61,176 @@
     .sidebar-menu button i{color:var(--primary)}
     .sidebar-menu button.active i{color:#fff}
 
-    /* Main - Ajustado para la columna lateral */
+    /* ---------------------------------------------------- */
+    /* MAIN CONTENT                   */
+    /* ---------------------------------------------------- */
     .main-content{
         flex: 1;
         padding: 40px;
-        display: flex; /* CLAVE para dividir en columnas */
-        gap: 30px; /* Espacio entre las columnas */
+        display: flex; 
+        gap: 30px; 
     }
     
-    /* Nueva estructura de contenido */
     .agenda-area {
-        flex: 2.5; /* Ocupa más espacio para el calendario */
+        flex: 2.5; 
         display: flex;
         flex-direction: column;
     }
 
     .sidebar-reservas {
-        flex: 1; /* Ocupa 1/4 del espacio */
+        flex: 1; 
         background: #fff;
         padding: 20px;
         border-radius: 12px;
         box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-        min-width: 250px; /* Ancho mínimo reducido */
+        min-width: 250px; 
         max-height: calc(100vh - 80px); 
         overflow-y: auto;
     }
     
-    .reserva-list {
-        list-style: none;
-        padding: 0;
-        margin: 0;
-    }
-    .reserva-item {
-        background: #f8f9fa;
-        border: 1px solid #e9ecef;
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background 0.2s;
-    }
-    .reserva-item:hover {
-        background: #e9ecef;
-    }
-    .reserva-time {
-        font-weight: 700;
-        color: var(--primary);
-        display: block;
-        margin-bottom: 5px;
-    }
-    .reserva-details {
-        font-size: 0.9rem;
-        color: var(--muted);
-    }
-    .reserva-details strong {
-        color: var(--success); /* Color verde para el nombre */
-    }
+    /* RESERVAS Y EVOLUCIONES */
+    .reserva-list { list-style:none; padding:0; margin:0; }
+    .reserva-item { background:#f8f9fa; border:1px solid #e9ecef; padding:15px; margin-bottom:10px; border-radius:8px; cursor:pointer; transition:background 0.2s; }
+    .reserva-item:hover { background:#e9ecef; }
+    .reserva-time { font-weight:700; color:var(--primary); display:block; margin-bottom:5px; }
+    .reserva-details { font-size:0.9rem; color:var(--muted); }
+    .reserva-details strong { color:var(--success); }
     
-    /* Estilos para Evoluciones PENDIENTES (Diseño Profesional) */
-    .pending-item {
-        background: #fffafa;
-        border: 1px solid #ffeded;
-        border-left: 5px solid var(--danger); /* Rojo para indicar urgencia/pendiente */
-        padding: 15px;
-        margin-bottom: 10px;
-        border-radius: 8px;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        transition: all 0.3s ease-out; 
-    }
-    .pending-item:hover {
-        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-    .pending-item.fade-out {
-        opacity: 0;
-        height: 0;
-        padding-top: 0;
-        padding-bottom: 0;
-        margin: 0;
-        overflow: hidden;
-    }
-    .pending-item button {
-        background: var(--success); /* Verde para 'Registrar' */
-        color: #fff;
-        border: none;
-        padding: 8px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-        font-size: 0.9rem;
-        white-space: nowrap;
-        font-weight: 600;
-    }
-    .pending-item-info {
-        max-width: 70%;
-    }
-    .pending-item .reserva-time {
-        color: var(--danger);
-    }
+    .pending-item { background:#fffafa; border:1px solid #ffeded; border-left:5px solid var(--danger); padding:15px; margin-bottom:10px; border-radius:8px; display:flex; justify-content:space-between; align-items:center; transition:all 0.3s ease-out; }
+    .pending-item button { background:var(--success); color:#fff; border:none; padding:8px 12px; border-radius:6px; cursor:pointer; font-size:0.9rem; white-space:nowrap; font-weight:600; }
+    .pending-item-info { max-width:70%; }
+    .pending-item .reserva-time { color:var(--danger); }
     
-    /* Estilos para el formulario de Evolución */
-    #evolution-form-container input[type="text"],
-    #evolution-form-container textarea {
-        width: 100%;
-        padding: 12px;
-        margin-top: 5px;
-        border: 1px solid #ccc;
-        border-radius: 6px;
-        font-size: 1rem;
-        box-sizing: border-box;
-    }
-    #evolution-form-container label {
-        display: block;
-        font-weight: 600;
-        color: var(--primary);
-        margin-top: 10px;
-    }
-    
-    /* Estilos para Historial */
-    .patient-card-summary {
-        background: var(--primary);
-        color: #fff;
-        padding: 15px 25px;
-        border-radius: 8px;
-        margin-bottom: 10px;
-        cursor: pointer;
-        transition: transform 0.2s;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .patient-card-summary:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-    }
-    .patient-card-summary h4 {
-        color: #fff;
-        margin: 0;
-        font-family: 'Montserrat', sans-serif;
-    }
-    .patient-card-summary .fas {
-        font-size: 1.2rem;
-    }
-
-    .evolutions-detail-list {
-        display: none; 
-        padding-top: 15px;
-        border-top: 1px solid #eee;
-        margin-top: 10px;
-    }
-    .evolutions-detail-list.active {
-        display: block; 
-    }
-
-    .history-card {
-        background: #f8f9fa;
-        padding: 15px;
-        border-radius: 8px;
-        margin-bottom: 15px;
-        text-align: left;
-        border-left: 4px solid var(--primary);
-    }
-    .history-card h5 {
-        font-family: 'Montserrat', sans-serif;
-        font-size: 1rem;
-        color: var(--primary);
-        margin: 0 0 5px;
-        font-weight: 700;
-    }
-    .history-card p {
-        font-size: 0.85rem;
-        margin: 3px 0;
-        color: var(--muted);
-    }
-    .history-content {
-        margin-top: 10px;
-        padding-top: 10px;
-        border-top: 1px solid #eee;
-        font-style: italic;
-        color: #495057;
-        white-space: pre-wrap; 
-    }
-
-
     .header-panel{display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;padding-bottom:1rem;border-bottom:1px solid #e9ecef}
     .header-panel h2{font-family:'Playfair Display',serif;color:var(--primary);font-size:2.2rem;margin:0}
     .logout-btn{background:var(--accent);color:#fff;border:none;padding:10px 18px;border-radius:8px;cursor:pointer;font-weight:700}
-    .logout-btn:hover{background:#d19a55}
 
     .tab-content{display:none;background:#fff;padding:36px;border-radius:12px;box-shadow:0 8px 25px rgba(0,0,0,0.08);margin-bottom:18px}
     .tab-content.active{display:block}
 
-    .section-header{text-align:center;margin-bottom:18px}
-    .section-header h3{margin:0;color:var(--primary);font-family:'Playfair Display',serif}
-    .section-header p{color:var(--muted);margin:6px 0 0 0}
-
-    /* Calendario */
+    /* CALENDARIO ESTILOS */
     .week-controls{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;gap:12px}
-    .week-label{font-weight:700;color:var(--primary);font-size:1.05rem}
     .calendar-wrapper{overflow-x: auto;border-radius:12px;border:1px solid #e9ecef;background:#fff;padding:12px} 
-    .calendar-table{border-collapse:collapse;width:100%;min-width:700px} 
-    .calendar-table thead th{position:sticky;top:0;background:#fff;border-bottom:1px solid #e9ecef;padding:10px 8px;text-align:center;font-weight:700;color:var(--primary);cursor:pointer; width: 10%;} 
+    .calendar-table{border-collapse:collapse;width:100%;min-width:700px} /* Min width para escritorio */
+    
     .time-col{width:80px;text-align:left;padding-left:12px;background:#fafafa;position:sticky;left:0;z-index:2;font-weight:700;color:var(--primary);border-right:1px solid #e9ecef} 
+    /* Estilos de Celda (se mantiene la base) */
     .calendar-table td{height:56px;padding:6px}
-    .cell{display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;user-select:none;transition:transform .08s ease,box-shadow .12s ease;font-weight:700;height:100%;width:100%}
-    .cell.available{background:#fff;border:1px solid #f1f1f1;color:var(--primary)}
-    /* CLASES DE AGENDAMIENTO */
-    .cell.active{background:var(--accent);color:#fff}
-    .cell.booked{background:var(--success);color:#fff;cursor:not-allowed} 
-    .cell.booked-cell{background:var(--success);color:#fff;cursor:not-allowed}
-    /* FIN CLASES DE AGENDAMIENTO */
-    .info-msg{color:var(--muted);font-weight:600}
+    .cell{display:flex;align-items:center;justify-content:center;border-radius:8px;cursor:pointer;user-select:none;font-weight:700;height:100%;width:100%}
 
-    /* Mensaje de error visual */
-    .error-box{background:#fff0f0;border:1px solid #ffd6d6;color:#7a1f1f;padding:12px;border-radius:8px;margin:10px 0}
-    .hint-box{background:#f8fbff;border:1px solid #e2f0ff;color:#1b4f8a;padding:12px;border-radius:8px;margin:10px 0}
-
-    /* Spinner sencillo */
-    .spinner{width:20px;height:20px;border-radius:50%;border:3px solid rgba(0,0,0,0.08);border-top-color:var(--primary);animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
-    @keyframes spin{to{transform:rotate(360deg)}}
-
-    /* Responsividad (Móvil/Tablet) */
-    @media (max-width:1200px){
-        .main-content {
-            padding: 20px;
-        }
-    }
+    /* ---------------------------------------------------- */
+    /* RESPONSIVIDAD MÓVIL (<= 900px)     */
+    /* ---------------------------------------------------- */
     
     @media (max-width:900px){
-      .time-col{width:80px;font-size:.85rem}
-      .calendar-table thead th{font-size:.85rem}
-      .calendar-table td{height:48px}
+      /* Estructura Principal */
+      body {
+        flex-direction: column;
+      }
       .main-content {
           flex-direction: column; /* Apila las columnas */
-          gap: 20px;
+          padding: 15px;
+          gap: 15px;
       }
+
+      /* Sidebar (Menú Superior Fijo) */
+      .sidebar {
+        width: 100%;
+        height: auto;
+        padding: 15px 10px;
+        position: sticky;
+        top: 0;
+        z-index: 1000;
+        flex-direction: row; /* Elementos del sidebar en fila */
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+      }
+      .profile-pic, .sidebar h4, .sidebar .small-muted {
+          display: none; /* Oculta elementos grandes en móvil */
+      }
+      .sidebar-menu {
+          display: flex; /* Muestra el menú en fila */
+          width: auto;
+          margin: 0;
+          overflow-x: auto; /* Permite scroll horizontal si hay muchos botones */
+          padding-bottom: 5px;
+      }
+      .sidebar-menu li {
+          flex-shrink: 0;
+          margin-right: 5px;
+      }
+      .sidebar-menu button {
+          padding: 8px 12px;
+          font-size: 0.8rem;
+          white-space: nowrap;
+          font-weight: 500;
+      }
+      .sidebar-menu button i {
+          margin-right: 5px;
+      }
+      #logout-btn {
+          margin-left: 10px;
+          padding: 8px 12px;
+          font-size: 0.8rem;
+          font-weight: 700;
+      }
+      
+      /* Header del Panel */
+      .header-panel {
+          margin-bottom: 1rem;
+          flex-direction: column;
+          align-items: flex-start;
+          padding-bottom: 0.5rem;
+      }
+      .header-panel h2 {
+          font-size: 1.8rem;
+      }
+      
+      /* Contenido de Tabs (Para que no se vea tan denso) */
+      .tab-content {
+          padding: 20px;
+      }
+      .section-header h3 {
+          font-size: 1.5rem;
+      }
+
+      /* Sidebar de Reservas Apilado */
       .sidebar-reservas {
-          min-width: unset;
-          max-height: 400px;
-          /* Ocupa todo el ancho cuando se apila */
-          width: 100%; 
+          min-width: 100%;
+          max-height: 300px; /* Limita la altura para no ocupar toda la pantalla */
+          order: -1; /* Mueve la lista de reservas al inicio de la columna */
+      }
+      
+      /* Calendario Ajustes */
+      .calendar-wrapper {
+          padding: 8px;
+      }
+      .calendar-table {
+          min-width: 500px; /* Asegura que el calendario tenga espacio para el scroll horizontal */
+      }
+      .time-col {
+          width: 60px; /* Reduce ancho de columna de hora */
+          font-size: 0.75rem;
+          padding-left: 8px;
+      }
+      .calendar-table thead th {
+          font-size: 0.75rem;
+          padding: 8px 4px;
+      }
+      .calendar-table td {
+          height: 40px;
+          padding: 4px;
+      }
+      .week-controls {
+          gap: 5px;
+          font-size: 0.9rem;
+      }
+      .week-controls button {
+          padding: 6px 8px;
+      }
+      .week-label {
+          font-size: 0.9rem;
       }
     }
   </style>
@@ -303,18 +239,18 @@
 
   <div class="sidebar">
     <div class="profile-pic">
-      <img id="sidebar-avatar" src="francisca-sin-fondo.png" alt="avatar"/>
+      <img id="sidebar-avatar" src="francisca-avatar.jpg" alt="avatar" onerror="this.src='https://via.placeholder.com/150'"/>
     </div>
     <h4 id="sidebar-name">Cargando...</h4>
     <div class="sidebar small-muted" id="sidebar-sub">Cargando...</div>
 
     <ul class="sidebar-menu">
-      <li><button class="menu-btn active" data-tab="agenda-tab"><i class="fas fa-calendar-alt"></i> Agenda y servicios</button></li>
+      <li><button class="menu-btn active" data-tab="agenda-tab"><i class="fas fa-calendar-alt"></i> Agenda</button></li>
       <li><button class="menu-btn" data-tab="evoluciones-tab"><i class="fas fa-notes-medical"></i> Evoluciones</button></li>
-      <li><button class="menu-btn" data-tab="atenciones-completadas-tab"><i class="fas fa-history"></i> Historial Clínico</button></li> <li><button class="menu-btn" data-tab="datos-tab"><i class="fas fa-user-circle"></i> Mis datos</button></li>
-      <li><button class="menu-btn" data-tab="perfil-tab"><i class="fas fa-id-card"></i> Mi perfil</button></li>
-      <li><button class="menu-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button></li>
-    </ul>
+      <li><button class="menu-btn" data-tab="atenciones-completadas-tab"><i class="fas fa-history"></i> Historial</button></li> 
+      <li><button class="menu-btn" data-tab="datos-tab"><i class="fas fa-user-circle"></i> Mis datos</button></li>
+      </ul>
+    <button class="logout-btn" id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar sesión</button>
   </div>
 
   <div class="main-content">
@@ -340,10 +276,10 @@
           <div class="week-controls">
             <div style="display:flex;gap:8px;align-items:center">
               <button id="prev-week" class="logout-btn" style="background:#fff;color:var(--primary);border:1px solid #e9ecef;padding:8px 12px;">
-                <i class="fas fa-chevron-left"></i> Semana anterior
+                <i class="fas fa-chevron-left"></i> Anterior
               </button>
               <button id="next-week" class="logout-btn" style="background:#fff;color:var(--primary);border:1px solid #e9ecef;padding:8px 12px;">
-                Semana siguiente <i class="fas fa-chevron-right"></i>
+                Siguiente <i class="fas fa-chevron-right"></i>
               </button>
             </div>
             <div style="display:flex;align-items:center;gap:18px">
