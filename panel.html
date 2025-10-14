@@ -64,6 +64,10 @@
       transition:background 0.2s;
       cursor:pointer;
       font-weight:500;
+      border: none;
+      background: none;
+      width: 100%;
+      text-align: left;
     }
     .menu-btn:hover{background:rgba(255,255,255,0.1);}
     .menu-btn.active{background:var(--accent);font-weight:700;}
@@ -249,6 +253,23 @@
     .mb-3{margin-bottom:1rem;}
     .p-3{padding:1rem;}
 
+    /* Mensaje de error visual */
+    .error-box{background:#fff0f0;border:1px solid #ffd6d6;color:#7a1f1f;padding:12px;border-radius:8px;margin:10px 0}
+    .hint-box{background:#f8fbff;border:1px solid #e2f0ff;color:#1b4f8a;padding:12px;border-radius:8px;margin:10px 0}
+
+    /* Spinner sencillo */
+    .spinner{width:20px;height:20px;border-radius:50%;border:3px solid rgba(0,0,0,0.08);border-top-color:var(--primary);animation:spin 1s linear infinite;display:inline-block;vertical-align:middle;margin-right:8px}
+    @keyframes spin{to{transform:rotate(360deg)}}
+
+    /* Responsividad (Móvil/Tablet) */
+    @media (max-width:900px){
+      .main-content {
+          flex-direction: column; /* Apila las columnas */
+          gap: 20px;
+          padding: 20px;
+      }
+      .calendar-table{min-width:600px;}
+    }
   </style>
 </head>
 <body>
@@ -260,14 +281,15 @@
       <span id="sidebar-sub"></span>
     </div>
     
-    <a data-tab="tab-today" class="menu-btn active"><i class="fas fa-calendar-day"></i> Citas de Hoy</a>
-    <a data-tab="tab-schedule" class="menu-btn"><i class="fas fa-calendar-alt"></i> Agenda de la Semana</a>
-    <a data-tab="tab-history" class="menu-btn"><i class="fas fa-history"></i> Historial de Evoluciones</a>
+    <button data-tab="tab-today" class="menu-btn active"><i class="fas fa-calendar-day"></i> Citas de Hoy</button>
+    <button data-tab="tab-schedule" class="menu-btn"><i class="fas fa-calendar-alt"></i> Agenda de la Semana</button>
+    <button data-tab="tab-history" class="menu-btn"><i class="fas fa-history"></i> Historial de Evoluciones</button>
 
     <button id="logout-btn"><i class="fas fa-sign-out-alt"></i> Cerrar Sesión</button>
   </div>
 
   <div class="main-content">
+    
     <div class="header-content">
       <h1 id="welcome-message">Bienvenida al Panel</h1>
       <span id="agenda-status">Estado: <span style="font-weight:700;color:var(--info)">Verificando...</span></span>
@@ -286,16 +308,16 @@
     <div id="tab-schedule" class="tab-content">
         <h3 class="mb-3">Gestión de Disponibilidad Semanal</h3>
         <p style="font-size: 0.95rem; color: var(--muted); margin-bottom: 25px;">
-            Haz clic en una celda **vacía** para marcarla como **Disponible** (<span style="color:var(--success); font-weight:700;">Verde</span>) o haz clic en una celda disponible para marcarla como No Disponible (<span style="color:var(--danger); font-weight:700;">Rojo</span>). Los horarios en <span style="color:var(--danger); font-weight:700;">Rojo</span> ya reservados no pueden modificarse.
+            Haz clic en una celda **vacía** para marcarla como **Disponible** (<span style="color:var(--accent); font-weight:700;">Ocre</span>) o haz clic en una celda disponible para **Bloquearla** (<span style="color:var(--primary); font-weight:700;">Gris Azulado</span>). Los horarios en <span style="color:var(--danger); font-weight:700;">Rojo</span> ya reservados no pueden modificarse.
         </p>
         
         <div class="week-controls">
             <div style="display:flex;gap:8px;align-items:center">
-                <button id="prev-week" class="btn-nav" onclick="changeWeek(-1)">
-                    <i class="fas fa-chevron-left"></i> Anterior
+                <button id="prev-week" class="btn-nav" onclick="changeWeek(-7)">
+                    <i class="fas fa-chevron-left"></i> Semana anterior
                 </button>
-                <button id="next-week" class="btn-nav" onclick="changeWeek(1)">
-                    Siguiente <i class="fas fa-chevron-right"></i>
+                <button id="next-week" class="btn-nav" onclick="changeWeek(7)">
+                    Semana siguiente <i class="fas fa-chevron-right"></i>
                 </button>
             </div>
             <div style="display:flex;align-items:center;gap:18px">
@@ -320,7 +342,8 @@
     <div id="tab-history" class="tab-content">
       <h3 class="mb-3">Historial de Evoluciones Registradas</h3>
       <div id="evolutions-history" class="evolution-list">
-        </div>
+        <p>Cargando historial...</p>
+      </div>
        <div id="no-history" style="display:none; padding:20px; background:#fff; border:1px solid #eee; border-radius:6px;">
         <i class="fas fa-info-circle" style="color:var(--info);"></i> Aún no hay evoluciones registradas.
       </div>
@@ -352,16 +375,15 @@
   function toISODate(d){ return `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`; }
   function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
 
-  function getStartOfWeek(date) {
-      const d = new Date(date);
-      // d.getDay() devuelve 0 para Domingo, 1 para Lunes. Queremos empezar en Lunes.
-      const day = d.getDay(); 
-      const diff = (day === 0 ? -6 : 1) - day; // Calcula la diferencia para llegar al lunes (1)
-      d.setDate(d.getDate() + diff);
-      d.setHours(0,0,0,0);
-      return d;
+  function getStartOfWeek(date){
+    const d = new Date(date);
+    const day = d.getDay(); 
+    const diff = (day === 0 ? -6 : 1) - day; 
+    d.setDate(d.getDate() + diff);
+    d.setHours(0,0,0,0);
+    return d;
   }
-  currentWeekStart = getStartOfWeek(currentWeekStart); // Inicializar la semana en el Lunes actual
+  currentWeekStart = getStartOfWeek(currentWeekStart); 
 
   function generateTimeSlots(){
       timeSlots = [];
@@ -372,7 +394,6 @@
           timeSlots.push(t);
           temp.setMinutes(temp.getMinutes() + slotIntervalMin);
       }
-      // Eliminar el último slot si excede la hora final
       if (timeSlots.length > 0) {
           const lastSlotTime = timeSlots[timeSlots.length - 1];
           const [h, m] = lastSlotTime.split(':').map(Number);
@@ -383,8 +404,7 @@
   }
   generateTimeSlots();
 
-
-  /****************** 1. AUTENTICACIÓN Y CARGA INICIAL (CON DEBUG) ******************/
+  /****************** 1. AUTENTICACIÓN Y CARGA INICIAL (CORREGIDO) ******************/
   async function checkAuth() {
     agendaStatus.innerHTML = '<span style="font-weight:700;color:var(--info)">Verificando...</span>';
     
@@ -397,7 +417,6 @@
             return;
         }
 
-        // --- DEBUG: UID DEL USUARIO LOGEADO ---
         const loggedInUserId = user.id;
         console.log("--- DEBUG DE AUTENTICACIÓN ---");
         console.log("1. Usuario logeado. UID de Supabase Auth:", loggedInUserId);
@@ -408,7 +427,7 @@
             .from('profesionales')
             .select('*')
             .eq('id', loggedInUserId) 
-            .single();
+            .maybeSingle(); // Usamos maybeSingle para manejar el caso de no encontrar la fila sin lanzar error
 
         console.log("2. Resultado de búsqueda en tabla 'profesionales':", prof);
         console.log("3. Error de Supabase (si existe):", error);
@@ -424,15 +443,14 @@
             
             console.error(debugMessage);
 
-            welcomeMessage.textContent = 'Error: Perfil no encontrado.';
-            agendaStatus.innerHTML = `<span style="font-weight:700;color:var(--danger)">ERROR. UID usado: ${loggedInUserId}</span>`;
-            
+            // Mostrar mensaje de error en el panel
             document.querySelector('.main-content').innerHTML = `
                 <div style="background:#fff3f4; border:1px solid var(--danger); padding:25px; border-radius:8px; margin-top:30px;">
-                    <h2>⚠️ Error de Sincronización de Perfil ⚠️</h2>
-                    <p>El sistema de autenticación funciona, pero no encuentra tu perfil en la tabla <b>'profesionales'</b>.</p>
-                    <p><b>ACCIÓN REQUERIDA:</b> Debes pegar este UID en la columna <b>'id'</b> de tu fila en la tabla <b>'profesionales'</b> de Supabase:</p>
-                    <pre style="background:#eee; padding:10px; word-break:break-all;"><b>${loggedInUserId}</b></pre>
+                    <h2>⚠️ Error Crítico: Perfil No Sincronizado ⚠️</h2>
+                    <p>El panel no pudo inicializar porque la fila de su perfil en la tabla <b>'profesionales'</b> (columna ID) no coincide con su usuario de inicio de sesión (UID).</p>
+                    <p><b>UID REQUERIDO:</b></p>
+                    <pre style="background:#eee; padding:10px; word-break:break-all; font-weight:700;">${loggedInUserId}</pre>
+                    <p>Pegue este ID en la tabla y **luego actualice la página**.</p>
                 </div>
             `;
             return;
@@ -440,9 +458,9 @@
 
         // Carga exitosa
         currentProfessionalId = prof.id;
-        welcomeMessage.textContent = `¡Hola, ${prof.nombre}!`;
-        sidebarNameEl.textContent = prof.nombre;
-        sidebarSubEl.textContent = user.email || '';
+        welcomeMessage.textContent = `¡Hola, ${prof.nombre || user.email}!`;
+        sidebarNameEl.textContent = prof.nombre || user.email;
+        sidebarSubEl.textContent = user.email || 'N/D';
 
         // Carga de datos
         setTimeout(async () => {
@@ -459,7 +477,7 @@
     }
   }
 
-  /****************** 2. CALENDARIO SEMANAL (LÓGICA CORREGIDA) ******************/
+  /****************** 2. CALENDARIO SEMANAL (GESTIÓN DE DISPONIBILIDAD) ******************/
   async function loadWeekSchedule() {
       if (!currentProfessionalId) return;
 
@@ -540,18 +558,18 @@
                   cell.classList.add('booked');
                   cell.innerHTML = `Reservado: ${record.paciente_nombre || 'Paciente'}`;
                   cell.title = 'Ya reservado. No se puede modificar.';
-                  cell.style.cursor = 'default';
+                  cell.style.cursor = 'not-allowed';
               } else if (isAvailable) {
-                  cell.classList.add('set-available');
-                  cell.innerHTML = 'Disponible (Público)';
-                  cell.title = 'Clic para marcar como NO disponible';
+                  cell.classList.add('set-available'); // CAMBIO DE CLASE A set-available (Verde)
+                  cell.innerHTML = 'DISPONIBLE';
+                  cell.title = 'Clic para bloquear';
                   cell.dataset.action = 'mark-unavailable';
                   cell.dataset.agendaId = record.id;
                   cell.addEventListener('click', () => markAvailable(cell, false));
               } else {
                   // Slot no existe en la DB (o disponible=null), se puede crear
-                  cell.classList.add('available');
-                  cell.innerHTML = 'Bloqueado (Clic para abrir)';
+                  cell.classList.add('available'); // CAMBIO DE CLASE A available (Ocre/Accent)
+                  cell.innerHTML = 'BLOQUEADO';
                   cell.title = 'Clic para marcar como DISPONIBLE';
                   cell.dataset.action = 'mark-available';
                   cell.dataset.date = dateStr;
@@ -567,24 +585,21 @@
   }
 
   function changeWeek(direction) {
-      currentWeekStart = addDays(currentWeekStart, direction * 7);
+      currentWeekStart = addDays(currentWeekStart, direction);
       loadWeekSchedule();
   }
 
   async function markAvailable(cell, newStatus) {
       const statusText = newStatus ? 'Disponible' : 'No Disponible';
-      const cellText = newStatus ? 'Disponible (Público)' : 'Bloqueado (Clic para abrir)';
-      const loadingText = `Guardando como ${statusText}...`;
       const originalHTML = cell.innerHTML;
-      cell.innerHTML = `<i class="fas fa-spinner fa-spin"></i> ${loadingText}`;
+      cell.innerHTML = `<i class="fas fa-spinner fa-spin"></i> Guardando...`;
       cell.style.cursor = 'wait';
       
-      let updateError = null;
       let recordId = cell.dataset.agendaId;
 
       try {
           if (newStatus) {
-              // 1. Crear el slot si no existe
+              // CREAR O MARCAR COMO DISPONIBLE
               if (!recordId) {
                   const dateStr = cell.dataset.date;
                   const timeStr = cell.dataset.time;
@@ -596,38 +611,29 @@
                           fecha: dateStr,
                           hora_inicio: timeStr,
                           disponible: true,
-                          paciente_prevision: null, // Se deja vacío para el paciente
                       }).select('id').single(); 
                   
                   if (insertError) throw insertError;
-                  recordId = insertData.id;
-                  cell.dataset.agendaId = recordId; // Actualizar el ID en la celda
+                  cell.dataset.agendaId = insertData.id; 
               } else {
-                  // 2. Actualizar a Disponible si ya existía (ej: estaba como No Disponible)
-                  const { error: upError } = await supabaseClient
+                  // Actualizar a Disponible
+                  await supabaseClient
                       .from('agendas')
-                      .update({ disponible: true, paciente_nombre: null, paciente_rut: null, paciente_email: null, paciente_celular: null })
+                      .update({ disponible: true, paciente_nombre: null }) // Limpiar datos de paciente al poner disponible
                       .eq('id', recordId);
-                  if (upError) throw upError;
               }
           } else {
-              // 3. Marcar como No Disponible (y limpiar datos de paciente)
-              const { error: upError } = await supabaseClient
+              // MARCAR COMO NO DISPONIBLE (Bloquear)
+              await supabaseClient
                   .from('agendas')
                   .update({ 
                       disponible: false, 
-                      paciente_nombre: null,
-                      paciente_rut: null,
-                      paciente_email: null,
-                      paciente_celular: null
+                      paciente_nombre: 'BLOQUEADO' // Marcar para que se distinga de una reserva real
                   })
                   .eq('id', recordId);
-              if (upError) throw upError;
           }
           
-          // Refrescar el mapa y el calendario
-          loadWeekSchedule();
-
+          loadWeekSchedule(); // Refrescar el calendario
       } catch (error) {
           console.error(`Error al marcar como ${statusText}:`, error);
           alert(`Error al guardar: ${error.message}.`);
@@ -638,6 +644,7 @@
 
   /****************** 3. CITAS DE HOY ******************/
   async function loadTodayAppointments() {
+    // ... (Esta función se mantiene igual) ...
     if (!currentProfessionalId) return;
 
     const today = toISODate(new Date());
@@ -686,6 +693,7 @@
 
   /****************** 4. MODAL Y EVOLUCIÓN ******************/
   function openEvolutionModal(agendaId, pacienteNombre) {
+      // ... (Esta función se mantiene igual) ...
       const modalHTML = `
           <div class="modal-overlay" id="evolution-modal">
               <div class="modal-content">
@@ -704,6 +712,7 @@
   }
 
   async function saveEvolution(agendaId) {
+       // ... (Esta función se mantiene igual) ...
       const evolutionText = document.getElementById('evolution-text').value;
       const statusEl = document.getElementById('modal-status-message');
       const modal = document.getElementById('evolution-modal');
@@ -757,6 +766,7 @@
 
   /****************** 5. HISTORIAL DE EVOLUCIONES ******************/
   async function loadCompletedEvolutions() {
+      // ... (Esta función se mantiene igual) ...
       if (!currentProfessionalId) return;
 
       const container = document.getElementById('evolutions-history');
@@ -805,7 +815,6 @@
       `).join('');
   }
 
-
   /****************** 6. LOGOUT Y TABS ******************/
   logoutBtn.addEventListener('click', async () => {
     await supabaseClient.auth.signOut();
@@ -826,6 +835,7 @@
   document.addEventListener('DOMContentLoaded', () => {
       checkAuth();
   });
+
 </script>
 </body>
 </html>
