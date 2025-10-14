@@ -1,1 +1,589 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Reserva | Francisca Sandoval - Psicofit</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;700;900&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <style>
+        /* PALETA DE COLORES - Clean & Elevated (Sofisticado) */
+        :root {
+            --primary: #2C3A47;
+            --accent: #B8860B;
+            --bg: #F9F7F1;
+            --bg-light: #FFFFFF;
+            --muted: #A3A3A3;
+            --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08);
+        }
 
+        body {
+            font-family: 'Montserrat', sans-serif;
+            margin: 0;
+            line-height: 1.7;
+            color: var(--primary);
+            background-color: var(--bg);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+        }
+
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-grow: 1;
+        }
+        
+        h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.8rem; 
+            color: var(--accent);
+            text-align: center;
+            margin-top: 50px;
+            margin-bottom: 20px;
+        }
+        h3 {
+            font-size: 1.5rem;
+            color: var(--primary);
+            margin-bottom: 25px;
+        }
+
+        /* Botones y Hover */
+        .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; border: none;}
+        .btn-agenda { background-color: var(--accent); color: white; border: 2px solid var(--accent); transition: transform 0.3s ease, background-color 0.3s ease; }
+        .btn-agenda:hover { transform: translateY(-2px); background-color: var(--primary); border-color: var(--primary); }
+        .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
+        
+        /* Contenedor Principal */
+        #agendamiento-container {
+            background-color: var(--bg-light); 
+            padding: 40px; 
+            border-radius: 8px; 
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 80px;
+        }
+
+        /* Estilos de Calendario */
+        .calendar-grid { 
+            display: grid; 
+            grid-template-columns: repeat(7, 1fr); 
+            gap: 10px; 
+            margin-top: 20px;
+            overflow-x: auto;
+        }
+        .calendar-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 15px; 
+            border-radius: 4px; 
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .day-column { 
+            display: flex; 
+            flex-direction: column; 
+            border-radius: 4px; 
+            overflow: hidden; 
+            min-width: 120px; 
+            border: 1px solid #E0E0E0; 
+            background-color: var(--bg-light);
+        }
+        .day-header { 
+            text-align: center; 
+            padding: 10px 5px; 
+            font-weight: 700; 
+            background-color: var(--primary); 
+            color: white; 
+            font-size: 0.9rem;
+        }
+        .day-number { font-size: 1.1rem; font-weight: 900; }
+        .time-slot-container { padding: 10px; flex-grow: 1; background-color: #ffffff; }
+
+        /* Estilos de Slots */
+        .time-slot {
+            padding: 8px 5px;
+            margin: 5px 0;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
+            border: 1px solid var(--muted);
+            color: var(--primary);
+            background-color: #f5f5f5;
+        }
+        .time-slot:hover {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+        .time-slot.selected {
+            background-color: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            box-shadow: 0 4px 8px rgba(184, 134, 11, 0.4);
+            transform: scale(1.05);
+        }
+        .time-slot.booked {
+            background-color: #eee;
+            color: var(--muted);
+            border: 1px solid #ccc;
+            cursor: not-allowed;
+            text-decoration: line-through;
+        }
+
+        /* Estilos de Formulario Modal */
+        .form-group { margin-bottom: 20px; }
+        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; color: var(--primary); }
+        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="tel"], .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid var(--muted);
+            border-radius: 4px;
+            font-size: 1rem;
+            box-sizing: border-box; 
+        }
+
+        /* Modal Overlay */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 2000;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            background: var(--bg-light);
+            border-radius: 10px;
+            width: 95%;
+            max-width: 550px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transform: translateY(-50px);
+            transition: transform 0.3s ease;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: translateY(0);
+        }
+        .modal-header {
+            background: var(--primary);
+            color: white;
+            padding: 15px 25px;
+            border-radius: 10px 10px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .modal-header h3 {
+            margin: 0;
+            font-family: 'Playfair Display', serif;
+        }
+        .modal-body {
+            padding: 25px;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .modal-close-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            line-height: 1;
+        }
+
+        footer { background-color: var(--primary); padding: 20px 0; margin-top: auto; }
+        footer p { color: #f5f5f5; font-size: 0.9rem; text-align: center; margin: 0;}
+
+        /* Animación de Spinner */
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-top: 4px solid var(--accent);
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    </style>
+</head>
+<body>
+<main>
+    <div class="container">
+        <div id="service-info">
+            <h2>Agenda tu Sesión</h2>
+            <h3 id="selected-service-display">Cargando tipo de sesión...</h3>
+            <p id="loading-status" style="text-align: center; margin-bottom: 20px;"><span class="spinner"></span> Cargando agenda del profesional...</p>
+        </div>
+
+        <div id="agendamiento-container">
+            
+            <div id="step-3">
+                <div class="calendar-nav mt-3">
+                    <button onclick="changeWeek(-1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Anterior</button>
+                    <h4 id="current-week-display" style="color:var(--primary); margin:0; text-align: center; flex-grow: 1;"></h4>
+                    <button onclick="changeWeek(1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;">Siguiente <i class="fas fa-chevron-right"></i></button>
+                </div>
+
+                <div id="schedule-container" class="calendar-grid">
+                    </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <a href="index.html" class="btn btn-panel" style="background-color: var(--muted); color:white;">Volver a Selección de Servicio</a>
+                </div>
+            </div>
+
+            <div id="step-5" style="display:none; text-align: center;">
+                <h3>¡Reserva Exitosa!</h3>
+                <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px;">
+                    <p style="color: var(--accent); font-size:1.1rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito.</p>
+                    <p>Te enviamos los detalles de tu sesión al correo. ¡Gracias por confiar en Psicofit!</p>
+                </div>
+                <a href="index.html" class="btn btn-agenda mt-3">Volver al Inicio</a>
+            </div>
+        </div>
+    </div>
+</main>
+
+<div id="modal-confirmacion" class="modal-overlay">
+    <div class="modal-content">
+        <div class="modal-header">
+            <img src="logo-psicofit.png" alt="Logo Psicofit" style="height: 40px; margin-right: 10px; filter: brightness(0) invert(1);"/>
+            <h3>Confirma tu Reserva</h3>
+            <button type="button" class="modal-close-btn" onclick="hideModal()">&times;</button>
+        </div>
+        <div class="modal-body">
+            <div class="hint-box" style="margin-bottom: 20px;">
+                <p style="margin: 5px 0;">Hora seleccionada: **<span id="modal-date-time"></span>**</p>
+            </div>
+            
+            <form id="booking-form" class="mt-3">
+                <div class="form-group">
+                    <label for="paciente_nombre">Nombre Completo (*)</label>
+                    <input type="text" id="paciente_nombre" required>
+                </div>
+                <div class="form-group">
+                    <label for="paciente_rut">RUT/DNI (*)</label>
+                    <input type="text" id="paciente_rut" required>
+                </div>
+                <div class="form-group">
+                    <label for="paciente_email">Correo Electrónico (*)</label>
+                    <input type="email" id="paciente_email" required>
+                </div>
+                <div class="form-group">
+                    <label for="paciente_celular">Celular (*)</label>
+                    <input type="tel" id="paciente_celular" required>
+                </div>
+                <div class="form-group">
+                    <label for="comentarios">Motivo de Consulta (Opcional)</label>
+                    <textarea id="comentarios" rows="3"></textarea>
+                </div>
+                
+                <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
+                <div style="display:flex; justify-content: space-between; margin-top: 20px;">
+                    <button type="button" onclick="hideModal()" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Cancelar</button>
+                    <button type="submit" class="btn btn-agenda" id="confirm-booking-btn" style="font-size: 0.9rem; padding: 10px 20px;">Confirmar Reserva <i class="fas fa-check"></i></button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<footer>
+    <p>&copy; 2025 Psicofit. Todos los derechos reservados.</p>
+</footer>
+
+<script>
+    // CREDENCIALES INTEGRADAS Y FUNCIONALES
+    const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
+    const { createClient } = supabase;
+    const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
+
+    let selectedServiceId = null; 
+    let selectedProfessionalId = null;
+    let selectedTimeSlot = null;
+    let currentWeekStart = new Date(); 
+    
+    // Configuración de horario
+    const startHour = 8, endHour = 21, slotIntervalMin = 45; 
+    
+    // Referencias DOM
+    const modalConfirmacionEl = document.getElementById('modal-confirmacion');
+    const modalDateTimeEl = document.getElementById('modal-date-time');
+    const loadingStatusEl = document.getElementById('loading-status');
+    const selectedServiceDisplayEl = document.getElementById('selected-service-display');
+
+    // --- UTILIDADES ---
+    function getStartOfWeek(date) {
+        const day = date.getDay();
+        const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
+        const monday = new Date(date);
+        monday.setDate(diff);
+        monday.setHours(0, 0, 0, 0); 
+        return monday;
+    }
+    function addDays(d, n) { const x = new Date(d); x.setDate(x.getDate() + n); return x; }
+    function pad(n) { return String(n).padStart(2, '0'); }
+    function toISODate(d) { return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`; }
+    function formatTime(timeString) {
+        const [hours, minutes] = timeString.split(':');
+        return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
+    }
+
+    // --- MANEJO DEL MODAL ---
+    function showModal() {
+        const datePart = new Date(selectedTimeSlot.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
+        modalDateTimeEl.textContent = `${datePart} a las ${selectedTimeSlot.time}`;
+        
+        modalConfirmacionEl.classList.add('visible');
+        document.body.style.overflow = 'hidden'; 
+        
+        document.getElementById('booking-status-message').textContent = '';
+        document.getElementById('confirm-booking-btn').disabled = false;
+    }
+
+    function hideModal() {
+        modalConfirmacionEl.classList.remove('visible');
+        document.body.style.overflow = '';
+    }
+    
+    // --- LÓGICA DEL CALENDARIO ---
+    async function loadUniqueProfessional() {
+        // Asumimos que solo hay un profesional o tomamos el primero
+        const { data: profData, error: profError } = await supabaseClient
+            .from('profesionales')
+            .select('id')
+            .limit(1);
+
+        if (profError || profData.length === 0) {
+            loadingStatusEl.innerHTML = 'Error: No se encontró el profesional.';
+            return false;
+        }
+        
+        selectedProfessionalId = profData[0].id;
+        return true;
+    }
+
+    function generateTimeSlots() {
+        let timeSlots = [];
+        const temp = new Date();
+        temp.setHours(startHour, 0, 0, 0);
+        while (temp.getHours() < endHour || (temp.getHours() === endHour && temp.getMinutes() === 0)) {
+            const t = `${pad(temp.getHours())}:${pad(temp.getMinutes())}`;
+            timeSlots.push(t);
+            temp.setMinutes(temp.getMinutes() + slotIntervalMin);
+        }
+        return timeSlots;
+    }
+
+    async function loadWeekSchedule() {
+        if (!selectedProfessionalId || !selectedServiceId) {
+            loadingStatusEl.innerHTML = 'Error: ID de servicio/profesional no cargado.';
+            return;
+        }
+
+        loadingStatusEl.innerHTML = '<span class="spinner"></span> Cargando agenda del profesional...';
+        
+        const startDate = getStartOfWeek(currentWeekStart);
+        const endDate = addDays(startDate, 6); 
+
+        document.getElementById('current-week-display').textContent = 
+            `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
+        
+        // Carga de agenda desde Supabase
+        const { data: agendaData, error } = await supabaseClient
+            .from('agendas')
+            .select('*')
+            .eq('profesional_id', selectedProfessionalId)
+            .gte('fecha', toISODate(startDate))
+            .lte('fecha', toISODate(endDate))
+            .order('hora_inicio', { ascending: true });
+
+        if (error) {
+            console.error('Error al cargar agenda:', error);
+            loadingStatusEl.innerHTML = 'Error al cargar la agenda. Intenta más tarde.';
+            return;
+        }
+
+        const agendaMap = new Map();
+        (agendaData || []).forEach(item => {
+            const hora = formatTime(item.hora_inicio);
+            const key = `${item.fecha}|${hora}`;
+            agendaMap.set(key, item);
+        });
+        
+        renderCalendar(agendaMap);
+        loadingStatusEl.textContent = ''; 
+    }
+
+    function renderCalendar(agendaMap) {
+        const scheduleContainer = document.getElementById('schedule-container');
+        scheduleContainer.innerHTML = '';
+        const timeSlots = generateTimeSlots();
+        
+        let currentDayIter = new Date(getStartOfWeek(currentWeekStart));
+        const today = new Date(); today.setHours(0, 0, 0, 0); 
+        
+        selectedTimeSlot = null;
+
+        for (let i = 0; i < 7; i++) {
+            const dayKey = toISODate(currentDayIter);
+            const isPastDay = currentDayIter < today; 
+
+            let daySlotsHTML = '';
+            let hasSlots = false;
+
+            for (const time of timeSlots) {
+                const key = `${dayKey}|${time}`;
+                const slot = agendaMap.get(key);
+                
+                const slotDateTime = new Date(`${dayKey}T${time}:00`);
+                const isPastHour = slotDateTime < new Date();
+                
+                const isBooked = slot && !slot.disponible;
+                const isAvailable = slot && slot.disponible;
+                
+                const isUnavailable = isPastDay || isPastHour || isBooked || !isAvailable;
+
+                if (isAvailable) hasSlots = true;
+
+                daySlotsHTML += `
+                    <div class="time-slot ${isUnavailable ? 'booked' : ''} ${isAvailable ? 'available-slot' : ''}" 
+                         data-id="${slot ? slot.id : ''}" 
+                         data-date="${dayKey}" 
+                         data-time="${time}"
+                         onclick="${isUnavailable ? '' : 'selectTimeSlot(this)'}">
+                       ${time}
+                    </div>
+                `;
+            }
+            
+            scheduleContainer.innerHTML += `
+                <div class="day-column">
+                    <div class="day-header ${isPastDay ? 'past-day' : ''}">
+                        ${currentDayIter.toLocaleDateString('es-ES', { weekday: 'short' })}<br><span class="day-number">${currentDayIter.getDate()}</span>
+                    </div>
+                    <div class="time-slot-container">
+                        ${hasSlots ? daySlotsHTML : '<p style="font-size:0.85rem; color:var(--muted); text-align:center;">No hay horas.</p>'}
+                    </div>
+                </div>
+            `;
+            currentDayIter.setDate(currentDayIter.getDate() + 1); 
+        }
+    }
+
+    function selectTimeSlot(element) {
+        if (element.classList.contains('booked')) return; 
+
+        document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
+        
+        element.classList.add('selected');
+        
+        selectedTimeSlot = {
+            id: element.dataset.id,
+            date: element.dataset.date,
+            time: element.dataset.time
+        };
+        
+        // Abre el Modal sin problemas de scroll
+        showModal();
+    }
+
+    function changeWeek(direction) {
+        currentWeekStart = addDays(currentWeekStart, direction * 7);
+        loadWeekSchedule();
+    }
+    
+    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
+    document.getElementById('booking-form').addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const statusMessage = document.getElementById('booking-status-message');
+        const confirmBtn = document.getElementById('confirm-booking-btn');
+        confirmBtn.disabled = true;
+        statusMessage.textContent = 'Procesando tu reserva...';
+        
+        if (!selectedTimeSlot || !selectedServiceId || !selectedProfessionalId) {
+            statusMessage.textContent = 'Error: Faltan datos de la selección.';
+            confirmBtn.disabled = false;
+            return;
+        }
+
+        const nombre = document.getElementById('paciente_nombre').value;
+        const rut = document.getElementById('paciente_rut').value;
+        const email = document.getElementById('paciente_email').value;
+        const celular = document.getElementById('paciente_celular').value;
+        const comentarios = document.getElementById('comentarios').value;
+        const prevision = selectedServiceId === 1 ? 'ISAPRE' : 'FONASA'; 
+
+        try {
+            const { error: updateError } = await supabaseClient
+                .from('agendas')
+                .update({
+                    disponible: false,
+                    paciente_nombre: nombre,
+                    paciente_rut: rut,
+                    paciente_email: email,
+                    paciente_celular: celular,
+                    paciente_prevision: prevision,
+                    comentarios: comentarios
+                })
+                .eq('id', selectedTimeSlot.id);
+
+            if (updateError) throw updateError;
+            
+            hideModal(); // Oculta el modal
+            document.getElementById('step-3').style.display = 'none'; // Oculta el calendario
+            document.getElementById('step-5').style.display = 'block'; // Muestra éxito
+
+        } catch (error) {
+            console.error('Error al confirmar la reserva:', error);
+            statusMessage.textContent = `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada.`;
+            confirmBtn.disabled = false;
+        }
+    });
+
+
+    // --- INICIALIZACIÓN ---
+    document.addEventListener('DOMContentLoaded', async () => {
+        // 1. Obtener ID del servicio de la URL (Ej: ?service_id=1)
+        const params = new URLSearchParams(window.location.search);
+        selectedServiceId = parseInt(params.get('service_id'));
+        
+        if (!selectedServiceId) {
+            selectedServiceDisplayEl.textContent = 'Error: ID de servicio no especificado.';
+            loadingStatusEl.textContent = 'Por favor, vuelve a la página principal.';
+            return;
+        }
+        
+        const serviceName = selectedServiceId === 1 ? 'Terapia Psicológica (ISAPRE)' : 'Terapia Psicológica (FONASA)';
+        selectedServiceDisplayEl.textContent = serviceName;
+
+        // 2. Cargar Profesional y Agenda
+        if (await loadUniqueProfessional()) {
+            currentWeekStart = getStartOfWeek(new Date());
+            loadWeekSchedule();
+        }
+    });
+</script>
