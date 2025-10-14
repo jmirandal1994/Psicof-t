@@ -164,7 +164,7 @@
         h2 {
             font-family: 'Playfair Display', serif;
             font-size: 2.8rem; 
-            color: var(--accent); 
+            color: var(--accent); /* AJUSTE SUTILEZA: Color de acento para títulos */
             text-align: center;
             margin-bottom: 60px;
         }
@@ -194,8 +194,7 @@
         .slider-container {
             width: 100%;
             overflow: hidden;
-            white-space: nowrap; 
-            padding: 30px 0; /* Más padding para que respire */
+            padding: 30px 0; 
             border-top: 1px solid #ddd;
             border-bottom: 1px solid #ddd;
             background-color: var(--bg-light);
@@ -563,7 +562,31 @@
         }, 100);
     }
 
-    // Función modificada para cargar todos los datos del profesional (Asumiendo que existe una fila en la tabla 'profesionales' para Francisca)
+    // [MODIFICACIÓN CLAVE]: Nueva función loadServices para Isapre/Fonasa
+    async function loadServices() {
+        const services = [
+            { id: 1, name: "Terapia Psicológica (ISAPRE)", price: "20.000 CLP", display_name: "Terapia Psicológica (Isapre)" },
+            { id: 2, name: "Terapia Psicológica (FONASA)", price: "15.000 CLP", display_name: "Terapia Psicológica (Fonasa)" },
+        ];
+        
+        const servicesContainer = document.getElementById('services-container');
+        servicesContainer.innerHTML = services.map(service => `
+            <div class="service-card" 
+                 data-service-id="${service.id}" 
+                 data-service-name="${service.name}" 
+                 data-price="${service.price}" 
+                 onclick="selectService(${service.id}, '${service.name}', '${service.price}')" 
+                 style="min-width: 250px; text-align: center; cursor: pointer; border-radius: 8px; padding: 25px; flex-grow: 1; max-width: 400px;">
+                
+                <h4 style="margin: 0 0 5px; font-weight: 700; color: var(--primary);">${service.display_name}</h4>
+                <p style="margin: 0; color: var(--accent); font-weight: 500; font-size: 1.2rem;">${service.price} por sesión</p>
+            </div>
+        `).join('');
+
+        await loadUniqueProfessional();
+    }
+    
+    // Función modificada para cargar el ID del profesional único (para el agendamiento)
     async function loadUniqueProfessional() {
         const { data: profData, error: profError } = await supabaseClient
             .from('profesionales')
@@ -572,7 +595,6 @@
 
         if (profError || profData.length === 0) {
             console.error("Error al cargar profesional único:", profError || "No se encontró profesional.");
-            // Si hay error, asignamos un ID placeholder para continuar con el agendamiento (Solo para desarrollo)
             selectedProfessionalId = 'DEFAULT_PROF_ID';
             return false;
         }
@@ -583,24 +605,6 @@
     }
 
 
-    async function loadServices() {
-        const services = [
-            { id: 1, name: "Sesión de Terapia Individual (50 min)", price: "50.000 CLP" },
-            { id: 2, name: "Terapia de Pareja (75 min)", price: "70.000 CLP" },
-            { id: 3, name: "Orientación Vocacional (Sesión inicial)", price: "45.000 CLP" },
-        ];
-        
-        const servicesContainer = document.getElementById('services-container');
-        servicesContainer.innerHTML = services.map(service => `
-            <div class="service-card" data-service-id="${service.id}" data-service-name="${service.name}" data-price="${service.price}" onclick="selectService(${service.id}, '${service.name}', '${service.price}')" style="min-width: 250px; text-align: center; cursor: pointer; border-radius: 8px; padding: 25px;">
-                <h4 style="margin: 0 0 5px; font-weight: 700; color: var(--primary);">${service.name}</h4>
-                <p style="margin: 0; color: var(--accent); font-weight: 500;">${service.price}</p>
-            </div>
-        `).join('');
-
-        await loadUniqueProfessional();
-    }
-    
     function selectService(id, name, price) {
         selectedServiceId = id;
         document.querySelectorAll('.service-card').forEach(card => card.classList.remove('selected'));
