@@ -28,7 +28,7 @@
             line-height: 1.7;
             color: var(--primary);
             overflow-x: hidden;
-            font-weight: 300; 
+            font-weight: 300; /* SUTILEZA: Peso de fuente general más ligero */
             background-color: var(--bg);
         }
 
@@ -97,7 +97,7 @@
             background-image: url('7B7421AF-ED37-47DE-BCD2-4C0A4346C38A.jpg');
             background-size: cover; 
             background-repeat: no-repeat; 
-            background-position: center 30%; 
+            background-position: center 30%; /* Enfoca el horizonte */
             
             box-shadow: inset 0 0 0 1000px rgba(0, 0, 0, 0.55); 
         }
@@ -190,7 +190,7 @@
             font-size: 2.2rem; 
         }
         
-        /* --- ESTILOS PARA EL CARRUSEL DE LOGOS (REIMPLEMENTADO) --- */
+        /* --- ESTILOS PARA EL CARRUSEL DE LOGOS (REIMPLEMENTADO Y CORREGIDO) --- */
         .slider-container {
             width: 100%;
             overflow: hidden;
@@ -201,11 +201,12 @@
             background-color: var(--bg-light);
         }
         .slider-track {
-            display: inline-block;
+            display: flex; /* CAMBIO CLAVE: Usa flex para un mejor manejo del espacio */
+            width: fit-content; 
             animation: scroll-logos 30s linear infinite; /* Animación de desplazamiento */
         }
         .slider-logo {
-            height: 70px; /* Tamaño un poco más grande */
+            height: 70px; 
             width: auto;
             margin: 0 40px;
             vertical-align: middle;
@@ -221,7 +222,8 @@
                 transform: translateX(0);
             }
             100% {
-                transform: translateX(-50%); /* Desplaza la mitad de los logos para el loop */
+                /* CORRECCIÓN DE BUG: Mueve -50.1% para evitar el parpadeo blanco al reiniciar la animación */
+                transform: translateX(-50.1%); 
             }
         }
 
