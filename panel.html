@@ -303,7 +303,7 @@
 
   <div class="sidebar">
     <div class="profile-pic">
-      <img id="sidebar-avatar" src="francisca-sin-fondo.png" alt="avatar"/>
+      <img id="sidebar-avatar" src="https://via.placeholder.com/150" alt="avatar"/>
     </div>
     <h4 id="sidebar-name">Cargando...</h4>
     <div class="sidebar small-muted" id="sidebar-sub">Cargando...</div>
@@ -477,7 +477,8 @@
 
   /****************** Estado ******************/
   let currentProfessionalId = null;
-  const startHour = 8, endHour = 21, slotIntervalMin = 45;
+  // CAMBIO CLAVE: Ajuste a 60 minutos para slots de hora en hora
+  const startHour = 8, endHour = 21, slotIntervalMin = 60; 
   let timeSlots = [];
   let startOfWeekDate = getStartOfWeek(new Date());
   let agendaMap = new Map(); 
@@ -502,7 +503,7 @@
   }
   function addDays(d,n){ const x=new Date(d); x.setDate(x.getDate()+n); return x; }
 
-  // Función para calcular la edad
+  // Función para calcular la edad (usada en el Panel, no en el formulario de reserva)
   function calculateAge(dateString) {
       if (!dateString) return 'N/D';
       const today = new Date();
@@ -524,7 +525,8 @@
     while (temp.getHours() < endHour || (temp.getHours() === endHour && temp.getMinutes() === 0)) {
       const t = `${pad(temp.getHours())}:${pad(temp.getMinutes())}`;
       timeSlots.push(t);
-      temp.setMinutes(temp.getMinutes() + slotIntervalMin);
+      // Utiliza la variable slotIntervalMin
+      temp.setMinutes(temp.getMinutes() + slotIntervalMin); 
     }
   }
 
