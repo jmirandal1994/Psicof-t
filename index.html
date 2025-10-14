@@ -391,7 +391,7 @@
             </a>
         </div>
         <div class="nav-buttons fade-in-on-load">
-            <a href="#agendar" class="btn btn-agenda">Agenda tu Hora</a>
+            <a href="#" onclick="scrollToAgendar(event)" class="btn btn-agenda">Agenda tu Hora</a>
             <a href="portal.html" class="btn btn-panel">Acceso Profesional</a>
         </div>
     </div>
@@ -403,7 +403,7 @@
             <p style="color: var(--bright-accent); font-weight: 700; margin-bottom: 10px; font-size: 1rem;">PSICÓLOGA Y TERAPEUTA CERTIFICADA</p>
             <h1>Francisca Sandoval Campos</h1>
             <p>Especialista en Ansiedad y Terapia Cognitivo-Conductual. Te ofrezco un espacio seguro y profesional para construir la vida con propósito que mereces.</p>
-            <a href="#agendar" class="btn btn-agenda btn-main-action">Comienza tu Bienestar Hoy</a>
+             <a href="#" onclick="scrollToAgendar(event)" class="btn btn-agenda btn-main-action">Comienza tu Bienestar Hoy</a>
         </div>
         
         <div class="hero-image fade-in-on-load" id="hero-image-container">
@@ -588,6 +588,15 @@
         });
     }
     
+    // --- [NUEVA FUNCIÓN DE SCROLL SEGURO] ---
+    function scrollToAgendar(event) {
+        event.preventDefault(); // Detiene el salto del hash (#) del navegador
+        const targetElement = document.getElementById('agendamiento-container');
+        if (targetElement) {
+            window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+        }
+    }
+    
     // --- [Funciones de Agendamiento Corregidas] ---
     function getStartOfWeek(date) {
         const day = date.getDay();
@@ -605,14 +614,14 @@
         document.getElementById(`step-${step}`).style.display = 'block';
         currentStep = step;
         
-        // CORRECCIÓN DEL BUG DE SCROLL: Solo hacemos scroll después de que el contenido del paso 3 se ha cargado.
-        if (step >= 3) {
-            setTimeout(() => {
-                const targetElement = document.getElementById('agendamiento-container');
-                if (targetElement) {
-                    window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
-                }
-            }, 100); 
+        // El scroll ahora solo se ejecuta si NO estamos volviendo al paso 1, y
+        // usamos la función scrollToAgendar para centralizar el movimiento.
+        if (step !== 1) {
+            // El movimiento se hace directamente aquí para evitar bugs del hash
+            const targetElement = document.getElementById('agendamiento-container');
+            if (targetElement) {
+                window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+            }
         }
     }
 
@@ -665,7 +674,7 @@
         document.querySelector(`.service-card[data-service-id="${id}"]`).classList.add('selected');
 
         loadWeekSchedule(); 
-        showStep(3); // Muestra el paso 3 y luego hace scroll suave
+        showStep(3); // Muestra el paso 3 y luego hace scroll (controlado por showStep)
     }
 
     function formatDate(date) {
@@ -757,8 +766,11 @@
         }
         
         // Mensaje de no disponibilidad solo si no se encontró NINGUNA hora
-        if (!hasAvailableSlots) {
+        if (!hasAvailableSlots && agenda.length > 0) { // Si hay agenda, pero nada disponible
              scheduleContainer.innerHTML = '<p style="color:var(--muted); text-align:center; grid-column: 1 / -1; padding: 20px;">No hay horarios de agendamiento disponibles para esta semana. Por favor, revisa la semana siguiente.</p>';
+             document.getElementById('next-step-4-btn').disabled = true;
+        } else if (agenda.length === 0) { // Si no hay agenda
+             scheduleContainer.innerHTML = '<p style="color:var(--muted); text-align:center; grid-column: 1 / -1; padding: 20px;">No se encontró ninguna agenda para esta semana.</p>';
              document.getElementById('next-step-4-btn').disabled = true;
         }
     }
