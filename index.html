@@ -588,7 +588,7 @@
         });
     }
     
-    // --- [FUNCIÓN DE INICIO DE PROCESO - CORRECCIÓN DEFINITIVA DE SCROLL] ---
+    // --- FUNCIÓN DE INICIO DE PROCESO ---
     function startBookingProcess(event) {
         event.preventDefault(); // Detiene el salto del hash (#)
         
@@ -596,11 +596,11 @@
         showStep(1); 
         
         // 2. Hacer el scroll suave, apuntando al CONTENEDOR PRINCIPAL 'agendar'
-        const targetSection = document.getElementById('agendar'); // Apuntamos a la sección con el ID 'agendar'
+        const targetSection = document.getElementById('agendar');
         
         if (targetSection) {
-             // Utilizamos scrollIntoView, que es más confiable que offsetTop para secciones, 
-             // y se usa un retraso para asegurar que el contenido se ha mostrado.
+             // Utilizamos scrollIntoView, que es más confiable que offsetTop para secciones.
+             // Se usa un retraso para asegurar que el contenido se ha mostrado.
              setTimeout(() => {
                 targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 50); 
@@ -622,7 +622,7 @@
     function showStep(step) {
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         
-        // Aseguramos que el Paso 1 tenga display: block para ser visible al iniciar el proceso
+        // CORRECCIÓN: Aseguramos que el Paso 1 tenga display: block para ser visible
         if (step === 1) {
              document.getElementById(`step-1`).style.display = 'block';
         } else {
@@ -631,13 +631,14 @@
 
         currentStep = step;
         
-        // Se mantiene el scroll solo para la parte final de la confirmación (Paso 4) si el usuario no lo ve.
-        if (step >= 4) { 
-            const targetElement = document.getElementById('agendamiento-container');
-            if (targetElement) {
-                setTimeout(() => {
-                     window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
-                }, 50);
+        // CORRECCIÓN CRÍTICA: Forzamos el scroll al contenedor de agendamiento 
+        // cada vez que cambiamos de paso (incluyendo el Paso 4) para evitar el salto al inicio.
+        if (step === 3 || step === 4) { 
+            const targetContainer = document.getElementById('agendamiento-container');
+            if (targetContainer) {
+                 setTimeout(() => {
+                    window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'smooth' });
+                }, 10); // Retraso mínimo para evitar el conflicto de scroll
             }
         }
     }
