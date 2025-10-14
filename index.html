@@ -542,10 +542,10 @@
 
                     <div style="display:flex; justify-content: space-between; margin-top: 40px;">
                         <button type="button" onclick="showStep(1)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver</button>
-                        <button type="button" onclick="validateTimeSelection()" class="btn btn-agenda" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px; display: none;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
+                        <button type="button" onclick="validateTimeSelection()" class="btn btn-agenda" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
-                
+
                 <div id="step-5" class="step-content" style="display:none;">
                     <h3>¡Reserva Exitosa!</h3>
                     <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px;">
@@ -901,17 +901,17 @@
             time: element.dataset.time
         };
         
-        // Va directo al modal
-        showModal();
+        // Avanza automáticamente al formulario (Paso 4) al seleccionar una hora
+        validateTimeSelection();
     }
 
     function validateTimeSelection() {
-        // Esta función ahora solo redirige al modal si se llama por el botón (oculto)
         if (!selectedTimeSlot) {
             alert('Por favor, selecciona una hora disponible.');
             return;
         }
-        showModal();
+        
+        showStep(4);
     }
 
 
@@ -954,7 +954,6 @@
 
             if (updateError) throw updateError;
             
-            hideModal(); // Oculta el modal antes de mostrar el paso 5
             showStep(5);
 
         } catch (error) {
@@ -977,3 +976,5 @@
         }
     });
 </script>
+</body>
+</html>
