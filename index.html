@@ -29,7 +29,7 @@
             line-height: 1.7;
             color: var(--primary);
             overflow-x: hidden;
-            font-weight: 300; 
+            font-weight: 300; /* SUTILEZA: Peso de fuente general más ligero */
             background-color: var(--bg);
         }
 
@@ -229,7 +229,7 @@
         }
 
         /* --- ESTILOS DE CALENDARIO DE TABLA (TIPO PANEL) --- */
-        .calendar-table{border-collapse:collapse;width:100%;min-width:700px; margin-top: 20px;} 
+        .calendar-table{border-collapse:collapse;width:100%;min-width:700px; margin-top: 20px; font-size: 0.9rem;} 
         .calendar-table thead th{
             position:sticky;top:0;
             background:var(--primary);
@@ -250,21 +250,21 @@
             color:var(--primary);
             border-right:1px solid #e9ecef
         } 
-        .calendar-table td{height:56px;padding:6px; border: 1px solid #eee; background-color: var(--bg-light);}
+        .calendar-table td{height:50px;padding:6px; border: 1px solid #eee; background-color: white;}
         .cell{
             display:flex;
             align-items:center;
             justify-content:center;
-            border-radius:8px;
+            border-radius:6px;
             cursor:pointer;
             user-select:none;
-            transition:transform .08s ease,box-shadow .12s ease;
-            font-weight:700;
+            transition:background .2s, border-color .2s;
+            font-weight:500;
             height:100%;
             width:100%;
             font-size: 0.9rem;
         }
-        .cell.available{background:#fff;border:1px solid #f1f1f1;color:var(--primary)}
+        .cell.available{background:#fff;border:1px solid var(--accent);color:var(--accent);}
         .cell.available:hover{background:var(--accent);color:#fff;}
         .cell.selected-time{background:var(--primary);color:#fff}
         .cell.booked{background:var(--success);color:#fff;cursor:not-allowed} 
@@ -533,7 +533,7 @@
     let selectedTimeSlot = null; // {id: agendaId, date: 'YYYY-MM-DD', time: 'HH:MM'}
     let currentWeekStart = new Date(); 
     let agendaMap = new Map();
-    const startHour = 9, endHour = 18, slotIntervalMin = 45; // Horario de la profesional
+    const startHour = 9, endHour = 18, slotIntervalMin = 45; 
     let timeSlots = [];
 
 
@@ -562,27 +562,31 @@
             temp.setMinutes(temp.getMinutes() + slotIntervalMin);
         }
     }
-    generateTimeSlots(); // Generar los slots al inicio
+    generateTimeSlots(); 
 
     // --- FUNCIONES DE VISTA/NAVEGACIÓN ---
     function showStep(step) {
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
-        document.getElementById(`step-${step}`).style.display = 'block';
-        currentStep = step;
-        
-        // El step 2 ahora es el calendario
-        if (step === 2 && selectedProfessionalId) { 
-            loadWeekSchedule();
-        }
-
-        setTimeout(() => {
-            if (step !== 0) {
+        const targetStep = document.getElementById(`step-${step}`);
+        if (targetStep) {
+            targetStep.classList.add('active'); // Usamos active para display:block
+            targetStep.style.display = 'block'; 
+            currentStep = step;
+            
+            // Corrección de Scroll: Solo hacer scroll si se avanza al paso 2 o 3
+            if (step > 1) { 
                 const targetElement = document.getElementById('agendamiento-container');
                 if (targetElement) {
                     window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
                 }
+            } else if (step === 1) {
+                 // Si volvemos al paso 1, volvemos arriba de la sección de agendamiento
+                const targetElement = document.getElementById('agendamiento-container');
+                 if (targetElement) {
+                    window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+                }
             }
-        }, 100);
+        }
     }
     
     // --- LÓGICA DE AGENDAMIENTO ---
@@ -604,7 +608,6 @@
     }
 
     async function loadServices() {
-        // [MODIFICACIÓN CLAVE]: Solo Terapia Psicológica con tarifas Isapre/Fonasa
         const services = [
             { id: 1, name: "Terapia Psicológica (ISAPRE)", price: "20.000 CLP", display_name: "Terapia Psicológica: Isapre" },
             { id: 2, name: "Terapia Psicológica (FONASA)", price: "15.000 CLP", display_name: "Terapia Psicológica: Fonasa" },
@@ -632,7 +635,7 @@
         document.querySelectorAll('.service-card').forEach(card => card.classList.remove('selected'));
         document.querySelector(`.service-card[data-service-id="${id}"]`).classList.add('selected');
 
-        // Mover al paso 2: Calendario
+        // Mover al paso 2: Calendario (y activa la carga del calendario)
         showStep(2); 
     }
 
@@ -647,10 +650,10 @@
         
         document.getElementById('week-label').textContent = `${start} — ${end}`;
         
-        // Cargar agendas (Solo necesitamos saber qué slots están disponibles/reservados)
+        // Cargar agendas (Solo slots disponibles y reservados)
         const { data, error } = await supabaseClient
             .from('agendas')
-            .select('fecha, hora_inicio, disponible, id')
+            .select('id, fecha, hora_inicio, disponible')
             .eq('profesional_id', selectedProfessionalId)
             .gte('fecha', start)
             .lte('fecha', end);
@@ -682,7 +685,7 @@
         for (let i = 0; i < 7; i++) {
             const d = addDays(currentWeekStart, i);
             const th = document.createElement('th');
-            th.innerHTML = `<div style="font-weight:700">${dayNames[i]}</div><div style="font-size:0.85rem;color:var(--bright-accent)">${d.getDate()}/${pad(d.getMonth() + 1)}</div>`;
+            th.innerHTML = `<div style="font-weight:700">${dayNames[i]}</div><div style="font-size:0.85rem;color:var(--accent)">${d.getDate()}/${pad(d.getMonth() + 1)}</div>`;
             calendarHead.appendChild(th);
         }
 
@@ -703,7 +706,7 @@
                 const dateStr = toISODate(d);
                 const key = `${dateStr}|${time}`;
                 const record = agendaMap.get(key);
-                const isPast = d < new Date(new Date().setHours(0,0,0,0)); 
+                const isPast = d < new Date(new Date().setHours(0,0,0,0));
                 const isBooked = record && record.disponible === false;
                 const isAvailable = record && record.disponible === true && !isPast;
                 
@@ -711,26 +714,27 @@
                 const cell = document.createElement('div');
                 cell.className = 'cell';
                 
-                if (isBooked) {
+                if (isPast) {
+                    cell.innerHTML = 'Pasado';
+                    cell.style.backgroundColor = '#f1f1f1';
+                    cell.style.color = 'var(--muted)';
+                    cell.style.cursor = 'not-allowed';
+                } else if (isBooked) {
                     cell.classList.add('booked');
-                    cell.innerHTML = '<i class="fas fa-user-check"></i> Ocupado';
-                    cell.title = 'Slot ya reservado';
+                    cell.innerHTML = 'Reservado';
+                    cell.title = 'Ya reservado.';
+                    cell.style.cursor = 'not-allowed';
                 } else if (isAvailable) {
                     cell.classList.add('available');
                     cell.innerHTML = 'Disponible';
+                    cell.title = 'Clic para seleccionar';
                     cell.dataset.date = dateStr;
                     cell.dataset.time = time;
                     cell.dataset.agendaId = record.id;
                     
                     cell.addEventListener('click', () => selectTime(cell));
-                } else if (isPast) {
-                    cell.classList.add('booked');
-                    cell.style.backgroundColor = '#f1f1f1';
-                    cell.style.color = 'var(--muted)';
-                    cell.innerHTML = 'Pasado';
                 } else {
-                    cell.classList.add('available');
-                    cell.innerHTML = ''; // Vacío, no disponible para agendar
+                    cell.innerHTML = ''; // Vacío, no disponible
                     cell.style.cursor = 'not-allowed';
                     cell.style.backgroundColor = '#f1f1f1';
                 }
@@ -744,6 +748,7 @@
 
     function selectTime(cell) {
         document.querySelectorAll('.cell.available').forEach(c => c.classList.remove('selected-time'));
+        
         cell.classList.add('selected-time');
         
         selectedTimeSlot = {
@@ -754,6 +759,7 @@
         document.getElementById('next-step-3-btn').disabled = false;
     }
 
+    // [FUNCIÓN CORREGIDA]
     function validateTimeSelection() {
         if (!selectedTimeSlot) {
             alert('Por favor, selecciona una hora disponible.');
@@ -802,8 +808,7 @@
                     paciente_email: pacienteEmail,
                     paciente_celular: pacienteCelular,
                     comentarios: comentarios,
-                    // Estos campos serían cargados por JS en un sistema más complejo, 
-                    // pero aquí los dejamos fijos ya que solo hay una tarifa seleccionada:
+                    // Determinar previsión basado en el ID de servicio seleccionado (1=ISAPRE, 2=FONASA)
                     paciente_prevision: selectedServiceId === 1 ? 'ISAPRE' : 'FONASA' 
                 })
                 .eq('id', selectedTimeSlot.id);
@@ -821,10 +826,9 @@
     });
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Ejecutar funciones de inicialización
         loadServices();
         
-        // Efectos visuales
+        // Ejecución de efectos visuales (adaptados del código anterior)
         document.querySelectorAll('.fade-in-on-load').forEach(el => {
             el.classList.add('loaded');
         });
@@ -846,5 +850,6 @@
         });
     });
 </script>
+
 </body>
 </html>
