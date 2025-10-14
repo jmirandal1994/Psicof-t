@@ -469,56 +469,6 @@
                         </div>
                 </div>
 
-                <div id="step-3" class="step-content" style="display:none;">
-                    <h3>Paso 2: Elige Fecha y Hora</h3>
-                    <div class="calendar-nav mt-3">
-                        <button onclick="changeWeek(-1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Anterior</button>
-                        <h4 id="current-week-display" style="color:var(--primary); margin:0; text-align: center; flex-grow: 1;"></h4>
-                        <button onclick="changeWeek(1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;">Siguiente <i class="fas fa-chevron-right"></i></button>
-                    </div>
-
-                    <div id="schedule-container" class="calendar-grid">
-                        </div>
-
-                    <div style="display:flex; justify-content: space-between; margin-top: 40px;">
-                        <button type="button" onclick="showStep(1)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver</button>
-                        <button type="button" onclick="validateTimeSelection()" class="btn btn-agenda" disabled id="next-step-4-btn" style="font-size: 0.9rem; padding: 10px 20px;">Continuar a Datos <i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
-
-                <div id="step-4" class="step-content" style="display:none;">
-                    <h3>Paso 3: Confirma tus Datos</h3>
-                    
-                    <form id="booking-form" class="mt-3">
-                        <div class="form-group">
-                            <label for="paciente_nombre">Nombre Completo (*)</label>
-                            <input type="text" id="paciente_nombre" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="paciente_rut">RUT/DNI (*)</label>
-                            <input type="text" id="paciente_rut" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="paciente_email">Correo Electrónico (*)</label>
-                            <input type="email" id="paciente_email" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="paciente_celular">Celular (*)</label>
-                            <input type="tel" id="paciente_celular" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="comentarios">Motivo de Consulta (Opcional)</label>
-                            <textarea id="comentarios" rows="3"></textarea>
-                        </div>
-                        
-                        <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
-                        <div style="display:flex; justify-content: space-between; margin-top: 20px;">
-                            <button type="button" onclick="showStep(3)" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Volver a Horarios</button>
-                            <button type="submit" class="btn btn-agenda" id="confirm-booking-btn" style="font-size: 0.9rem; padding: 10px 20px;">Confirmar Reserva <i class="fas fa-check"></i></button>
-                        </div>
-                    </form>
-                </div>
-
                 <div id="step-5" class="step-content" style="display:none;">
                     <h3>¡Reserva Exitosa!</h3>
                     <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px;">
@@ -540,49 +490,7 @@
     </div>
 </footer>
 
-<div id="modal-confirmacion" class="modal-overlay">
-    <div class="modal-content">
-        <div class="modal-header">
-            <img src="logo-psicofit.png" alt="Logo Psicofit" style="height: 40px; margin-right: 10px; filter: brightness(0) invert(1);"/>
-            <h3>Confirma tu Reserva</h3>
-            <button type="button" class="modal-close-btn" onclick="hideModal()">&times;</button>
-        </div>
-        <div class="modal-body">
-            <div class="hint-box" style="margin-bottom: 20px;">
-                <p style="margin: 5px 0;">Hora seleccionada: **<span id="modal-date-time"></span>**</p>
-            </div>
-            
-            <form id="booking-form-modal" class="mt-3">
-                <div class="form-group">
-                    <label for="paciente_nombre_modal">Nombre Completo (*)</label>
-                    <input type="text" id="paciente_nombre_modal" required>
-                </div>
-                <div class="form-group">
-                    <label for="paciente_rut_modal">RUT/DNI (*)</label>
-                    <input type="text" id="paciente_rut_modal" required>
-                </div>
-                <div class="form-group">
-                    <label for="paciente_email_modal">Correo Electrónico (*)</label>
-                    <input type="email" id="paciente_email_modal" required>
-                </div>
-                <div class="form-group">
-                    <label for="paciente_celular_modal">Celular (*)</label>
-                    <input type="tel" id="paciente_celular_modal" required>
-                </div>
-                <div class="form-group">
-                    <label for="comentarios_modal">Motivo de Consulta (Opcional)</label>
-                    <textarea id="comentarios_modal" rows="3"></textarea>
-                </div>
-                
-                <div id="booking-status-message-modal" style="margin-top:15px; font-weight:700;"></div>
-                <div style="display:flex; justify-content: space-between; margin-top: 20px;">
-                    <button type="button" onclick="hideModal()" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Cancelar</button>
-                    <button type="submit" class="btn btn-agenda" id="confirm-booking-btn-modal" style="font-size: 0.9rem; padding: 10px 20px;">Confirmar Reserva <i class="fas fa-check"></i></button>
-                </div>
-            </form>
-        </div>
-    </div>
-</div>
+
 <script>
     // CREDENCIALES INTEGRADAS Y FUNCIONALES
     const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
@@ -593,14 +501,7 @@
     let currentStep = 1;
     let selectedProfessionalId = null; 
     let selectedServiceId = null;
-    let selectedTimeSlot = null;
-    let currentWeekStart = new Date(); 
     
-    // Referencia al modal
-    const modalConfirmacionEl = document.getElementById('modal-confirmacion');
-    const modalDateTimeEl = document.getElementById('modal-date-time');
-
-
     // --- FUNCIONES DE EFECTOS ---
     function applyLoadEffects() {
         document.querySelectorAll('.fade-in-on-load').forEach(el => {
@@ -652,54 +553,22 @@
         }
     }
     
-    // --- [Funciones de Agendamiento] ---
-    function getStartOfWeek(date) {
-        const day = date.getDay();
-        const diff = date.getDate() - day + (day === 0 ? -6 : 1); 
-        const monday = new Date(date);
-        monday.setDate(diff);
-        monday.setHours(0, 0, 0, 0); 
-        return monday;
-    }
-
-    currentWeekStart = getStartOfWeek(currentWeekStart);
-
     // FUNCIÓN SIMPLIFICADA: SOLO MANEJA LA VISIBILIDAD
     function showStep(step) {
+        // Oculta todos los pasos excepto el Step 1 y Step 5
         document.querySelectorAll('.step-content').forEach(el => el.style.display = 'none');
         
         if (step === 1) {
              document.getElementById(`step-1`).style.display = 'block';
-        } else {
-             document.getElementById(`step-${step}`).style.display = 'block';
+        } else if (step === 5) {
+             document.getElementById(`step-5`).style.display = 'block';
         }
 
         currentStep = step;
     }
 
-    // --- MANEJO DEL MODAL ---
-    function showModal() {
-        // Prepara la info
-        const datePart = new Date(selectedTimeSlot.date).toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
-        modalDateTimeEl.textContent = `${datePart} a las ${selectedTimeSlot.time}`;
-        
-        // Muestra el modal
-        modalConfirmacionEl.classList.add('visible');
-        document.body.style.overflow = 'hidden'; // Congela el scroll principal (CRÍTICO para evitar el rebote)
-        
-        // Limpiar mensaje de estado al abrir
-        document.getElementById('booking-status-message-modal').textContent = '';
-        document.getElementById('confirm-booking-btn-modal').disabled = false;
-    }
 
-    function hideModal() {
-        modalConfirmacionEl.classList.remove('visible');
-        document.body.style.overflow = ''; // Restaura el scroll principal
-    }
-    
-    // --- FIN MANEJO DEL MODAL ---
-
-
+    // --- LÓGICA DE REDIRECCIÓN A CALENDARIO-RESERVA.HTML ---
     async function loadServices() {
         const services = [
             { id: 1, name: "Terapia Psicológica (ISAPRE)", price: "20.000 CLP", display_name: "Terapia Psicológica (Isapre)" },
@@ -720,224 +589,17 @@
             </div>
         `).join('');
 
-        await loadUniqueProfessional();
+        // NOTA: loadUniqueProfessional ya no se necesita aquí.
     }
     
-    async function loadUniqueProfessional() {
-        const { data: profData, error: profError } = await supabaseClient
-            .from('profesionales')
-            .select('*')
-            .limit(1);
-
-        if (profError || profData.length === 0) {
-            console.error("Error al cargar profesional único:", profError || "No se encontró profesional.");
-            selectedProfessionalId = 'DEFAULT_PROF_ID';
-            return false;
-        }
-        
-        selectedProfessionalId = profData[0].id;
-        
-        return true;
-    }
-
-
     function selectService(id, name, price) {
         selectedServiceId = id;
-        document.querySelectorAll('.service-card').forEach(card => card.classList.remove('selected'));
-        document.querySelector(`.service-card[data-service-id="${id}"]`).classList.add('selected');
-
-        loadWeekSchedule(); 
-        showStep(3); 
         
-        // **ACCIÓN DE SCROLL CRÍTICA (Paso 1 -> Paso 3):**
-        const targetContainer = document.getElementById('agendamiento-container');
-        if (targetContainer) {
-            window.requestAnimationFrame(() => {
-                 // Forzamos el scroll sin animación ('auto') para que no haya rebote.
-                 window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'auto' }); 
-            });
-        }
+        // **ACCIÓN CRÍTICA:** Redirigimos a la página externa del calendario, pasando el ID del servicio
+        window.location.href = `calendario-reserva.html?service_id=${id}&service_name=${encodeURIComponent(name)}`;
     }
+    // --- FIN LÓGICA DE REDIRECCIÓN ---
 
-    function formatDate(date) {
-        return date.toLocaleDateString('es-ES', { weekday: 'short' }); 
-    }
-
-    function formatTime(timeString) {
-        const [hours, minutes] = timeString.split(':');
-        return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
-    }
-
-    async function loadWeekSchedule() {
-        if (!selectedProfessionalId) {
-            document.getElementById('schedule-container').innerHTML = '<p style="color:red; text-align:center; grid-column: 1 / -1;">Error: ID del profesional no cargado.</p>';
-            return;
-        }
-        
-        const startDate = new Date(currentWeekStart);
-        const endDate = new Date(startDate);
-        endDate.setDate(startDate.getDate() + 6); 
-        endDate.setHours(23, 59, 59, 999); 
-
-        document.getElementById('current-week-display').textContent = 
-            `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
-        
-        const { data: agenda, error } = await supabaseClient
-            .from('agendas')
-            .select('*')
-            .eq('profesional_id', selectedProfessionalId)
-            .gte('fecha', startDate.toISOString().split('T')[0])
-            .lte('fecha', endDate.toISOString().split('T')[0])
-            .order('fecha', { ascending: true })
-            .order('hora_inicio', { ascending: true });
-
-        if (error) {
-            console.error('Error al cargar agenda:', error);
-            document.getElementById('schedule-container').innerHTML = '<p style="color:red; text-align:center; grid-column: 1 / -1;">Error al cargar la agenda. Intenta más tarde.</p>';
-            return;
-        }
-
-        const scheduleContainer = document.getElementById('schedule-container');
-        scheduleContainer.innerHTML = ''; 
-
-        let currentDayIter = new Date(startDate);
-        const today = new Date(); today.setHours(0, 0, 0, 0); 
-
-        selectedTimeSlot = null;
-        document.getElementById('next-step-4-btn').disabled = true;
-
-        let hasAvailableSlots = false;
-
-        for (let i = 0; i < 7; i++) {
-            const dayKey = currentDayIter.toISOString().split('T')[0];
-            const isPastDay = currentDayIter < today; 
-
-            const dayAgenda = agenda.filter(item => item.fecha === dayKey);
-            const daySlotsHTML = dayAgenda.map(slot => {
-                const isBooked = !slot.disponible;
-                const slotDateTime = new Date(`${dayKey}T${slot.hora_inicio}`);
-                const isPastHour = slotDateTime < new Date();
-                
-                const isUnavailable = isPastDay || isPastHour || isBooked;
-
-                if (!isUnavailable) {
-                    hasAvailableSlots = true;
-                }
-
-                return `<div class="time-slot ${isUnavailable ? 'booked' : ''}" 
-                             data-id="${slot.id}" 
-                             data-date="${dayKey}" 
-                             data-time="${formatTime(slot.hora_inicio)}"
-                             onclick="${isUnavailable ? '' : 'selectTimeSlot(this)'}">
-                           ${formatTime(slot.hora_inicio)}
-                        </div>`;
-            }).join('');
-
-            scheduleContainer.innerHTML += `
-                <div class="day-column">
-                    <div class="day-header ${isPastDay ? 'past-day' : ''}">
-                        ${formatDate(currentDayIter)}<br><span class="day-number">${currentDayIter.getDate()}</span>
-                    </div>
-                    <div class="time-slot-container">
-                        ${daySlotsHTML.length > 0 ? daySlotsHTML : '<p style="font-size:0.85rem; color:var(--muted); text-align:center;">No hay horas.</p>'}
-                    </div>
-                </div>
-            `;
-            currentDayIter.setDate(currentDayIter.getDate() + 1); 
-        }
-        
-        // Mensaje de no disponibilidad solo si no se encontró NINGUNA hora
-        if (!hasAvailableSlots && agenda.length > 0) { 
-             scheduleContainer.innerHTML = '<p style="color:var(--muted); text-align:center; grid-column: 1 / -1; padding: 20px;">No hay horarios de agendamiento disponibles para esta semana. Por favor, revisa la semana siguiente.</p>';
-             document.getElementById('next-step-4-btn').disabled = true;
-        } else if (agenda.length === 0 && currentWeekStart > new Date()) { 
-             scheduleContainer.innerHTML = '<p style="color:var(--muted); text-align:center; grid-column: 1 / -1; padding: 20px;">No se encontró ninguna agenda para esta semana.</p>';
-             document.getElementById('next-step-4-btn').disabled = true;
-        }
-    }
-
-    function changeWeek(direction) {
-        currentWeekStart.setDate(currentWeekStart.getDate() + direction * 7);
-        loadWeekSchedule();
-    }
-
-    function selectTimeSlot(element) {
-        if (element.classList.contains('booked')) return; 
-
-        document.querySelectorAll('.time-slot').forEach(slot => slot.classList.remove('selected'));
-        
-        element.classList.add('selected');
-        
-        selectedTimeSlot = {
-            id: element.dataset.id,
-            date: element.dataset.date,
-            time: element.dataset.time
-        };
-        
-        // Llama a la validación que abre el formulario/Modal
-        validateTimeSelection();
-    }
-
-    function validateTimeSelection() {
-        if (!selectedTimeSlot) {
-            alert('Por favor, selecciona una hora disponible.');
-            return;
-        }
-        
-        showModal();
-    }
-
-
-    document.getElementById('booking-form-modal').addEventListener('submit', async (e) => {
-        e.preventDefault();
-        
-        const statusMessage = document.getElementById('booking-status-message-modal');
-        const confirmBtn = document.getElementById('confirm-booking-btn-modal');
-        confirmBtn.disabled = true;
-        statusMessage.textContent = 'Procesando tu reserva...';
-        statusMessage.style.color = 'var(--accent)';
-
-        if (!selectedTimeSlot || !selectedServiceId || !selectedProfessionalId) {
-            statusMessage.textContent = 'Error: Faltan datos de la selección. Vuelve al Paso 1.';
-            statusMessage.style.color = 'red';
-            confirmBtn.disabled = false;
-            return;
-        }
-
-        // Obtener datos del Modal
-        const nombre = document.getElementById('paciente_nombre_modal').value;
-        const rut = document.getElementById('paciente_rut_modal').value;
-        const email = document.getElementById('paciente_email_modal').value;
-        const celular = document.getElementById('paciente_celular_modal').value;
-        const comentarios = document.getElementById('comentarios_modal').value;
-        const prevision = ''; 
-
-        try {
-            const { error: updateError } = await supabaseClient
-                .from('agendas')
-                .update({
-                    disponible: false,
-                    paciente_nombre: nombre,
-                    paciente_rut: rut,
-                    paciente_email: email,
-                    paciente_celular: celular,
-                    paciente_prevision: prevision,
-                    comentarios: comentarios
-                })
-                .eq('id', selectedTimeSlot.id);
-
-            if (updateError) throw updateError;
-            
-            hideModal(); // Oculta el modal antes de mostrar el paso 5
-            showStep(5);
-
-        } catch (error) {
-            console.error('Error al confirmar la reserva:', error);
-            statusMessage.textContent = `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada.`;
-            statusMessage.style.color = 'red';
-            confirmBtn.disabled = false;
-        }
-    });
 
     document.addEventListener('DOMContentLoaded', () => {
         loadServices();
@@ -951,3 +613,5 @@
         }
     });
 </script>
+</body>
+</html>
