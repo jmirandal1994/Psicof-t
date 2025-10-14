@@ -809,7 +809,7 @@
         loadWeekSchedule(); 
         showStep(3); 
         
-        // **ACCIÓN DE SCROLL DEFINITIVA (Paso 1 -> Paso 3):**
+        // **ACCIÓN DE SCROLL CRÍTICA (Paso 1 -> Paso 3):**
         const targetContainer = document.getElementById('agendamiento-container');
         if (targetContainer) {
             window.requestAnimationFrame(() => {
@@ -934,7 +934,7 @@
             time: element.dataset.time
         };
         
-        // **MODIFICACIÓN CLAVE (PARA ABRIR EL FORMULARIO):**
+        // Llama a la validación que abre el formulario/Modal
         validateTimeSelection();
     }
 
