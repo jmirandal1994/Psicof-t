@@ -12,12 +12,13 @@
     <style>
         /* PALETA DE COLORES - Clean & Elevated (Sofisticado) */
         :root {
-            --primary: #2C3A47;
-            --accent: #B8860B;
-            --bg: #F9F7F1;
-            --bg-light: #FFFFFF;
+            --primary: #2C3A47; /* Gris Azulado Oscuro */
+            --accent: #B8860B; /* Ocre Suave/Bronce (Acción) */
+            --bg: #F9F7F1; /* Fondo General */
+            --bg-light: #FFFFFF; /* Fondo de Contenedor */
             --muted: #A3A3A3;
             --shadow-subtle: 0 6px 20px rgba(0, 0, 0, 0.08);
+            --success: #1e7e34;
         }
 
         body {
@@ -29,46 +30,65 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start;
         }
 
         .container {
-            width: 90%;
+            width: 95%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 20px 0;
             flex-grow: 1;
         }
         
-        h2 {
-            font-family: 'Playfair Display', serif;
-            font-size: 2.8rem; 
-            color: var(--accent);
+        .header-section {
+            background-color: var(--bg-light);
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-subtle);
+            margin-bottom: 30px;
             text-align: center;
-            margin-top: 50px;
-            margin-bottom: 20px;
         }
-        h3 {
-            font-size: 1.5rem;
+        .header-section h2 {
+            font-family: 'Playfair Display', serif;
+            font-size: 2.2rem; 
             color: var(--primary);
-            margin-bottom: 25px;
+            margin-top: 0;
+            margin-bottom: 5px;
+        }
+        .header-section h3 {
+            font-size: 1.1rem;
+            color: var(--accent);
+            font-weight: 700;
+            margin-bottom: 15px;
         }
 
-        /* Botones y Hover */
+        /* Botones Generales */
         .btn { padding: 10px 22px; border-radius: 4px; text-decoration: none; font-weight: 500; transition: all 0.2s; display: inline-block; border: none;}
-        .btn-agenda { background-color: var(--accent); color: white; border: 2px solid var(--accent); transition: transform 0.3s ease, background-color 0.3s ease; }
-        .btn-agenda:hover { transform: translateY(-2px); background-color: var(--primary); border-color: var(--primary); }
-        .btn-panel { color: var(--primary); border: 1px solid var(--muted); margin-left: 10px; }
-        
-        /* Contenedor Principal */
+        .btn-agenda { background-color: var(--accent); color: white; border: 2px solid var(--accent); }
+        .btn-agenda:hover { background-color: var(--primary); border-color: var(--primary); }
+        .btn-nav { background: #fff; color: var(--primary); border: 1px solid #e9ecef; padding: 8px 12px; cursor: pointer; font-weight: 700; border-radius: 6px; }
+
+        /* Calendario y Grid */
         #agendamiento-container {
             background-color: var(--bg-light); 
-            padding: 40px; 
-            border-radius: 8px; 
+            padding: 30px; 
+            border-radius: 12px; 
             box-shadow: var(--shadow-subtle);
-            margin-bottom: 80px;
         }
-
-        /* Estilos de Calendario */
+        .calendar-nav { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            padding: 10px 0;
+        }
+        #current-week-display { 
+            font-size: 1rem; 
+            font-weight: 700;
+            flex-grow: 1;
+            text-align: center;
+        }
+        
+        /* Grid del Calendario (Responsivo) */
         .calendar-grid { 
             display: grid; 
             grid-template-columns: repeat(7, 1fr); 
@@ -76,22 +96,21 @@
             margin-top: 20px;
             overflow-x: auto;
         }
-        .calendar-nav { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            padding: 15px; 
-            border-radius: 4px; 
-            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        @media (max-width: 768px) {
+            /* Forzar 4 columnas en móvil con scroll horizontal para días */
+            .calendar-grid {
+                grid-template-columns: repeat(7, 120px); 
+                justify-content: flex-start;
+                padding-bottom: 10px; /* Espacio para scrollbar horizontal */
+            }
         }
+
         .day-column { 
             display: flex; 
             flex-direction: column; 
-            border-radius: 4px; 
-            overflow: hidden; 
-            min-width: 120px; 
+            border-radius: 8px; 
             border: 1px solid #E0E0E0; 
-            background-color: var(--bg-light);
+            min-width: 120px; 
         }
         .day-header { 
             text-align: center; 
@@ -100,9 +119,10 @@
             background-color: var(--primary); 
             color: white; 
             font-size: 0.9rem;
+            border-radius: 8px 8px 0 0;
         }
-        .day-number { font-size: 1.1rem; font-weight: 900; }
-        .time-slot-container { padding: 10px; flex-grow: 1; background-color: #ffffff; }
+        .day-number { font-size: 1.1rem; font-weight: 900; display: block;}
+        .time-slot-container { padding: 10px; flex-grow: 1; background-color: var(--bg-light); }
 
         /* Estilos de Slots */
         .time-slot {
@@ -113,10 +133,10 @@
             font-size: 0.9rem;
             font-weight: 500;
             cursor: pointer;
-            transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
             border: 1px solid var(--muted);
             color: var(--primary);
             background-color: #f5f5f5;
+            transition: all 0.2s;
         }
         .time-slot:hover {
             background-color: var(--accent);
@@ -128,7 +148,6 @@
             color: white;
             border-color: var(--accent);
             box-shadow: 0 4px 8px rgba(184, 134, 11, 0.4);
-            transform: scale(1.05);
         }
         .time-slot.booked {
             background-color: #eee;
@@ -137,130 +156,71 @@
             cursor: not-allowed;
             text-decoration: line-through;
         }
-
-        /* Estilos de Formulario Modal */
-        .form-group { margin-bottom: 20px; }
-        .form-group label { display: block; font-weight: 500; margin-bottom: 5px; color: var(--primary); }
-        .form-group input[type="text"], .form-group input[type="email"], .form-group input[type="tel"], .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid var(--muted);
-            border-radius: 4px;
-            font-size: 1rem;
-            box-sizing: border-box; 
+        .time-slot.past-day {
+            background-color: #f0f0f0;
         }
 
-        /* Modal Overlay */
+        /* Modal Overlay (Mantener limpio para evitar bugs de scroll) */
         .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 2000;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.3s ease;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center;
+            z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
         }
-        .modal-overlay.visible {
-            opacity: 1;
-            pointer-events: auto;
-        }
+        .modal-overlay.visible { opacity: 1; pointer-events: auto; }
         .modal-content {
-            background: var(--bg-light);
-            border-radius: 10px;
-            width: 95%;
-            max-width: 550px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
-            transform: translateY(-50px);
-            transition: transform 0.3s ease;
+            background: var(--bg-light); border-radius: 10px; width: 95%; max-width: 550px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); transform: translateY(-50px); transition: transform 0.3s ease;
         }
-        .modal-overlay.visible .modal-content {
-            transform: translateY(0);
-        }
+        .modal-overlay.visible .modal-content { transform: translateY(0); }
         .modal-header {
-            background: var(--primary);
-            color: white;
-            padding: 15px 25px;
-            border-radius: 10px 10px 0 0;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+            background: var(--primary); color: white; padding: 15px 25px; border-radius: 10px 10px 0 0;
+            display: flex; justify-content: space-between; align-items: center;
         }
-        .modal-header h3 {
-            margin: 0;
-            font-family: 'Playfair Display', serif;
-        }
-        .modal-body {
-            padding: 25px;
-            max-height: 80vh;
-            overflow-y: auto;
-        }
-        .modal-close-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            line-height: 1;
-        }
+        .modal-header h3 { margin: 0; font-family: 'Playfair Display', serif; }
+        .modal-body { padding: 25px; max-height: 80vh; overflow-y: auto; }
+        .modal-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 
         footer { background-color: var(--primary); padding: 20px 0; margin-top: auto; }
         footer p { color: #f5f5f5; font-size: 0.9rem; text-align: center; margin: 0;}
-
-        /* Animación de Spinner */
-        .spinner {
-            border: 4px solid rgba(0, 0, 0, 0.1);
-            border-top: 4px solid var(--accent);
-            border-radius: 50%;
-            width: 24px;
-            height: 24px;
-            animation: spin 1s linear infinite;
-            display: inline-block;
-        }
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
     </style>
 </head>
 <body>
 <main>
     <div class="container">
-        <div id="service-info">
+        <div class="header-section">
             <h2>Agenda tu Sesión</h2>
             <h3 id="selected-service-display">Cargando tipo de sesión...</h3>
-            <p id="loading-status" style="text-align: center; margin-bottom: 20px;"><span class="spinner"></span> Cargando agenda del profesional...</p>
+            <div style="margin-bottom: 15px;">
+                 <a href="index.html" class="btn btn-nav"><i class="fas fa-chevron-left"></i> Volver a Servicios</a>
+            </div>
+            <p id="loading-status" style="font-weight: 500;"><span class="spinner"></span> Cargando agenda del profesional...</p>
         </div>
 
         <div id="agendamiento-container">
             
             <div id="step-3">
+                
                 <div class="calendar-nav mt-3">
-                    <button onclick="changeWeek(-1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;"><i class="fas fa-chevron-left"></i> Anterior</button>
-                    <h4 id="current-week-display" style="color:var(--primary); margin:0; text-align: center; flex-grow: 1;"></h4>
-                    <button onclick="changeWeek(1)" class="btn btn-panel" style="font-size: 0.9rem; padding: 8px 15px;">Siguiente <i class="fas fa-chevron-right"></i></button>
+                    <button onclick="changeWeek(-1)" class="btn btn-nav">
+                        <i class="fas fa-chevron-left"></i> Anterior
+                    </button>
+                    <h4 id="current-week-display" style="color:var(--primary); margin:0; flex-grow: 1;"></h4>
+                    <button onclick="changeWeek(1)" class="btn btn-nav">
+                        Siguiente <i class="fas fa-chevron-right"></i>
+                    </button>
                 </div>
 
                 <div id="schedule-container" class="calendar-grid">
                     </div>
-
-                <div style="text-align: center; margin-top: 30px;">
-                    <a href="index.html" class="btn btn-panel" style="background-color: var(--muted); color:white;">Volver a Selección de Servicio</a>
-                </div>
             </div>
 
             <div id="step-5" style="display:none; text-align: center;">
                 <h3>¡Reserva Exitosa!</h3>
-                <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px;">
+                <div class="booking-summary" style="background-color: #f7f3ed; border: 1px solid var(--accent); padding: 30px; border-radius: 8px;">
                     <p style="color: var(--accent); font-size:1.1rem; font-weight: 700;"><i class="fas fa-check-circle"></i> Tu hora ha sido reservada con éxito.</p>
-                    <p>Te enviamos los detalles de tu sesión al correo. ¡Gracias por confiar en Psicofit!</p>
+                    <p>Te enviaremos los detalles de tu sesión al correo. ¡Gracias por confiar en Psicofit!</p>
                 </div>
-                <a href="index.html" class="btn btn-agenda mt-3">Volver al Inicio</a>
+                <a href="index.html" class="btn btn-agenda mt-3" style="margin-top: 20px;">Volver al Inicio</a>
             </div>
         </div>
     </div>
@@ -302,8 +262,8 @@
                 
                 <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
                 <div style="display:flex; justify-content: space-between; margin-top: 20px;">
-                    <button type="button" onclick="hideModal()" class="btn btn-panel" style="background-color: var(--muted); color:white; border:none; font-size: 0.9rem; padding: 10px 20px;">Cancelar</button>
-                    <button type="submit" class="btn btn-agenda" id="confirm-booking-btn" style="font-size: 0.9rem; padding: 10px 20px;">Confirmar Reserva <i class="fas fa-check"></i></button>
+                    <button type="button" onclick="hideModal()" class="btn btn-nav" style="background-color: var(--muted); color:white;">Cancelar</button>
+                    <button type="submit" class="btn btn-agenda" id="confirm-booking-btn">Confirmar Reserva <i class="fas fa-check"></i></button>
                 </div>
             </form>
         </div>
