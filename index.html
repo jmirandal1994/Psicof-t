@@ -702,17 +702,6 @@
         }
 
         currentStep = step;
-        
-        // **FORZAMOS SCROLL AL CAMBIAR DE PASO (SOLUCIÓN DEFINITIVA)**
-        if (step === 3) { // Después de seleccionar servicio
-            const targetContainer = document.getElementById('agendamiento-container');
-            if (targetContainer) {
-                window.requestAnimationFrame(() => {
-                     // SCROLL INSTANTÁNEO Y FORZADO
-                     window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'auto' }); 
-                });
-            }
-        }
     }
 
     // --- MANEJO DEL MODAL ---
@@ -787,10 +776,11 @@
         loadWeekSchedule(); 
         showStep(3); 
         
-        // Scroll forzado al calendario (Paso 3)
+        // **ACCIÓN DE SCROLL DEFINITIVA (Paso 1 -> Paso 3):**
         const targetContainer = document.getElementById('agendamiento-container');
         if (targetContainer) {
             window.requestAnimationFrame(() => {
+                 // Forzamos el scroll sin animación ('auto') para que no haya rebote.
                  window.scrollTo({ top: targetContainer.offsetTop - 50, behavior: 'auto' }); 
             });
         }
@@ -911,7 +901,7 @@
             time: element.dataset.time
         };
         
-        // Ya no llamamos a validateTimeSelection, vamos directo al modal
+        // Va directo al modal
         showModal();
     }
 
@@ -987,3 +977,5 @@
         }
     });
 </script>
+</body>
+</html>
