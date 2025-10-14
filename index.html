@@ -543,7 +543,7 @@
 <script>
     // CREDENCIALES INTEGRADAS Y FUNCIONALES
     const supabaseUrl = 'https://sncznbowdiarakoekxit.supabase.co'; 
-    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrc2VraXQiLCJyb2xlIjoiYW5vbiIsImlhdCI6MTc2MDM1NzAxOCwiZXhwIjoyMDc1OTMzMDE4fQ.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
+    const supabaseAnonKey = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNuY3puYm93ZGlhcmFrb2VreGl0Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAzNTcwMTgsImV4cCI6MjA3NTkzMzAxOH0.X7hSM3_h0kPPpbxm-y7pbtOPXpnmk41uiwrN4lnGRJU'; 
     const { createClient } = supabase;
     const supabaseClient = createClient(supabaseUrl, supabaseAnonKey);
 
@@ -588,19 +588,21 @@
         });
     }
     
-    // --- [FUNCIÓN DE INICIO DE PROCESO - CORRECCIÓN SCROLL PRINCIPAL] ---
+    // --- [FUNCIÓN DE INICIO DE PROCESO - CORRECCIÓN DEFINITIVA DE SCROLL] ---
     function startBookingProcess(event) {
         event.preventDefault(); // Detiene el salto del hash (#)
         
         // 1. Mostrar el Paso 1 (Selección de Servicio)
         showStep(1); 
         
-        // 2. Hacer el scroll suave DESPUÉS de un pequeño retraso para asegurar que el contenido esté visible.
-        const targetElement = document.getElementById('agendamiento-container');
-        if (targetElement) {
-             // Se añadió el setTimeout para resolver el problema de que el scroll no se ejecutara al inicio.
+        // 2. Hacer el scroll suave, apuntando al CONTENEDOR PRINCIPAL 'agendar'
+        const targetSection = document.getElementById('agendar'); // Apuntamos a la sección con el ID 'agendar'
+        
+        if (targetSection) {
+             // Utilizamos scrollIntoView, que es más confiable que offsetTop para secciones, 
+             // y se usa un retraso para asegurar que el contenido se ha mostrado.
              setTimeout(() => {
-                window.scrollTo({ top: targetElement.offsetTop - 50, behavior: 'smooth' });
+                targetSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
             }, 50); 
         }
     }
