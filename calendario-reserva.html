@@ -187,7 +187,6 @@
             display: flex; justify-content: space-between; align-items: center;
         }
         .modal-header h3 { margin: 0; font-family: 'Playfair Display', serif; }
-        .modal-body { padding: 25px; max-height: 80vh; overflow-y: auto; }
         .modal-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 
         /* Estilos de Formulario MEJORADOS */
@@ -332,9 +331,24 @@
                 </div>
                 
                 <div id="booking-status-message" style="margin-top:15px; font-weight:700;"></div>
-                <div style="display:flex; justify-content: space-between; margin-top: 20px;">
-                    <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar</button>
-                    <button type="submit" class="btn btn-agenda" id="confirm-booking-btn">Confirmar Reserva <i class="fas fa-check"></i></button>
+
+                <div style="margin-top: 25px; border-top: 1px solid #ddd; padding-top: 20px;">
+                    <h4 style="color: var(--primary); margin-bottom: 15px;">Paso Final: Confirmar Hora y Proceder al Pago</h4>
+                    
+                    <p style="font-size: 1.1rem; font-weight: 700;">Monto a Pagar: <span id="payment-amount-display" style="color: var(--accent);"></span></p>
+
+                    <div style="display:flex; justify-content: space-between; margin-top: 20px;">
+                        <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar / Volver</button>
+                        
+                        <form name='rec20108_btn1' id="webpay-form" method='post' action='https://www.webpay.cl/backpub/external/form-pay'>
+                            <input type='hidden' name='idFormulario' value='326331' />
+                            <input type='hidden' name='monto' id="webpay-monto" value='' />
+                            <button type='submit' class="btn btn-agenda" id="confirm-payment-btn" style="display: flex; align-items: center; gap: 8px;">
+                                Confirmar Hora y Pagar <i class="fas fa-credit-card"></i>
+                            </button>
+                        </form>
+                        
+                    </div>
                 </div>
             </form>
         </div>
@@ -411,17 +425,40 @@
         document.body.style.overflow = 'hidden'; 
         
         document.getElementById('booking-status-message').textContent = '';
-        document.getElementById('confirm-booking-btn').disabled = false;
         
-        // Cargar previsión predeterminada (si es FONASA o ISAPRE)
+        // --- LÓGICA DE CÁLCULO DE MONTO Y PREPARACIÓN DE PAGO ---
+        let paymentAmount = 0;
+        let amountDisplay = 'Monto no definido';
+
+        if (selectedServiceName.includes('ISAPRE')) {
+            paymentAmount = 20000; // 20.000 CLP
+        } else if (selectedServiceName.includes('FONASA')) {
+            paymentAmount = 15000; // 15.000 CLP
+        }
+        
+        // Formato para mostrar el monto
+        if (paymentAmount > 0) {
+            amountDisplay = paymentAmount.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
+        }
+        
+        // 1. Actualizar el campo oculto de Webpay con el monto
+        document.getElementById('webpay-monto').value = paymentAmount;
+        
+        // 2. Mostrar el monto en la pantalla
+        document.getElementById('payment-amount-display').textContent = amountDisplay;
+        
+        // 3. Cargar previsión predeterminada (si es FONASA o ISAPRE)
         const previsionSelect = document.getElementById('paciente_prevision');
         if (selectedServiceName.includes('FONASA')) {
             previsionSelect.value = 'Fonasa';
         } else if (selectedServiceName.includes('ISAPRE')) {
-            previsionSelect.value = 'Isapre Colmena';
+            previsionSelect.value = 'Isapre Consalud'; 
         } else {
              previsionSelect.value = '';
         }
+        
+        // 4. Bloquear el botón de pago si el monto es 0 o si no se ha seleccionado hora
+        document.getElementById('confirm-payment-btn').disabled = (paymentAmount === 0 || !selectedTimeSlot);
     }
 
     function hideModal() {
@@ -575,14 +612,14 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (MODIFICADA PARA WEB-PAY) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
         const statusMessage = document.getElementById('booking-status-message');
-        const confirmBtn = document.getElementById('confirm-booking-btn');
+        const confirmBtn = document.getElementById('confirm-payment-btn');
         confirmBtn.disabled = true;
-        statusMessage.textContent = 'Procesando tu reserva...';
+        statusMessage.textContent = 'Recopilando datos y preparando pago...';
         
         if (!selectedTimeSlot || !selectedServiceId || !selectedProfessionalId) {
             statusMessage.textContent = 'Error: Faltan datos de la selección.';
@@ -590,7 +627,7 @@
             return;
         }
 
-        // Recolección de Datos
+        // Recolección de Datos (Se recogen, pero no se envían a Supabase AÚN, ya que depende del pago)
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
         const fechaNac = document.getElementById('paciente_fecha_nac').value; 
@@ -599,41 +636,22 @@
         const comentarios = document.getElementById('comentarios').value;
         const prevision = document.getElementById('paciente_prevision').value; 
         
-        // Datos calculados
-        const edad = calculateAge(fechaNac);
-
-        try {
-            const { error: updateError } = await supabaseClient
-                .from('agendas')
-                .update({
-                    disponible: false,
-                    paciente_nombre: nombre,
-                    paciente_rut: rut,
-                    paciente_fecha_nac: fechaNac, 
-                    paciente_edad: edad, 
-                    paciente_email: email,
-                    paciente_celular: celular,
-                    paciente_prevision: prevision, 
-                    comentarios: comentarios
-                })
-                .eq('id', selectedTimeSlot.id);
-
-            if (updateError) throw updateError;
-            
-            // Éxito y UI
-            hideModal(); 
-            document.getElementById('step-3').style.display = 'none'; 
-            document.getElementById('step-5').style.display = 'block';
-
-        } catch (error) {
-            console.error('Error al confirmar la reserva en DB:', error);
-            // Muestra un mensaje de error detallado si es un error de base de datos
-            const errorMessage = error.message.includes('column') ? 
-                `Error de Base de Datos: Verifique que las columnas 'paciente_fecha_nac', 'paciente_edad', y 'paciente_prevision' existan en su tabla 'agendas'.` : 
-                `Error al confirmar la reserva. Es posible que la hora ya haya sido tomada.`;
-                
-            statusMessage.textContent = errorMessage;
-            confirmBtn.disabled = false;
+        // Validar que los campos requeridos tengan valor antes de proceder con Webpay
+        if (!nombre || !rut || !fechaNac || !email || !celular || !prevision || document.getElementById('webpay-monto').value === '0') {
+             statusMessage.textContent = 'Por favor, completa todos los campos requeridos y selecciona una hora válida.';
+             confirmBtn.disabled = false;
+             return;
+        }
+        
+        // Disparamos el submit del formulario de Webpay
+        const webpayForm = document.getElementById('webpay-form');
+        if (webpayForm) {
+            statusMessage.textContent = 'Redirigiendo a Webpay...';
+            // Para asegurar la transición, enviamos el formulario de Webpay directamente.
+            webpayForm.submit(); 
+        } else {
+             statusMessage.textContent = 'Error: No se encontró el formulario de pago.';
+             confirmBtn.disabled = false;
         }
     });
 
@@ -660,3 +678,6 @@
         }
     });
 </script>
+
+</body>
+</html>
