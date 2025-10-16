@@ -180,14 +180,12 @@
             background: rgba(0, 0, 0, 0.6); 
             display: flex; 
             justify-content: center; 
-            /* Alineación al inicio si el contenido es grande, para evitar que se salga de la pantalla */
             align-items: flex-start; 
-            padding-top: 5vh; /* Pequeño margen superior */
+            padding-top: 5vh; 
             z-index: 2000; 
             opacity: 0; 
             pointer-events: none; 
             transition: opacity 0.3s ease;
-            /* Permitir scroll en el overlay si el formulario es más alto que la ventana */
             overflow-y: auto; 
         }
         .modal-overlay.visible { opacity: 1; pointer-events: auto; }
@@ -199,7 +197,7 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
             transform: translateY(-50px); 
             transition: transform 0.3s ease;
-            margin-bottom: 5vh; /* Margen inferior para scroll */
+            margin-bottom: 5vh; 
         }
         .modal-overlay.visible .modal-content { transform: translateY(0); }
         .modal-header {
@@ -210,14 +208,13 @@
             display: flex; 
             justify-content: space-between; 
             align-items: center;
-            position: sticky; /* Fija el header */
+            position: sticky; 
             top: 0;
             z-index: 2001; 
         }
         .modal-header h3 { margin: 0; font-family: 'Playfair Display', serif; }
         .modal-body { 
             padding: 25px; 
-            /* Se ha eliminado max-height y overflow-y: auto de aquí, se gestiona con el body y el overlay */
         }
         .modal-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 
@@ -368,17 +365,15 @@
                     <h4 style="color: var(--primary); margin-bottom: 15px;">Paso Final: Confirmar Hora y Proceder al Pago</h4>
                     
                     <p style="font-size: 1.1rem; font-weight: 700;">Monto a Pagar: <span id="payment-amount-display" style="color: var(--accent);"></span></p>
+                    
+                    <input type='hidden' name='monto' id="webpay-monto" value='' />
 
                     <div style="display:flex; justify-content: space-between; margin-top: 20px;">
                         <button type="button" onclick="hideModal()" class="btn btn-nav">Cancelar / Volver</button>
                         
-                        <form name='rec20108_btn1' id="webpay-form" method='post' action='https://www.webpay.cl/backpub/external/form-pay'>
-                            <input type='hidden' name='idFormulario' value='326331' />
-                            <input type='hidden' name='monto' id="webpay-monto" value='' />
-                            <button type='submit' class="btn btn-agenda" id="confirm-payment-btn" style="display: flex; align-items: center; gap: 8px;">
-                                Confirmar Hora y Pagar <i class="fas fa-credit-card"></i>
-                            </button>
-                        </form>
+                        <button type='submit' class="btn btn-agenda" id="confirm-payment-btn" style="display: flex; align-items: center; gap: 8px;">
+                            Confirmar Hora y Pagar <i class="fas fa-credit-card"></i>
+                        </button>
                         
                     </div>
                 </div>
@@ -444,15 +439,13 @@
     }
 
 
-    // --- MANEJO DEL MODAL (CORREGIDO) ---
+    // --- MANEJO DEL MODAL ---
     function showModal() {
         const datePart = new Date(selectedTimeSlot.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         modalDateTimeEl.textContent = `${datePart} a las ${selectedTimeSlot.time}`;
         modalServiceNameEl.textContent = selectedServiceName;
         
         modalConfirmacionEl.classList.add('visible');
-        // El bloqueo del scroll ahora es condicional o puede ser omitido si el CSS del modal lo maneja bien. 
-        // Lo dejaremos para evitar que el fondo se mueva, pero el modal ahora tiene scroll interno.
         document.body.style.overflow = 'hidden'; 
         
         document.getElementById('booking-status-message').textContent = '';
@@ -488,7 +481,6 @@
     }
 
     function hideModal() {
-        // CORRECCIÓN CRÍTICA: Desbloquea el scroll del body
         modalConfirmacionEl.classList.remove('visible');
         document.body.style.overflow = '';
     }
@@ -637,7 +629,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO (MODIFICADA PARA WEB-PAY) ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (CORREGIDA) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -646,36 +638,38 @@
         confirmBtn.disabled = true;
         statusMessage.textContent = 'Recopilando datos y preparando pago...';
         
-        if (!selectedTimeSlot || !selectedServiceId || !selectedProfessionalId) {
-            statusMessage.textContent = 'Error: Faltan datos de la selección.';
-            confirmBtn.disabled = false;
-            return;
-        }
-
-        // Recolección de Datos (Para validación)
+        // Recolección y validación de Datos
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
         const fechaNac = document.getElementById('paciente_fecha_nac').value; 
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
         const prevision = document.getElementById('paciente_prevision').value; 
-        
-        // Validar que los campos requeridos tengan valor
-        if (!nombre || !rut || !fechaNac || !email || !celular || !prevision || document.getElementById('webpay-monto').value === '0') {
+        const monto = document.getElementById('webpay-monto').value;
+        const isMontoValid = parseInt(monto) > 0;
+
+        if (!selectedTimeSlot || !nombre || !rut || !fechaNac || !email || !celular || !prevision || !isMontoValid) {
              statusMessage.textContent = 'Por favor, completa todos los campos requeridos y selecciona una hora válida.';
              confirmBtn.disabled = false;
              return;
         }
+
+        // --- CREACIÓN DINÁMICA DEL FORMULARIO DE WEBPAY ---
+        const webpayForm = document.createElement('form');
+        webpayForm.name = 'rec20108_btn1';
+        webpayForm.method = 'post';
+        webpayForm.action = 'https://www.webpay.cl/backpub/external/form-pay';
         
-        // Disparamos el submit del formulario de Webpay
-        const webpayForm = document.getElementById('webpay-form');
-        if (webpayForm) {
-            statusMessage.textContent = 'Redirigiendo a Webpay...';
-            webpayForm.submit(); 
-        } else {
-             statusMessage.textContent = 'Error: No se encontró el formulario de pago.';
-             confirmBtn.disabled = false;
-        }
+        // Campos ocultos requeridos por Webpay
+        webpayForm.innerHTML = `
+            <input type='hidden' name='idFormulario' value='326331' />
+            <input type='hidden' name='monto' value='${monto}' />
+        `;
+        
+        // Agregar el formulario al cuerpo y enviarlo
+        document.body.appendChild(webpayForm);
+        statusMessage.textContent = 'Redirigiendo a Webpay...';
+        webpayForm.submit(); 
     });
 
 
