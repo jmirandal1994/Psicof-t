@@ -629,7 +629,7 @@
         loadWeekSchedule();
     }
     
-    // --- LÓGICA DE ENVÍO DE FORMULARIO (CORREGIDA) ---
+    // --- LÓGICA DE ENVÍO DE FORMULARIO (CORREGIDA Y OPTIMIZADA SIN DESCRIPCIÓN) ---
     document.getElementById('booking-form').addEventListener('submit', async (e) => {
         e.preventDefault();
         
@@ -660,7 +660,7 @@
         webpayForm.method = 'post';
         webpayForm.action = 'https://www.webpay.cl/backpub/external/form-pay';
         
-        // Campos ocultos requeridos por Webpay
+        // Campos ocultos requeridos por Webpay (Solo idFormulario y monto)
         webpayForm.innerHTML = `
             <input type='hidden' name='idFormulario' value='326331' />
             <input type='hidden' name='monto' value='${monto}' />
