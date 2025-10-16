@@ -69,9 +69,9 @@
         }
         .navbar { display: flex; justify-content: space-between; align-items: center; }
         
-        /* LOGO: AJUSTES DE TAMAÑO Y ELIMINACIÓN DE TEXTO */
+        /* LOGO: AJUSTES DE TAMAÑO Y ELIMINACIÓN DE TEXTO (AJUSTADO) */
         .logo-area { display: flex; align-items: center; gap: 0; }
-        .logo-area img { height: 90px; } /* MÁS GRANDE */
+        .logo-area img { height: 110px; } /* Agrandado de 90px a 110px */
         .logo-text { display: none; } /* OCULTAMOS EL TEXTO */
         .logo-text-only-icon { display: flex; align-items: center; }
 
@@ -126,14 +126,16 @@
              text-shadow: none;
         }
 
-        /* Contenedor de la Imagen: Más pequeño y contenido */
+        /* Contenedor de la Imagen: Más grande y más arriba (AJUSTADO) */
         .hero-image {
             position: absolute; 
             right: 5%; 
-            bottom: 0; 
-            height: 85%; 
-            width: 35%; 
-            max-width: 400px; 
+            /* AJUSTE TAMAÑO/POSICIÓN */
+            bottom: -5%; /* Mueve la imagen más arriba */
+            height: 95%; /* Hace el contenedor más grande (antes era 85%) */
+            width: 40%; /* Un poco más de ancho (antes era 35%) */
+            max-width: 450px; /* Aumenta el límite máximo (antes era 400px) */
+            /* FIN AJUSTE */
             z-index: 10;
             transition: transform 0.1s ease-out; 
             background: none; 
