@@ -170,23 +170,55 @@
             background-color: #f0f0f0;
         }
 
-        /* Modal Overlay */
+        /* --- CORRECCIONES DEL MODAL --- */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.6); display: flex; justify-content: center; align-items: center;
-            z-index: 2000; opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+            position: fixed; 
+            top: 0; 
+            left: 0; 
+            width: 100%; 
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6); 
+            display: flex; 
+            justify-content: center; 
+            /* Alineación al inicio si el contenido es grande, para evitar que se salga de la pantalla */
+            align-items: flex-start; 
+            padding-top: 5vh; /* Pequeño margen superior */
+            z-index: 2000; 
+            opacity: 0; 
+            pointer-events: none; 
+            transition: opacity 0.3s ease;
+            /* Permitir scroll en el overlay si el formulario es más alto que la ventana */
+            overflow-y: auto; 
         }
         .modal-overlay.visible { opacity: 1; pointer-events: auto; }
         .modal-content {
-            background: var(--bg-light); border-radius: 10px; width: 95%; max-width: 550px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); transform: translateY(-50px); transition: transform 0.3s ease;
+            background: var(--bg-light); 
+            border-radius: 10px; 
+            width: 95%; 
+            max-width: 550px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3); 
+            transform: translateY(-50px); 
+            transition: transform 0.3s ease;
+            margin-bottom: 5vh; /* Margen inferior para scroll */
         }
         .modal-overlay.visible .modal-content { transform: translateY(0); }
         .modal-header {
-            background: var(--primary); color: white; padding: 15px 25px; border-radius: 10px 10px 0 0;
-            display: flex; justify-content: space-between; align-items: center;
+            background: var(--primary); 
+            color: white; 
+            padding: 15px 25px; 
+            border-radius: 10px 10px 0 0;
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center;
+            position: sticky; /* Fija el header */
+            top: 0;
+            z-index: 2001; 
         }
         .modal-header h3 { margin: 0; font-family: 'Playfair Display', serif; }
+        .modal-body { 
+            padding: 25px; 
+            /* Se ha eliminado max-height y overflow-y: auto de aquí, se gestiona con el body y el overlay */
+        }
         .modal-close-btn { background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; }
 
         /* Estilos de Formulario MEJORADOS */
@@ -372,7 +404,7 @@
     let currentWeekStart = new Date(); 
     
     // Configuración de horario
-    const startHour = 8, endHour = 21, slotIntervalMin = 60; // INTERVALO DE 60 MINUTOS SINCRONIZADO
+    const startHour = 8, endHour = 21, slotIntervalMin = 60; 
     
     // Referencias DOM
     const modalConfirmacionEl = document.getElementById('modal-confirmacion');
@@ -398,9 +430,6 @@
         return `${hours.padStart(2, '0')}:${minutes.padStart(2, '0')}`;
     }
     
-    /**
-     * Calcula la edad en años a partir de una fecha de nacimiento (string YYYY-MM-DD).
-     */
     function calculateAge(dobString) {
         if (!dobString) return null;
         const today = new Date();
@@ -415,13 +444,15 @@
     }
 
 
-    // --- MANEJO DEL MODAL ---
+    // --- MANEJO DEL MODAL (CORREGIDO) ---
     function showModal() {
         const datePart = new Date(selectedTimeSlot.date + 'T12:00:00').toLocaleDateString('es-ES', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
         modalDateTimeEl.textContent = `${datePart} a las ${selectedTimeSlot.time}`;
         modalServiceNameEl.textContent = selectedServiceName;
         
         modalConfirmacionEl.classList.add('visible');
+        // El bloqueo del scroll ahora es condicional o puede ser omitido si el CSS del modal lo maneja bien. 
+        // Lo dejaremos para evitar que el fondo se mueva, pero el modal ahora tiene scroll interno.
         document.body.style.overflow = 'hidden'; 
         
         document.getElementById('booking-status-message').textContent = '';
@@ -436,18 +467,14 @@
             paymentAmount = 15000; // 15.000 CLP
         }
         
-        // Formato para mostrar el monto
         if (paymentAmount > 0) {
             amountDisplay = paymentAmount.toLocaleString('es-CL', { style: 'currency', currency: 'CLP', minimumFractionDigits: 0 });
         }
         
-        // 1. Actualizar el campo oculto de Webpay con el monto
         document.getElementById('webpay-monto').value = paymentAmount;
-        
-        // 2. Mostrar el monto en la pantalla
         document.getElementById('payment-amount-display').textContent = amountDisplay;
         
-        // 3. Cargar previsión predeterminada (si es FONASA o ISAPRE)
+        // Cargar previsión predeterminada
         const previsionSelect = document.getElementById('paciente_prevision');
         if (selectedServiceName.includes('FONASA')) {
             previsionSelect.value = 'Fonasa';
@@ -457,11 +484,11 @@
              previsionSelect.value = '';
         }
         
-        // 4. Bloquear el botón de pago si el monto es 0 o si no se ha seleccionado hora
         document.getElementById('confirm-payment-btn').disabled = (paymentAmount === 0 || !selectedTimeSlot);
     }
 
     function hideModal() {
+        // CORRECCIÓN CRÍTICA: Desbloquea el scroll del body
         modalConfirmacionEl.classList.remove('visible');
         document.body.style.overflow = '';
     }
@@ -508,7 +535,6 @@
         document.getElementById('current-week-display').textContent = 
             `Semana del ${startDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })} - ${endDate.toLocaleDateString('es-ES', { day: '2-digit', month: 'long', year: 'numeric' })}`;
         
-        // Carga de agenda desde Supabase
         const { data: agendaData, error } = await supabaseClient
             .from('agendas')
             .select('*')
@@ -603,7 +629,6 @@
             time: element.dataset.time
         };
         
-        // Abre el Modal sin problemas de scroll
         showModal();
     }
 
@@ -627,16 +652,15 @@
             return;
         }
 
-        // Recolección de Datos (Se recogen, pero no se envían a Supabase AÚN, ya que depende del pago)
+        // Recolección de Datos (Para validación)
         const nombre = document.getElementById('paciente_nombre').value;
         const rut = document.getElementById('paciente_rut').value;
         const fechaNac = document.getElementById('paciente_fecha_nac').value; 
         const email = document.getElementById('paciente_email').value;
         const celular = document.getElementById('paciente_celular').value;
-        const comentarios = document.getElementById('comentarios').value;
         const prevision = document.getElementById('paciente_prevision').value; 
         
-        // Validar que los campos requeridos tengan valor antes de proceder con Webpay
+        // Validar que los campos requeridos tengan valor
         if (!nombre || !rut || !fechaNac || !email || !celular || !prevision || document.getElementById('webpay-monto').value === '0') {
              statusMessage.textContent = 'Por favor, completa todos los campos requeridos y selecciona una hora válida.';
              confirmBtn.disabled = false;
@@ -647,7 +671,6 @@
         const webpayForm = document.getElementById('webpay-form');
         if (webpayForm) {
             statusMessage.textContent = 'Redirigiendo a Webpay...';
-            // Para asegurar la transición, enviamos el formulario de Webpay directamente.
             webpayForm.submit(); 
         } else {
              statusMessage.textContent = 'Error: No se encontró el formulario de pago.';
@@ -658,7 +681,6 @@
 
     // --- INICIALIZACIÓN ---
     document.addEventListener('DOMContentLoaded', async () => {
-        // 1. Obtener ID y Nombre del servicio de la URL (Ej: ?service_id=1&service_name=Terapia%20ISAPRE)
         const params = new URLSearchParams(window.location.search);
         selectedServiceId = parseInt(params.get('service_id'));
         selectedServiceName = params.get('service_name') ? decodeURIComponent(params.get('service_name')) : 'Terapia No Definida';
@@ -671,7 +693,6 @@
         
         selectedServiceDisplayEl.textContent = selectedServiceName;
 
-        // 2. Cargar Profesional y Agenda
         if (await loadUniqueProfessional()) {
             currentWeekStart = getStartOfWeek(new Date());
             loadWeekSchedule();
